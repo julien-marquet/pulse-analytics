@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
         "module": "nodenext",
         "moduleResolution": "nodenext",
         "resolvePackageJsonExports": true,
@@ -21,7 +22,7 @@
         "noFallthroughCasesInSwitch": true,
         "paths": {
             "@app/database": [
-                "packages/database/src"
+                "packages/database"
             ]
         }
     }
