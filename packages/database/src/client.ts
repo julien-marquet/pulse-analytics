@@ -1,4 +1,3 @@
-import { PrismaClient } from '../generated';
-
-export const prisma = new PrismaClient();
+export * from '../generated';
+export * from '@prisma/adapter-pg';
 

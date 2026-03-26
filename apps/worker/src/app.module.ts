@@ -1,6 +1,7 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { EventProcessor } from './event.processor';
+import { PrismaService } from './prisma.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { EventProcessor } from './event.processor';
       name: 'event',
     }),
   ],
-  providers: [EventProcessor],
+  providers: [EventProcessor, PrismaService],
 })
 export class AppModule {}

@@ -93,9 +93,43 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.EventScalarFieldEnum = {
+  id: 'id',
+  eventType: 'eventType',
+  receivedAt: 'receivedAt',
+  processedAt: 'processedAt',
+  properties: 'properties'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
-
+  Event: 'Event'
 };
 /**
  * Create the Client
@@ -105,14 +139,14 @@ const config = {
   "clientVersion": "7.5.0",
   "engineVersion": "280c870be64f457428992c43c1f6d557fab6e29e",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n"
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Event {\n  id          String    @id\n  eventType   String\n  receivedAt  DateTime\n  processedAt DateTime?\n  properties  Json?\n}\n"
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Event\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"eventType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"receivedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"processedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.parameterizationSchema = {
-  strings: JSON.parse("[]"),
-  graph: "AAAA"
+  strings: JSON.parse("[\"where\",\"Event.findUnique\",\"Event.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"Event.findFirst\",\"Event.findFirstOrThrow\",\"Event.findMany\",\"data\",\"Event.createOne\",\"Event.createMany\",\"Event.createManyAndReturn\",\"Event.updateOne\",\"Event.updateMany\",\"Event.updateManyAndReturn\",\"create\",\"update\",\"Event.upsertOne\",\"Event.deleteOne\",\"Event.deleteMany\",\"having\",\"_count\",\"_min\",\"_max\",\"Event.groupBy\",\"Event.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"eventType\",\"receivedAt\",\"processedAt\",\"properties\",\"equals\",\"string_contains\",\"string_starts_with\",\"string_ends_with\",\"array_starts_with\",\"array_ends_with\",\"array_contains\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"in\",\"notIn\",\"contains\",\"startsWith\",\"endsWith\",\"set\"]"),
+  graph: "MwkQCBoAACgAMBsAAAQAEBwAACgAMB0BAAAAAR4BACkAIR9AACoAISBAACsAISEAACwAIAEAAAABACABAAAAAQAgCBoAACgAMBsAAAQAEBwAACgAMB0BACkAIR4BACkAIR9AACoAISBAACsAISEAACwAIAIgAAAtACAhAAAtACADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAFHQEAAAABHgEAAAABH0AAAAABIEAAAAABIYAAAAABAQgAAAkAIAUdAQAAAAEeAQAAAAEfQAAAAAEgQAAAAAEhgAAAAAEBCAAACwAwAQgAAAsAMAUdAQAxACEeAQAxACEfQAAyACEgQAAzACEhgAAAAAECAAAAAQAgCAAADgAgBR0BADEAIR4BADEAIR9AADIAISBAADMAISGAAAAAAQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgBRUAAC4AIBYAADAAIBcAAC8AICAAAC0AICEAAC0AIAgaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAbACEfQAAcACEgQAAdACEhAAAeACADAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAgaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAbACEfQAAcACEgQAAdACEhAAAeACAOFQAAJAAgFgAAJwAgFwAAJwAgIgEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAAAABLQEAJgAhLgEAAAAELwEAAAAEMAEAAAABMQEAAAABMgEAAAABCxUAACQAIBYAACUAIBcAACUAICJAAAAAASlAAAAAASpAAAAAAStAAAAAASxAAAAAAS1AACMAIS5AAAAABC9AAAAABAsVAAAfACAWAAAiACAXAAAiACAiQAAAAAEpQAAAAAEqQAAAAAErQAAAAAEsQAAAAAEtQAAhACEuQAAAAAUvQAAAAAUPFQAAHwAgFgAAIAAgFwAAIAAgIoAAAAABIwEAAAABJAEAAAABJQEAAAABJoAAAAABJ4AAAAABKIAAAAABKYAAAAABKoAAAAABK4AAAAABLIAAAAABLYAAAAABCCICAAAAASkCAAAAASoCAAAAASsCAAAAASwCAAAAAS0CAB8AIS4CAAAABS8CAAAABQwigAAAAAEjAQAAAAEkAQAAAAElAQAAAAEmgAAAAAEngAAAAAEogAAAAAEpgAAAAAEqgAAAAAErgAAAAAEsgAAAAAEtgAAAAAELFQAAHwAgFgAAIgAgFwAAIgAgIkAAAAABKUAAAAABKkAAAAABK0AAAAABLEAAAAABLUAAIQAhLkAAAAAFL0AAAAAFCCJAAAAAASlAAAAAASpAAAAAAStAAAAAASxAAAAAAS1AACIAIS5AAAAABS9AAAAABQsVAAAkACAWAAAlACAXAAAlACAiQAAAAAEpQAAAAAEqQAAAAAErQAAAAAEsQAAAAAEtQAAjACEuQAAAAAQvQAAAAAQIIgIAAAABKQIAAAABKgIAAAABKwIAAAABLAIAAAABLQIAJAAhLgIAAAAELwIAAAAECCJAAAAAASlAAAAAASpAAAAAAStAAAAAASxAAAAAAS1AACUAIS5AAAAABC9AAAAABA4VAAAkACAWAAAnACAXAAAnACAiAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAAAAEtAQAmACEuAQAAAAQvAQAAAAQwAQAAAAExAQAAAAEyAQAAAAELIgEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAAAABLQEAJwAhLgEAAAAELwEAAAAEMAEAAAABMQEAAAABMgEAAAABCBoAACgAMBsAAAQAEBwAACgAMB0BACkAIR4BACkAIR9AACoAISBAACsAISEAACwAIAsiAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAAAAEtAQAnACEuAQAAAAQvAQAAAAQwAQAAAAExAQAAAAEyAQAAAAEIIkAAAAABKUAAAAABKkAAAAABK0AAAAABLEAAAAABLUAAJQAhLkAAAAAEL0AAAAAECCJAAAAAASlAAAAAASpAAAAAAStAAAAAASxAAAAAAS1AACIAIS5AAAAABS9AAAAABQwigAAAAAEjAQAAAAEkAQAAAAElAQAAAAEmgAAAAAEngAAAAAEogAAAAAEpgAAAAAEqgAAAAAErgAAAAAEsgAAAAAEtgAAAAAEAAAAAATMBAAAAAQEzQAAAAAEBM0AAAAABAAAAAAMVAAYWAAcXAAgAAAADFQAGFgAHFwAIAQIBAgMBBQYBBgcBBwgBCQoBCgwCCw0DDA8BDRECDhIEERMBEhQBExUCGBgFGRkJ"
 }
 config.compilerWasm = {
       getRuntime: async () => require('./query_compiler_fast_bg.js'),

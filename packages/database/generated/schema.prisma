@@ -6,3 +6,11 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Event {
+  id          String    @id
+  eventType   String
+  receivedAt  DateTime
+  processedAt DateTime?
+  properties  Json?
+}
