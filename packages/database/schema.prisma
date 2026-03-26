@@ -7,3 +7,11 @@ datasource db {
   provider = "postgresql"
 }
 
+model Event {
+  id           String   @id
+  eventType    String
+  occurredAt   DateTime
+  receivedAt   DateTime
+  processedAt  DateTime?
+  properties   Json?
+}
