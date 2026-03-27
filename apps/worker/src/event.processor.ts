@@ -1,43 +1,42 @@
-import { Processor, WorkerHost, OnWorkerEvent } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { PrismaService } from './prisma.service';
 import { randomUUID } from 'crypto';
+import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
+import { environment } from './environment';
 
-interface UserEvent {
+interface AddEventJobData {
   type: string;
   properties: any;
 }
 
-@Processor('event')
+@Processor(environment.get('EVENT_QUEUE_NAME'))
 export class EventProcessor extends WorkerHost {
-  constructor(private prisma: PrismaService) {
+  constructor(private readonly prisma: PrismaService) {
     super();
   }
 
-  async process(job: Job<UserEvent>): Promise<any> {
-    try {
-      await this.prisma.event.create({
-        data: {
-          id: randomUUID().toString(),
-          eventType: job.data.type,
-          properties: job.data.properties,
-          processedAt: new Date(job.timestamp),
-          receivedAt: new Date(),
-        },
-      });
-    } catch (err) {
-      console.error(err);
-    }
-    return 'ok';
+  async process(job: Job<AddEventJobData>): Promise<void> {
+    if (job.name != environment.get('ADD_EVENT_JOB_NAME'))
+      throw new Error(`Unknown job name ${job.name}`);
+
+    await this.prisma.event.create({
+      data: {
+        id: randomUUID(),
+        eventType: job.data.type,
+        properties: job.data.properties,
+        processedAt: new Date(job.timestamp),
+        receivedAt: new Date(),
+      },
+    });
   }
 
   @OnWorkerEvent('completed')
-  onCompleted() {
+  onCompleted(): void {
     console.info('completed');
   }
 
   @OnWorkerEvent('error')
-  onError() {
-    console.error('error');
+  onError(error: Error): void {
+    console.error(error);
   }
 }

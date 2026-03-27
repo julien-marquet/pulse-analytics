@@ -1,6 +1,6 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
-import { plainToInstance, ClassConstructor } from 'class-transformer';
-import { validate, ValidationError } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 import { EventDto, GetDtoClassByType } from './events.dto';
 
 interface RawEventPayload {
@@ -20,20 +20,16 @@ export class EventPipe implements PipeTransform<
       throw new BadRequestException(`Invalid event type: ${payload.type}`);
     }
 
-    const instance = plainToInstance(
-      dtoClass as ClassConstructor<EventDto>,
-      payload,
-      {
-        enableImplicitConversion: true,
-        exposeDefaultValues: true,
-      },
-    ) as EventDto;
-    const errors = (await validate(instance, {
+    const instance = plainToInstance(dtoClass, payload, {
+      enableImplicitConversion: true,
+      exposeDefaultValues: true,
+    });
+    const errors = await validate(instance, {
       whitelist: true,
       forbidNonWhitelisted: true,
       validationError: { target: false },
       skipMissingProperties: false,
-    })) as ValidationError[];
+    });
 
     if (errors.length > 0) {
       throw new BadRequestException(errors);

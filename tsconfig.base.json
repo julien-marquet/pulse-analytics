@@ -17,12 +17,16 @@
         "skipLibCheck": true,
         "strictNullChecks": true,
         "forceConsistentCasingInFileNames": true,
+        "useDefineForClassFields": false,
         "noImplicitAny": true,
         "strictBindCallApply": true,
         "noFallthroughCasesInSwitch": true,
         "paths": {
             "@app/database": [
                 "packages/database"
+            ],
+            "@app/common": [
+                "packages/common"
             ]
         }
     }

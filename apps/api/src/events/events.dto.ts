@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { ClassConstructor, Type } from 'class-transformer';
 import {
   IsDefined,
   IsIn,
@@ -58,7 +58,9 @@ export class ButtonClickedEventDto extends BaseEventDto {
 
 export type EventDto = PageViewedEventDto | ButtonClickedEventDto;
 
-export function GetDtoClassByType(type: string | null | undefined) {
+export function GetDtoClassByType(
+  type: string | null | undefined,
+): ClassConstructor<EventDto> | null {
   switch (type) {
     case EventTypes.PAGE_VIEWED:
       return PageViewedEventDto;
