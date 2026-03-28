@@ -9,7 +9,7 @@ datasource db {
 
 model Event {
   id           String   @id
-  eventType    String
+  type         String
   receivedAt   DateTime
   processedAt  DateTime?
   properties   Json?

@@ -3,6 +3,7 @@ import {
   IsDefined,
   IsIn,
   IsNotEmpty,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -16,6 +17,11 @@ type EventType = (typeof EventTypes)[keyof typeof EventTypes];
 abstract class BaseEventDto {
   @IsIn(Object.values(EventTypes))
   type: EventType;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  id: string | undefined;
 }
 
 class PageViewedPropertiesDto {

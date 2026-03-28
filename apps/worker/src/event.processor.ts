@@ -1,11 +1,11 @@
 import { Job } from 'bullmq';
 import { PrismaService } from './prisma.service';
-import { randomUUID } from 'crypto';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { environment } from './environment';
 
 interface AddEventJobData {
   type: string;
+  id: string;
   properties: any;
 }
 
@@ -21,8 +21,8 @@ export class EventProcessor extends WorkerHost {
 
     await this.prisma.event.create({
       data: {
-        id: randomUUID(),
-        eventType: job.data.type,
+        id: job.data.id,
+        type: job.data.type,
         properties: job.data.properties,
         processedAt: new Date(job.timestamp),
         receivedAt: new Date(),
