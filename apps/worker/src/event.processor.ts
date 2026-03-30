@@ -2,6 +2,8 @@ import { Job } from 'bullmq';
 import { PrismaService } from './prisma.service';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { environment } from './environment';
+import { Prisma } from 'packages/database/generated';
+import { DateHelpers } from '@app/common';
 
 interface AddEventJobData {
   type: string;
@@ -19,15 +21,44 @@ export class EventProcessor extends WorkerHost {
     if (job.name != environment.get('ADD_EVENT_JOB_NAME'))
       throw new Error(`Unknown job name ${job.name}`);
 
-    await this.prisma.event.create({
-      data: {
-        id: job.data.id,
-        type: job.data.type,
-        properties: job.data.properties,
-        processedAt: new Date(job.timestamp),
-        receivedAt: new Date(),
-      },
-    });
+    try {
+      const receivedAt = new Date(job.timestamp);
+      const roundedDate = DateHelpers.roundDateToDay(receivedAt);
+
+      await this.prisma.$transaction([
+        this.prisma.event.create({
+          data: {
+            id: job.data.id,
+            type: job.data.type,
+            properties: job.data.properties,
+            processedAt: new Date(),
+            receivedAt,
+          },
+        }),
+        this.prisma.dailyEventsStats.upsert({
+          where: {
+            date_type: {
+              date: roundedDate,
+              type: job.data.type,
+            },
+          },
+          create: {
+            type: job.data.type,
+            count: 1,
+            date: roundedDate,
+          },
+          update: {
+            count: { increment: 1 },
+          },
+        }),
+      ]);
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        console.error(`Prisma error ${err.code}:`, err.meta, err.message);
+      } else {
+        throw err;
+      }
+    }
   }
 
   @OnWorkerEvent('completed')
