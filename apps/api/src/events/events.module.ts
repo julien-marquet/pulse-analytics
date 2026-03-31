@@ -3,6 +3,7 @@ import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
 import { BullModule } from '@nestjs/bullmq';
 import { environment } from '../environment';
+import { PrismaService } from 'apps/api/src/prisma.service';
 
 @Module({
   controllers: [EventsController],
@@ -12,6 +13,6 @@ import { environment } from '../environment';
     }),
     BullModule.registerQueue({ name: environment.get('EVENT_QUEUE_NAME') }),
   ],
-  providers: [EventsService],
+  providers: [EventsService, PrismaService],
 })
 export class EventsModule {}

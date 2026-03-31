@@ -1,5 +1,12 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsDefined,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsTimeZone,
+} from 'class-validator';
 import { ValidatedEnv } from '@app/common';
+import { Transform } from 'class-transformer';
 
 class EnvironmentVariables {
   @IsString()
@@ -16,6 +23,19 @@ class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   ADD_EVENT_JOB_NAME: string;
+
+  @IsString()
+  @IsNotEmpty()
+  DATABASE_URL: string;
+
+  @IsDefined()
+  @IsTimeZone({ each: true })
+  @IsDefined({ each: true })
+  @IsNotEmpty({ each: true })
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.split(',') : undefined,
+  )
+  TIMEZONES: string[];
 }
 
 export const environment = new ValidatedEnv(EnvironmentVariables);

@@ -3,7 +3,7 @@ import { PrismaService } from './prisma.service';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { environment } from './environment';
 import { Prisma } from 'packages/database/generated';
-import { DateHelpers } from '@app/common';
+import { startOfDayUTC } from 'packages/common/src/date.helpers';
 
 interface AddEventJobData {
   type: string;
@@ -23,8 +23,6 @@ export class EventProcessor extends WorkerHost {
 
     try {
       const receivedAt = new Date(job.timestamp);
-      const roundedDate = DateHelpers.roundDateToDay(receivedAt);
-
       await this.prisma.$transaction([
         this.prisma.event.create({
           data: {
@@ -35,22 +33,7 @@ export class EventProcessor extends WorkerHost {
             receivedAt,
           },
         }),
-        this.prisma.dailyEventsStats.upsert({
-          where: {
-            date_type: {
-              date: roundedDate,
-              type: job.data.type,
-            },
-          },
-          create: {
-            type: job.data.type,
-            count: 1,
-            date: roundedDate,
-          },
-          update: {
-            count: { increment: 1 },
-          },
-        }),
+        ...this.getDailyEventsStatsUpsertQueries(job.data, receivedAt),
       ]);
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -59,6 +42,37 @@ export class EventProcessor extends WorkerHost {
         throw err;
       }
     }
+  }
+
+  private getDailyEventsStatsUpsertQueries(
+    jobData: AddEventJobData,
+    receivedAt: Date,
+  ) {
+    const queries = [];
+    for (const timezone of environment.get('TIMEZONES')) {
+      const dayDateInTimezone = startOfDayUTC(receivedAt, timezone);
+      queries.push(
+        this.prisma.dailyEventsStats.upsert({
+          where: {
+            date_type_timeZone: {
+              timeZone: timezone,
+              date: dayDateInTimezone,
+              type: jobData.type,
+            },
+          },
+          create: {
+            timeZone: timezone,
+            type: jobData.type,
+            count: 1,
+            date: dayDateInTimezone,
+          },
+          update: {
+            count: { increment: 1 },
+          },
+        }),
+      );
+    }
+    return queries;
   }
 
   @OnWorkerEvent('completed')

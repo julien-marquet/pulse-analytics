@@ -8,16 +8,18 @@ datasource db {
 }
 
 model Event {
-  id          String    @id
+  id          String   @id
   type        String
-  receivedAt  DateTime
-  processedAt DateTime?
+  receivedAt  DateTime @db.Timestamptz(3)
+  processedAt DateTime @db.Timestamptz(3)
   properties  Json?
 }
 
 model DailyEventsStats {
-  date  DateTime
-  type  String
-  count Int
-  @@id([date, type])
+  date     DateTime @db.Date
+  type     String
+  count    Int
+  timeZone String
+  
+  @@id([date, type, timeZone])
 }

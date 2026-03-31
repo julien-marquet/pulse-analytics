@@ -1,10 +1,13 @@
+import { environment } from 'apps/api/src/environment';
 import { ClassConstructor, Type } from 'class-transformer';
 import {
+  IsDateString,
   IsDefined,
   IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsTimeZone,
   ValidateNested,
 } from 'class-validator';
 
@@ -75,4 +78,15 @@ export function GetDtoClassByType(
     default:
       return null;
   }
+}
+
+export class GetStatsByDayParamsDto {
+  @IsDateString()
+  @IsDefined()
+  date: string;
+}
+
+export class GetStatsByDayQueryParamsDto {
+  @IsIn(environment.get('TIMEZONES'))
+  timeZone: string = 'UTC';
 }
