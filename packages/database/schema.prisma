@@ -15,11 +15,11 @@ model Event {
   properties  Json?
 }
 
-model DailyEventsStats {
-  date     DateTime @db.Date
-  type     String
-  count    Int
-  timeZone String
-  
-  @@id([date, type, timeZone])
+model DailyEventStat {
+  date      DateTime @db.Date
+  eventType String
+  count     Int
+  timeZone  String
+
+  @@id([date, eventType, timeZone])
 }

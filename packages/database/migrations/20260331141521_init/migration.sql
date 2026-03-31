@@ -10,11 +10,11 @@ CREATE TABLE "Event" (
 );
 
 -- CreateTable
-CREATE TABLE "DailyEventsStats" (
+CREATE TABLE "DailyEventStat" (
     "date" DATE NOT NULL,
-    "type" TEXT NOT NULL,
+    "eventType" TEXT NOT NULL,
     "count" INTEGER NOT NULL,
     "timeZone" TEXT NOT NULL,
 
-    CONSTRAINT "DailyEventsStats_pkey" PRIMARY KEY ("date","type","timeZone")
+    CONSTRAINT "DailyEventStat_pkey" PRIMARY KEY ("date","eventType","timeZone")
 );

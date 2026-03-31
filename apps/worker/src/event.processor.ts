@@ -6,7 +6,7 @@ import { Prisma } from 'packages/database/generated';
 import { startOfDayUTC } from 'packages/common/src/date.helpers';
 
 interface AddEventJobData {
-  type: string;
+  eventType: string;
   id: string;
   properties: any;
 }
@@ -27,7 +27,7 @@ export class EventProcessor extends WorkerHost {
         this.prisma.event.create({
           data: {
             id: job.data.id,
-            type: job.data.type,
+            type: job.data.eventType,
             properties: job.data.properties,
             processedAt: new Date(),
             receivedAt,
@@ -52,17 +52,17 @@ export class EventProcessor extends WorkerHost {
     for (const timezone of environment.get('TIMEZONES')) {
       const dayDateInTimezone = startOfDayUTC(receivedAt, timezone);
       queries.push(
-        this.prisma.dailyEventsStats.upsert({
+        this.prisma.dailyEventStat.upsert({
           where: {
-            date_type_timeZone: {
+            date_eventType_timeZone: {
               timeZone: timezone,
               date: dayDateInTimezone,
-              type: jobData.type,
+              eventType: jobData.eventType,
             },
           },
           create: {
             timeZone: timezone,
-            type: jobData.type,
+            eventType: jobData.eventType,
             count: 1,
             date: dayDateInTimezone,
           },

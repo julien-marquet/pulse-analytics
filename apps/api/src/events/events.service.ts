@@ -22,7 +22,7 @@ export class EventsService {
   }
 
   public async GetStatsByDay(startOfDayUTC: Date, timeZone: string) {
-    return this.prisma.dailyEventsStats.findMany({
+    return this.prisma.dailyEventStat.findMany({
       where: { date: { equals: startOfDayUTC }, timeZone },
       orderBy: { date: 'desc' },
     });

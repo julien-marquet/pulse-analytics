@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { EventValidationPipe, ValidationPipe } from './events.pipe';
+import { EventValidationPipe } from './events.pipe';
 import {
   GetStatsByDayParamsDto,
   GetStatsByDayQueryParamsDto,
@@ -7,6 +7,7 @@ import {
 } from './events.dto';
 import { EventsService } from './events.service';
 import { parseUTCDate, startOfDayUTC } from 'packages/common/src/date.helpers';
+import { ValidationPipe } from 'apps/api/src/validation.pipe';
 
 @Controller('events')
 export class EventsController {

@@ -7,7 +7,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsTimeZone,
   ValidateNested,
 } from 'class-validator';
 
@@ -19,7 +18,7 @@ type EventType = (typeof EventTypes)[keyof typeof EventTypes];
 
 abstract class BaseEventDto {
   @IsIn(Object.values(EventTypes))
-  type: EventType;
+  eventType: EventType;
 
   @IsOptional()
   @IsString()
@@ -38,7 +37,7 @@ class PageViewedPropertiesDto {
 }
 
 export class PageViewedEventDto extends BaseEventDto {
-  declare type: typeof EventTypes.PAGE_VIEWED;
+  declare eventType: typeof EventTypes.PAGE_VIEWED;
 
   @ValidateNested()
   @IsDefined()
@@ -57,7 +56,7 @@ class ButtonClickedPropertiesDto {
 }
 
 export class ButtonClickedEventDto extends BaseEventDto {
-  declare type: typeof EventTypes.BUTTON_CLICKED;
+  declare eventType: typeof EventTypes.BUTTON_CLICKED;
 
   @ValidateNested()
   @IsDefined()
@@ -67,7 +66,7 @@ export class ButtonClickedEventDto extends BaseEventDto {
 
 export type EventDto = PageViewedEventDto | ButtonClickedEventDto;
 
-export function GetDtoClassByType(
+export function GetDtoClassByEventType(
   type: string | null | undefined,
 ): ClassConstructor<EventDto> | null {
   switch (type) {
