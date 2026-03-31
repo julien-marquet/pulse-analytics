@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { EventDto } from './events.dto';
+import { EventDto, EventType } from './events.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import { environment } from '../environment';
 import { randomUUID } from 'node:crypto';
@@ -22,10 +22,35 @@ export class EventsService {
   }
 
   public async GetStatsByDay(startOfDayUTC: Date, timeZone: string) {
-    return this.prisma.dailyEventStat.findMany({
+    const res = await this.prisma.dailyEventStat.findMany({
+      select: {
+        count: true,
+        eventType: true,
+      },
       where: { date: { equals: startOfDayUTC }, timeZone },
+      orderBy: { eventType: 'asc' },
+    });
+    return res.map((r) => ({ count: r.count, eventType: r.eventType }));
+  }
+
+  public async GetStatsByType(
+    eventType: EventType,
+    fromStartOfDayUTC: Date,
+    toStartOfDayUTC: Date,
+  ) {
+    const res = await this.prisma.dailyEventStat.findMany({
+      select: {
+        count: true,
+        date: true,
+      },
+      where: {
+        eventType,
+        timeZone: 'UTC',
+        date: { gte: fromStartOfDayUTC, lte: toStartOfDayUTC },
+      },
       orderBy: { date: 'desc' },
     });
+    return res;
   }
 
   private generateEventId() {

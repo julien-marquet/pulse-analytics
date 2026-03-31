@@ -1,7 +1,5 @@
-import { environment } from 'apps/api/src/environment';
 import { ClassConstructor, Type } from 'class-transformer';
 import {
-  IsDateString,
   IsDefined,
   IsIn,
   IsNotEmpty,
@@ -14,7 +12,7 @@ export const EventTypes = {
   PAGE_VIEWED: 'page-viewed',
   BUTTON_CLICKED: 'button-clicked',
 } as const;
-type EventType = (typeof EventTypes)[keyof typeof EventTypes];
+export type EventType = (typeof EventTypes)[keyof typeof EventTypes];
 
 abstract class BaseEventDto {
   @IsIn(Object.values(EventTypes))
@@ -77,15 +75,4 @@ export function GetDtoClassByEventType(
     default:
       return null;
   }
-}
-
-export class GetStatsByDayParamsDto {
-  @IsDateString()
-  @IsDefined()
-  date: string;
-}
-
-export class GetStatsByDayQueryParamsDto {
-  @IsIn(environment.get('TIMEZONES'))
-  timeZone: string = 'UTC';
 }
