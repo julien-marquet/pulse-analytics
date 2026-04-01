@@ -33,6 +33,20 @@ export class EventsService {
     return res.map((r) => ({ count: r.count, eventType: r.eventType }));
   }
 
+  public async GetEvents(page: number, pageSize: number) {
+    const [data, total] = await Promise.all([
+      this.prisma.event.findMany({
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+      }),
+      this.prisma.event.count(),
+    ]);
+    return {
+      data,
+      total,
+    };
+  }
+
   public async GetStatsByType(
     eventType: EventType,
     fromStartOfDayUTC: Date,

@@ -1,7 +1,14 @@
 import { environment } from 'apps/api/src/environment';
-import type { EventDto, EventType } from 'apps/api/src/events/events.dto';
+import type { EventType } from 'apps/api/src/events/events.dto';
 import { EventTypes } from 'apps/api/src/events/events.dto';
-import { IsDateString, IsDefined, IsIn } from 'class-validator';
+import {
+  IsDateString,
+  IsDefined,
+  IsIn,
+  IsNumber,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class GetStatsByDayParamsDto {
   @IsDateString()
@@ -28,4 +35,15 @@ export class GetStatsByTypeQueryParamsDto {
   @IsDateString()
   @IsDefined()
   to: string;
+}
+
+export class GetEventsQueryParamsDto {
+  @IsNumber()
+  @Min(1)
+  page: number = 1;
+
+  @IsNumber()
+  @Min(1)
+  @Max(100)
+  pageSize: number = 50;
 }

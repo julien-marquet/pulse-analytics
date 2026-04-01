@@ -4,6 +4,7 @@ import { EventsService } from './events.service';
 import { parseUTCDate, startOfDayUTC } from 'packages/common/src/date.helpers';
 import { ValidationPipe } from 'apps/api/src/validation.pipe';
 import {
+  GetEventsQueryParamsDto,
   GetStatsByDayParamsDto,
   GetStatsByDayQueryParamsDto,
   GetStatsByTypeParamsDto,
@@ -11,6 +12,7 @@ import {
 } from 'apps/api/src/events/events.request.dto';
 import type { EventDto } from 'apps/api/src/events/events.dto';
 import {
+  GetEventsResponse,
   GetStatsByDayResponse,
   GetStatsByTypeResponse,
 } from 'apps/api/src/events/events.response.dto';
@@ -21,6 +23,23 @@ export class EventsController {
   @Post()
   async CreateEvent(@Body(EventValidationPipe) eventDto: EventDto) {
     await this.eventsService.AddEvent(eventDto);
+  }
+
+  @Get()
+  async GetEvents(
+    @Query(ValidationPipe) queryParams: GetEventsQueryParamsDto,
+  ): Promise<GetEventsResponse> {
+    const { data, total } = await this.eventsService.GetEvents(
+      queryParams.page,
+      queryParams.pageSize,
+    );
+
+    return {
+      page: queryParams.page,
+      pageSize: queryParams.pageSize,
+      total,
+      data: data as GetEventsResponse['data'],
+    };
   }
 
   @Get('/stats/by-day/:date')
