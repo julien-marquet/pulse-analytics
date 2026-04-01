@@ -1,13 +1,10 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { EventValidationPipe } from './events.pipe';
 import { EventsService } from './events.service';
-import { parseUTCDate, startOfDayUTC } from 'packages/common/src/date.helpers';
 import { ValidationPipe } from 'apps/api/src/validation.pipe';
 import {
   GetEventsQueryParamsDto,
-  GetStatsByDayParamsDto,
   GetStatsByDayQueryParamsDto,
-  GetStatsByTypeParamsDto,
   GetStatsByTypeQueryParamsDto,
 } from 'apps/api/src/events/events.request.dto';
 import type { EventDto } from 'apps/api/src/events/events.dto';
@@ -32,6 +29,9 @@ export class EventsController {
     const { data, total } = await this.eventsService.GetEvents(
       queryParams.page,
       queryParams.pageSize,
+      queryParams.type,
+      queryParams.from,
+      queryParams.to,
     );
 
     return {
@@ -42,30 +42,27 @@ export class EventsController {
     };
   }
 
-  @Get('/stats/by-day/:date')
+  @Get('/stats/by-day')
   async GetStatsByDay(
-    @Param(ValidationPipe)
-    params: GetStatsByDayParamsDto,
     @Query(ValidationPipe)
     queryParams: GetStatsByDayQueryParamsDto,
   ): Promise<GetStatsByDayResponse> {
     return this.eventsService.GetStatsByDay(
-      startOfDayUTC(parseUTCDate(params.date), queryParams.timeZone),
+      queryParams.date,
       queryParams.timeZone,
     );
   }
 
-  @Get('/stats/by-type/:eventType')
+  @Get('/stats/by-type')
   async GetStatsByType(
-    @Param(ValidationPipe)
-    params: GetStatsByTypeParamsDto,
     @Query(ValidationPipe)
     queryParams: GetStatsByTypeQueryParamsDto,
   ): Promise<GetStatsByTypeResponse> {
     return this.eventsService.GetStatsByType(
-      params.eventType,
-      parseUTCDate(queryParams.from),
-      parseUTCDate(queryParams.to),
+      queryParams.eventType,
+      queryParams.timeZone,
+      queryParams.from,
+      queryParams.to,
     );
   }
 }

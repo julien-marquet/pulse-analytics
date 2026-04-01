@@ -1,5 +1,6 @@
 import { ClassConstructor, Type } from 'class-transformer';
 import {
+  IsDate,
   IsDefined,
   IsIn,
   IsNotEmpty,
@@ -17,6 +18,10 @@ export type EventType = (typeof EventTypes)[keyof typeof EventTypes];
 abstract class BaseEventDto {
   @IsIn(Object.values(EventTypes))
   eventType: EventType;
+
+  @IsDate()
+  @IsOptional()
+  receivedAt?: Date;
 
   @IsOptional()
   @IsString()

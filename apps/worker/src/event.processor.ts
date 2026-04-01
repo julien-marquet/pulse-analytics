@@ -3,9 +3,9 @@ import { PrismaService } from './prisma.service';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { environment } from './environment';
 import { Prisma } from 'packages/database/generated';
-import { startOfDayUTC } from 'packages/common/src/date.helpers';
 
 interface AddEventJobData {
+  receivedAt: Date;
   eventType: string;
   id: string;
   properties: any;
@@ -22,7 +22,10 @@ export class EventProcessor extends WorkerHost {
       throw new Error(`Unknown job name ${job.name}`);
 
     try {
-      const receivedAt = new Date(job.timestamp);
+      const receivedAt = job.data.receivedAt
+        ? new Date(job.data.receivedAt)
+        : new Date(job.timestamp);
+
       await this.prisma.$transaction([
         this.prisma.event.create({
           data: {
@@ -84,4 +87,31 @@ export class EventProcessor extends WorkerHost {
   onError(error: Error): void {
     console.error(error);
   }
+}
+
+/**
+ * Returns a Date representing UTC midnight of the calendar date
+ * that `date` falls on in the given IANA timezone.
+ *
+ * @param date - The source date/time.
+ * @param timeZone - An IANA timezone name (e.g. `"America/New_York"`).
+ * @returns A Date at UTC midnight of the local calendar date in that timezone.
+ *
+ * @example
+ * // 2026-03-31 01:00 UTC is still 2026-03-30 in New York (UTC-4)
+ * startOfDayUTC(new Date('2026-03-31T01:00:00Z'), 'America/New_York');
+ * // → 2026-03-30T00:00:00.000Z
+ */
+export function startOfDayUTC(date: Date, timeZone: string = 'UTC'): Date {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date);
+  const year = parseInt(parts.find((p) => p.type === 'year')!.value);
+  const month = parseInt(parts.find((p) => p.type === 'month')!.value);
+  const day = parseInt(parts.find((p) => p.type === 'day')!.value);
+
+  return new Date(Date.UTC(year, month - 1, day));
 }
