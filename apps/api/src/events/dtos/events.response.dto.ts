@@ -11,10 +11,15 @@ export type GetStatsByTypeResponse = {
 type EventResponseDto = {
   type: string;
   id: string;
-  clientReceivedAt: Date;
-  serverReceivedAt: Date;
+  receivedAt: Date;
+  emittedAt: Date;
   processedAt: Date;
   properties: Record<string, any>;
+  latencies: {
+    ingestionLatencyMs: number;
+    processingLatencyMs: number;
+    totalLatencyMs: number;
+  };
 };
 
 export type GetEventsResponse = {
@@ -23,3 +28,5 @@ export type GetEventsResponse = {
   total: number;
   data: EventResponseDto[];
 };
+
+export type GetStatsOverviewResponse = {};

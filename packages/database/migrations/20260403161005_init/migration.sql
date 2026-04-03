@@ -2,6 +2,7 @@
 CREATE TABLE "Event" (
     "id" TEXT NOT NULL,
     "type" TEXT NOT NULL,
+    "emittedAt" TIMESTAMPTZ(3) NOT NULL,
     "receivedAt" TIMESTAMPTZ(3) NOT NULL,
     "processedAt" TIMESTAMPTZ(3) NOT NULL,
     "properties" JSONB,
@@ -15,6 +16,7 @@ CREATE TABLE "DailyEventStat" (
     "eventType" TEXT NOT NULL,
     "count" INTEGER NOT NULL,
     "timeZone" TEXT NOT NULL,
+    "processingLatencyTotalMs" INTEGER NOT NULL,
 
     CONSTRAINT "DailyEventStat_pkey" PRIMARY KEY ("date","eventType","timeZone")
 );

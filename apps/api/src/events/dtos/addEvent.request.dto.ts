@@ -20,7 +20,7 @@ abstract class BaseEventDto {
   eventType: EventType;
 
   @IsDate()
-  receivedAt: Date;
+  emittedAt: Date;
 
   @IsOptional()
   @IsString()

@@ -5,7 +5,7 @@ import { environment } from './environment';
 import { Prisma } from 'packages/database/generated';
 
 interface AddEventJobData {
-  receivedAt: Date;
+  emittedAt: Date;
   eventType: string;
   id: string;
   properties: any;
@@ -22,8 +22,9 @@ export class EventProcessor extends WorkerHost {
       throw new Error(`Unknown job name ${job.name}`);
 
     try {
-      const serverReceivedAt = new Date(job.timestamp);
-      const clientReceivedAt = new Date(job.data.receivedAt);
+      const receivedAt = new Date(job.timestamp);
+      const emittedAt = new Date(job.data.emittedAt);
+      const processedAt = new Date();
 
       await this.prisma.$transaction([
         this.prisma.event.create({
@@ -31,12 +32,17 @@ export class EventProcessor extends WorkerHost {
             id: job.data.id,
             type: job.data.eventType,
             properties: job.data.properties,
-            processedAt: new Date(),
-            clientReceivedAt,
-            serverReceivedAt,
+            processedAt,
+            emittedAt,
+            receivedAt,
           },
         }),
-        ...this.getDailyEventsStatsUpsertQueries(job.data, clientReceivedAt),
+        ...this.getDailyEventsStatsUpsertQueries(
+          job.data,
+          emittedAt,
+          receivedAt,
+          processedAt,
+        ),
       ]);
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -49,11 +55,16 @@ export class EventProcessor extends WorkerHost {
 
   private getDailyEventsStatsUpsertQueries(
     jobData: AddEventJobData,
+    emittedAt: Date,
     receivedAt: Date,
+    processedAt: Date,
   ) {
     const queries = [];
+
+    const jobProcessingLatency = processedAt.valueOf() - receivedAt.valueOf();
+
     for (const timezone of environment.get('TIMEZONES')) {
-      const dayDateInTimezone = startOfDayUTC(receivedAt, timezone);
+      const dayDateInTimezone = startOfDayUTC(emittedAt, timezone);
       queries.push(
         this.prisma.dailyEventStat.upsert({
           where: {
@@ -68,9 +79,11 @@ export class EventProcessor extends WorkerHost {
             eventType: jobData.eventType,
             count: 1,
             date: dayDateInTimezone,
+            processingLatencyTotalMs: jobProcessingLatency,
           },
           update: {
             count: { increment: 1 },
+            processingLatencyTotalMs: { increment: jobProcessingLatency },
           },
         }),
       );

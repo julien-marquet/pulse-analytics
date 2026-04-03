@@ -6,12 +6,14 @@ import {
   GetEventsQueryParamsDto,
   GetStatsByDayQueryParamsDto,
   GetStatsByTypeQueryParamsDto,
+  GetStatsOverviewQueryParamsDto,
 } from 'apps/api/src/events/dtos/events.request.dto';
 import type { AddEventRequestDto } from 'apps/api/src/events/dtos/addEvent.request.dto';
 import {
   GetEventsResponse,
   GetStatsByDayResponse,
   GetStatsByTypeResponse,
+  GetStatsOverviewResponse,
 } from 'apps/api/src/events/dtos/events.response.dto';
 
 @Controller('events')
@@ -66,5 +68,25 @@ export class EventsController {
       queryParams.from,
       queryParams.to,
     );
+  }
+
+  @Get('/stats/overview')
+  async GetStatsOverview(
+    @Query(ValidationPipe)
+    queryParams: GetStatsOverviewQueryParamsDto,
+  ): Promise<GetStatsOverviewResponse> {
+    const res = await this.eventsService.GetStatsOverview(
+      queryParams.timeZone,
+      queryParams.from,
+      queryParams.to,
+    );
+    return {
+      period: {
+        from: queryParams.from,
+        to: queryParams.to,
+        timeZone: queryParams.timeZone,
+      },
+      ...res,
+    };
   }
 }

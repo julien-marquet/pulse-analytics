@@ -28,10 +28,23 @@ export class GetStatsByTypeQueryParamsDto {
   timeZone: string = 'UTC';
 
   @IsDateString()
+  @IsOptional()
   from?: string;
 
   @IsDateString()
+  @IsOptional()
   to?: string;
+}
+
+export class GetStatsOverviewQueryParamsDto {
+  @IsIn(environment.get('TIMEZONES'))
+  timeZone: string = 'UTC';
+
+  @IsDateString()
+  from: string;
+
+  @IsDateString()
+  to: string;
 }
 
 export class GetEventsQueryParamsDto {
