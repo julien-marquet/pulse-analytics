@@ -10,6 +10,7 @@ datasource db {
 model Event {
   id          String   @id
   type        String
+  emittedAt   DateTime @db.Timestamptz(3)
   receivedAt  DateTime @db.Timestamptz(3)
   processedAt DateTime @db.Timestamptz(3)
   properties  Json?

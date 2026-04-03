@@ -1,7 +1,7 @@
 import { environment } from 'apps/api/src/environment';
-import { IsArrayOfAllowedValues } from 'apps/api/src/events/dto.decorators';
-import type { EventType } from 'apps/api/src/events/events.dto';
-import { EventTypes } from 'apps/api/src/events/events.dto';
+import { IsArrayOfAllowedValues } from 'apps/api/src/utils/dto.decorators';
+import type { EventType } from 'apps/api/src/events/dtos/addEvent.request.dto';
+import { EventTypes } from 'apps/api/src/events/dtos/addEvent.request.dto';
 import {
   IsDate,
   IsDateString,

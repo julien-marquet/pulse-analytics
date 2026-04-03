@@ -20,8 +20,7 @@ abstract class BaseEventDto {
   eventType: EventType;
 
   @IsDate()
-  @IsOptional()
-  receivedAt?: Date;
+  receivedAt: Date;
 
   @IsOptional()
   @IsString()
@@ -67,11 +66,11 @@ export class ButtonClickedEventDto extends BaseEventDto {
   properties: ButtonClickedPropertiesDto;
 }
 
-export type EventDto = PageViewedEventDto | ButtonClickedEventDto;
+export type AddEventRequestDto = PageViewedEventDto | ButtonClickedEventDto;
 
 export function GetDtoClassByEventType(
   type: string | null | undefined,
-): ClassConstructor<EventDto> | null {
+): ClassConstructor<AddEventRequestDto> | null {
   switch (type) {
     case EventTypes.PAGE_VIEWED:
       return PageViewedEventDto;

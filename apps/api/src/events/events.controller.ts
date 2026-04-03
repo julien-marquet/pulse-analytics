@@ -1,24 +1,26 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { EventValidationPipe } from './events.pipe';
+import { AddEventValidationPipe } from './events.pipe';
 import { EventsService } from './events.service';
 import { ValidationPipe } from 'apps/api/src/validation.pipe';
 import {
   GetEventsQueryParamsDto,
   GetStatsByDayQueryParamsDto,
   GetStatsByTypeQueryParamsDto,
-} from 'apps/api/src/events/events.request.dto';
-import type { EventDto } from 'apps/api/src/events/events.dto';
+} from 'apps/api/src/events/dtos/events.request.dto';
+import type { AddEventRequestDto } from 'apps/api/src/events/dtos/addEvent.request.dto';
 import {
   GetEventsResponse,
   GetStatsByDayResponse,
   GetStatsByTypeResponse,
-} from 'apps/api/src/events/events.response.dto';
+} from 'apps/api/src/events/dtos/events.response.dto';
 
 @Controller('events')
 export class EventsController {
   constructor(private eventsService: EventsService) {}
   @Post()
-  async CreateEvent(@Body(EventValidationPipe) eventDto: EventDto) {
+  async CreateEvent(
+    @Body(AddEventValidationPipe) eventDto: AddEventRequestDto,
+  ) {
     await this.eventsService.AddEvent(eventDto);
   }
 

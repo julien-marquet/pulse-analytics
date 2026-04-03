@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { EventDto, EventType } from './events.dto';
+import { AddEventRequestDto, EventType } from './dtos/addEvent.request.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import { environment } from '../environment';
 import { randomUUID } from 'node:crypto';
@@ -14,7 +14,7 @@ export class EventsService {
     private readonly prisma: PrismaService,
   ) {}
 
-  public async AddEvent(eventDto: EventDto) {
+  public async AddEvent(eventDto: AddEventRequestDto) {
     if (eventDto.id == undefined) {
       eventDto.id = this.generateEventId();
     }

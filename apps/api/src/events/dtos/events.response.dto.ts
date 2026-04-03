@@ -11,7 +11,8 @@ export type GetStatsByTypeResponse = {
 type EventResponseDto = {
   type: string;
   id: string;
-  receivedAt: Date;
+  clientReceivedAt: Date;
+  serverReceivedAt: Date;
   processedAt: Date;
   properties: Record<string, any>;
 };

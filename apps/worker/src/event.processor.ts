@@ -22,9 +22,8 @@ export class EventProcessor extends WorkerHost {
       throw new Error(`Unknown job name ${job.name}`);
 
     try {
-      const receivedAt = job.data.receivedAt
-        ? new Date(job.data.receivedAt)
-        : new Date(job.timestamp);
+      const serverReceivedAt = new Date(job.timestamp);
+      const clientReceivedAt = new Date(job.data.receivedAt);
 
       await this.prisma.$transaction([
         this.prisma.event.create({
@@ -33,10 +32,11 @@ export class EventProcessor extends WorkerHost {
             type: job.data.eventType,
             properties: job.data.properties,
             processedAt: new Date(),
-            receivedAt,
+            clientReceivedAt,
+            serverReceivedAt,
           },
         }),
-        ...this.getDailyEventsStatsUpsertQueries(job.data, receivedAt),
+        ...this.getDailyEventsStatsUpsertQueries(job.data, clientReceivedAt),
       ]);
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
