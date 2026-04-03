@@ -29,4 +29,18 @@ export type GetEventsResponse = {
   data: EventResponseDto[];
 };
 
-export type GetStatsOverviewResponse = {};
+export type GetStatsOverviewResponse = {
+  period: {
+    from: string;
+    to: string;
+    timeZone: string;
+  };
+  totalEvents: number;
+  averageProcessingLatencyMs: number;
+  eventTypesCount: number;
+  topEventTypes: {
+    eventType: string;
+    count: number;
+  }[];
+  latestEventAt?: string;
+};

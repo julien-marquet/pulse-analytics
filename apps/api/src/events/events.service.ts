@@ -150,7 +150,7 @@ export class EventsService {
       averageProcessingLatencyMs: this.SumAverageProcessingLatency(entries),
       eventTypesCount: countDistinctValueOfField(entries, 'eventType'),
       topEventTypes: this.GetTopEventTypes(entries, 3),
-      latestEventAt: lastEvent?.emittedAt,
+      latestEventAt: lastEvent?.emittedAt.toISOString(),
     };
   }
   private SumAverageProcessingLatency(dbStats: DbDailyEventStat[]) {
