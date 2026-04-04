@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { EventsQueryService } from 'apps/api/src/events/query/event-query.service';
-import { PrismaService } from 'apps/api/src/prisma.service';
-
+import { PrismaService } from '../../prisma.service';
+import { EventsQueryService } from './event-query.service';
 @Module({
   providers: [EventsQueryService, PrismaService],
   exports: [EventsQueryService],

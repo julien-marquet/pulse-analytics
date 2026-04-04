@@ -23,13 +23,13 @@
         "noFallthroughCasesInSwitch": true,
         "paths": {
             "@app/database": [
-                "packages/database"
+                "packages/database/src/index.ts"
             ],
             "@app/common": [
-                "packages/common"
+                "packages/common/src/index.ts"
             ],
             "@app/contracts": [
-                "packages/contracts"
+                "packages/contracts/src/index.ts"
             ]
         }
     }

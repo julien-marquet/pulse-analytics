@@ -3,8 +3,8 @@ import {
   CreateEventRequestDto,
   CreateEventRequestTypeDtoMap,
 } from './dtos/create-event.request.dto';
-import { validateAndTransformPayload } from 'apps/api/src/utils/validation.utils';
 import { EventType } from '@app/contracts';
+import { validateAndTransformPayload } from '../utils/validation.utils';
 
 interface RawEventPayload {
   type?: string;

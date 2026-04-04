@@ -6,19 +6,19 @@ import {
   Query,
   ValidationPipe,
 } from '@nestjs/common';
-import type { CreateEventRequestDto } from 'apps/api/src/events/dtos/create-event.request.dto';
-import { EventsIngestionService } from 'apps/api/src/events/ingestion/event-ingestion.service';
-import { CreateEventValidationPipe } from 'apps/api/src/events/create-event-validation.pipe';
-import { EventsQueryService } from 'apps/api/src/events/query/event-query.service';
-import { EventsStatsService } from 'apps/api/src/events/stats/event-stats.service';
-import { GetEventsQueryParamsDto } from 'apps/api/src/events/dtos/get-events.request.dto';
-import { GetEventsResponse } from 'apps/api/src/events/dtos/get-events.response.dto';
-import { GetStatsByDayQueryParamsDto } from 'apps/api/src/events/dtos/get-stats-by-day.request.dto';
-import { GetStatsByDayResponse } from 'apps/api/src/events/dtos/get-stats-by-day.response.dto';
-import { GetStatsByTypeQueryParamsDto } from 'apps/api/src/events/dtos/get-stats-by-type.request.dto';
-import { GetStatsByTypeResponse } from 'apps/api/src/events/dtos/get-stats-by-type.response.dto';
-import { GetStatsOverviewQueryParamsDto } from 'apps/api/src/events/dtos/get-stats-overview.request.dto';
-import { GetStatsOverviewResponse } from 'apps/api/src/events/dtos/get-stats-overview.response.dto';
+import { CreateEventValidationPipe } from './create-event-validation.pipe';
+import type { CreateEventRequestDto } from './dtos/create-event.request.dto';
+import { GetEventsQueryParamsDto } from './dtos/get-events.request.dto';
+import { GetEventsResponse } from './dtos/get-events.response.dto';
+import { GetStatsByDayQueryParamsDto } from './dtos/get-stats-by-day.request.dto';
+import { GetStatsByDayResponse } from './dtos/get-stats-by-day.response.dto';
+import { GetStatsByTypeQueryParamsDto } from './dtos/get-stats-by-type.request.dto';
+import { GetStatsByTypeResponse } from './dtos/get-stats-by-type.response.dto';
+import { GetStatsOverviewQueryParamsDto } from './dtos/get-stats-overview.request.dto';
+import { GetStatsOverviewResponse } from './dtos/get-stats-overview.response.dto';
+import { EventsIngestionService } from './ingestion/event-ingestion.service';
+import { EventsQueryService } from './query/event-query.service';
+import { EventsStatsService } from './stats/event-stats.service';
 
 @Controller('events')
 export class EventsController {

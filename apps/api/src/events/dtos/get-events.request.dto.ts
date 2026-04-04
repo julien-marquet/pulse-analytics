@@ -1,6 +1,6 @@
-import { IsArrayOfAllowedValues } from 'apps/api/src/utils/dto.decorators';
 import { IsNumber, Min, Max, IsDate, IsOptional } from 'class-validator';
 import { EventTypes, EventType } from '@app/contracts';
+import { IsArrayOfAllowedValues } from '../../utils/dto.decorators';
 
 export class GetEventsQueryParamsDto {
   @IsNumber()

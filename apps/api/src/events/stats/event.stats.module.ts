@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { EventsStatsService } from 'apps/api/src/events/stats/event-stats.service';
-import { PrismaService } from 'apps/api/src/prisma.service';
+import { PrismaService } from '../../prisma.service';
+import { EventsStatsService } from './event-stats.service';
 
 @Module({
   providers: [EventsStatsService, PrismaService],

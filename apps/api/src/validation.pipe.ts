@@ -1,6 +1,6 @@
-import { Injectable, PipeTransform, ArgumentMetadata } from '@nestjs/common';
-import { validateAndTransformPayload } from 'apps/api/src/utils/validation.utils';
+import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { ClassConstructor } from 'class-transformer';
+import { validateAndTransformPayload } from './utils/validation.utils';
 
 @Injectable()
 export class ValidationPipe<
