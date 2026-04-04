@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "module": "nodenext",
-        "moduleResolution": "nodenext",
-        "resolvePackageJsonExports": true,
+        "module": "preserve",
+        "moduleResolution": "bundler",
+        // "resolvePackageJsonExports": true,
         "esModuleInterop": true,
         "isolatedModules": true,
         "declaration": true,

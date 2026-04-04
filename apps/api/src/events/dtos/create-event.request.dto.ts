@@ -1,5 +1,3 @@
-import type { EventType } from 'apps/api/src/events/dtos/event.types';
-import { EventTypes } from 'apps/api/src/events/dtos/event.types';
 import { ClassConstructor, Type } from 'class-transformer';
 import {
   IsDate,
@@ -10,10 +8,12 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { EventTypes } from '@app/common/src/EventTypes';
+import type { EventType } from '@app/common/src/EventTypes';
 
 abstract class BaseCreateEventRequestDto {
   @IsIn(Object.values(EventTypes))
-  eventType: EventType;
+  type: EventType;
 
   @IsDate()
   emittedAt: Date;
@@ -35,7 +35,7 @@ class PageViewedPropertiesDto {
 }
 
 export class PageViewedCreateEventRequestDto extends BaseCreateEventRequestDto {
-  declare eventType: typeof EventTypes.PAGE_VIEWED;
+  declare type: typeof EventTypes.PAGE_VIEWED;
 
   @ValidateNested()
   @IsDefined()
@@ -54,7 +54,7 @@ class ButtonClickedPropertiesDto {
 }
 
 export class ButtonClickedCreateEventRequestDto extends BaseCreateEventRequestDto {
-  declare eventType: typeof EventTypes.BUTTON_CLICKED;
+  declare type: typeof EventTypes.BUTTON_CLICKED;
 
   @ValidateNested()
   @IsDefined()

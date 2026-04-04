@@ -1,7 +1,8 @@
 import { environment } from 'apps/api/src/environment';
-import { EventTypes } from 'apps/api/src/events/dtos/event.types';
-import type { EventType } from 'apps/api/src/events/dtos/event.types';
+
 import { IsIn, IsDateString, IsOptional } from 'class-validator';
+import { EventTypes } from '@app/common';
+import type { EventType } from '@app/common';
 
 export class GetStatsByTypeQueryParamsDto {
   @IsIn(Object.values(EventTypes))

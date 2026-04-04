@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import type { CreateEventRequestDto } from 'apps/api/src/events/dtos/create-event.request.dto';
 import { EventsIngestionService } from 'apps/api/src/events/ingestion/event-ingestion.service';
-import { CreateEventValidationPipe } from 'apps/api/src/events/ingestion/create-event-validation.pipe';
+import { CreateEventValidationPipe } from 'apps/api/src/events/create-event-validation.pipe';
 import { EventsQueryService } from 'apps/api/src/events/query/event-query.service';
 import { EventsStatsService } from 'apps/api/src/events/stats/event-stats.service';
 import { GetEventsQueryParamsDto } from 'apps/api/src/events/dtos/get-events.request.dto';
@@ -31,7 +31,7 @@ export class EventsController {
   async CreateEvent(
     @Body(CreateEventValidationPipe) eventDto: CreateEventRequestDto,
   ) {
-    await this.eventsIngestionService.AddEvent(eventDto);
+    await this.eventsIngestionService.AddEvent(eventDto.id, eventDto);
   }
 
   @Get()

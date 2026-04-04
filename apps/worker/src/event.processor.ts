@@ -3,13 +3,7 @@ import { PrismaService } from './prisma.service';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { environment } from './environment';
 import { Prisma } from 'packages/database/generated';
-
-interface AddEventJobData {
-  emittedAt: Date;
-  eventType: string;
-  id: string;
-  properties: any;
-}
+import { CreateEventJobData } from '@app/common';
 
 @Processor(environment.get('EVENT_QUEUE_NAME'))
 export class EventProcessor extends WorkerHost {
@@ -17,7 +11,7 @@ export class EventProcessor extends WorkerHost {
     super();
   }
 
-  async process(job: Job<AddEventJobData>): Promise<void> {
+  async process(job: Job<CreateEventJobData>): Promise<void> {
     if (job.name != environment.get('ADD_EVENT_JOB_NAME'))
       throw new Error(`Unknown job name ${job.name}`);
 
@@ -30,8 +24,8 @@ export class EventProcessor extends WorkerHost {
         this.prisma.event.create({
           data: {
             id: job.data.id,
-            type: job.data.eventType,
-            properties: job.data.properties,
+            type: job.data.type,
+            properties: job.data.properties as unknown as Prisma.InputJsonValue,
             processedAt,
             emittedAt,
             receivedAt,
@@ -54,7 +48,7 @@ export class EventProcessor extends WorkerHost {
   }
 
   private getDailyEventsStatsUpsertQueries(
-    jobData: AddEventJobData,
+    jobData: CreateEventJobData,
     emittedAt: Date,
     receivedAt: Date,
     processedAt: Date,
@@ -71,12 +65,12 @@ export class EventProcessor extends WorkerHost {
             date_eventType_timeZone: {
               timeZone: timezone,
               date: dayDateInTimezone,
-              eventType: jobData.eventType,
+              eventType: jobData.type,
             },
           },
           create: {
             timeZone: timezone,
-            eventType: jobData.eventType,
+            eventType: jobData.type,
             count: 1,
             date: dayDateInTimezone,
             processingLatencyTotalMs: jobProcessingLatency,

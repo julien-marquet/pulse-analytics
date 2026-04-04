@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'apps/api/src/prisma.service';
-import { DateHelpers } from '@app/common';
+import { DateHelpers, EventType } from '@app/common';
 import { type DailyEventStat as DbDailyEventStat } from '@app/database';
 import { countDistinctValueOfField } from 'apps/api/src/utils/collection.utils';
-import { EventType } from '../dtos/event.types';
 
 @Injectable()
 export class EventsStatsService {
