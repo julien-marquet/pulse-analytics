@@ -1,5 +1,5 @@
 {
   "js/ts.preferences.importModuleSpecifier": "non-relative",
   "postman.settings.dotenv-detection-notification-visibility": false,
-  "js/ts.tsdk.path": "./apps/api/node_modules/typescript/lib"
+  "js/ts.tsdk.path": "./node_modules/typescript/lib"
 }
