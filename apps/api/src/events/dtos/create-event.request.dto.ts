@@ -8,8 +8,8 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { EventTypes } from '@app/common/src/EventTypes';
-import type { EventType } from '@app/common/src/EventTypes';
+import { EventTypes } from '@app/contracts';
+import type { EventType } from '@app/contracts';
 
 abstract class BaseCreateEventRequestDto {
   @IsIn(Object.values(EventTypes))

@@ -27,6 +27,9 @@
             ],
             "@app/common": [
                 "packages/common"
+            ],
+            "@app/contracts": [
+                "packages/contracts"
             ]
         }
     }

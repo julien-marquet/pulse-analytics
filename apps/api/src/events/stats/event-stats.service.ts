@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'apps/api/src/prisma.service';
-import { DateHelpers, EventType } from '@app/common';
+import { EventType } from '@app/contracts';
 import { type DailyEventStat as DbDailyEventStat } from '@app/database';
 import { countDistinctValueOfField } from 'apps/api/src/utils/collection.utils';
+import { DatePrismaConverter } from 'packages/common/src';
 
 @Injectable()
 export class EventsStatsService {
@@ -15,7 +16,7 @@ export class EventsStatsService {
         eventType: true,
       },
       where: {
-        date: { equals: DateHelpers.DatePrismaConverter.toPrisma(dateString) },
+        date: { equals: DatePrismaConverter.toPrisma(dateString) },
         timeZone,
       },
       orderBy: { eventType: 'asc' },
@@ -30,16 +31,16 @@ export class EventsStatsService {
       },
       where: {
         emittedAt: {
-          lte: DateHelpers.DatePrismaConverter.toPrisma(to),
-          gte: DateHelpers.DatePrismaConverter.toPrisma(from),
+          lte: DatePrismaConverter.toPrisma(to),
+          gte: DatePrismaConverter.toPrisma(from),
         },
       },
     });
     const entries = await this.prisma.dailyEventStat.findMany({
       where: {
         date: {
-          lte: DateHelpers.DatePrismaConverter.toPrisma(to),
-          gte: DateHelpers.DatePrismaConverter.toPrisma(from),
+          lte: DatePrismaConverter.toPrisma(to),
+          gte: DatePrismaConverter.toPrisma(from),
         },
         timeZone,
       },
@@ -71,17 +72,15 @@ export class EventsStatsService {
         eventType,
         timeZone,
         date: {
-          gte: from
-            ? DateHelpers.DatePrismaConverter.toPrisma(from)
-            : undefined,
-          lte: to ? DateHelpers.DatePrismaConverter.toPrisma(to) : undefined,
+          gte: from ? DatePrismaConverter.toPrisma(from) : undefined,
+          lte: to ? DatePrismaConverter.toPrisma(to) : undefined,
         },
       },
       orderBy: { date: 'desc' },
     });
     return res.map((i) => ({
       ...i,
-      date: DateHelpers.DatePrismaConverter.fromPrismaToDateString(i.date),
+      date: DatePrismaConverter.fromPrismaToDateString(i.date),
     }));
   }
 

@@ -1,4 +1,4 @@
-import { EventTypes } from "./EventTypes";
+import { EventTypes } from './EventTypes';
 
 interface PageViewedProperties {
   source: string;

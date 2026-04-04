@@ -3,7 +3,7 @@ import { PrismaService } from './prisma.service';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { environment } from './environment';
 import { Prisma } from 'packages/database/generated';
-import { CreateEventJobData } from '@app/common';
+import { CreateEventJobData } from '@app/contracts';
 
 @Processor(environment.get('EVENT_QUEUE_NAME'))
 export class EventProcessor extends WorkerHost {

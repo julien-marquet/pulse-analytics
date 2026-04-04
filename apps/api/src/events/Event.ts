@@ -1,4 +1,4 @@
-import { EventData } from '@app/common';
+import { EventData } from '@app/contracts';
 
 type DbEventData = {
   id: string;

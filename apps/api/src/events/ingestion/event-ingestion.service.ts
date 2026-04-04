@@ -3,7 +3,7 @@ import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
 import { randomUUID } from 'node:crypto';
 import { environment } from 'apps/api/src/environment';
-import { CreateEventJobData, EventData } from '@app/common';
+import { CreateEventJobData, EventData } from '@app/contracts';
 
 @Injectable()
 export class EventsIngestionService {

@@ -7,7 +7,11 @@ import { defineConfig } from 'eslint/config';
 
 export default defineConfig(
   {
-    ignores: ['eslint.config.mjs', 'webpack.config.js'],
+    ignores: [
+      '**/eslint.config.mjs',
+      '**/webpack.config.js',
+      'packages/database/generated/**',
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
@@ -34,7 +38,7 @@ export default defineConfig(
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-unsafe-assignment': 'off',
-      "prettier/prettier": ["error", { endOfLine: "auto" }],
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
   }
 );

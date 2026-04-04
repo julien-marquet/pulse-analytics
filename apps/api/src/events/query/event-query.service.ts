@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'apps/api/src/prisma.service';
 import { type Event as DbEvent } from '@app/database';
-import type { EventType } from '@app/common/src/EventTypes';
+import type { EventType } from '@app/contracts';
 
 @Injectable()
 export class EventsQueryService {
