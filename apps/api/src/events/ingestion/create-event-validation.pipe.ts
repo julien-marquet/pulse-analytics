@@ -1,9 +1,10 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
 import {
-  AddEventRequestDto,
-  GetDtoClassByEventType,
-} from './dtos/addEvent.request.dto';
+  CreateEventRequestDto,
+  CreateEventRequestTypeDtoMap,
+} from '../dtos/create-event.request.dto';
 import { validateAndTransformPayload } from 'apps/api/src/utils/validation.utils';
+import { EventType } from 'apps/api/src/events/dtos/event.types';
 
 interface RawEventPayload {
   eventType?: string;
@@ -11,13 +12,13 @@ interface RawEventPayload {
 }
 
 @Injectable()
-export class AddEventValidationPipe implements PipeTransform<
+export class CreateEventValidationPipe implements PipeTransform<
   RawEventPayload,
-  Promise<AddEventRequestDto>
+  Promise<CreateEventRequestDto>
 > {
-  async transform(payload: RawEventPayload): Promise<AddEventRequestDto> {
-    const dtoClass = GetDtoClassByEventType(payload.eventType);
-
+  async transform(payload: RawEventPayload): Promise<CreateEventRequestDto> {
+    const dtoClass =
+      CreateEventRequestTypeDtoMap[payload.eventType as EventType] ?? null;
     if (!dtoClass) {
       throw new BadRequestException(`Invalid event type: ${payload.eventType}`);
     }

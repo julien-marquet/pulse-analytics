@@ -1,36 +1,44 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { AddEventValidationPipe } from './events.pipe';
-import { EventsService } from './events.service';
-import { ValidationPipe } from 'apps/api/src/validation.pipe';
 import {
-  GetEventsQueryParamsDto,
-  GetStatsByDayQueryParamsDto,
-  GetStatsByTypeQueryParamsDto,
-  GetStatsOverviewQueryParamsDto,
-} from 'apps/api/src/events/dtos/events.request.dto';
-import type { AddEventRequestDto } from 'apps/api/src/events/dtos/addEvent.request.dto';
-import {
-  GetEventsResponse,
-  GetStatsByDayResponse,
-  GetStatsByTypeResponse,
-  GetStatsOverviewResponse,
-} from 'apps/api/src/events/dtos/events.response.dto';
+  Controller,
+  Post,
+  Body,
+  Get,
+  Query,
+  ValidationPipe,
+} from '@nestjs/common';
+import type { CreateEventRequestDto } from 'apps/api/src/events/dtos/create-event.request.dto';
+import { EventsIngestionService } from 'apps/api/src/events/ingestion/event-ingestion.service';
+import { CreateEventValidationPipe } from 'apps/api/src/events/ingestion/create-event-validation.pipe';
+import { EventsQueryService } from 'apps/api/src/events/query/event-query.service';
+import { EventsStatsService } from 'apps/api/src/events/stats/event-stats.service';
+import { GetEventsQueryParamsDto } from 'apps/api/src/events/dtos/get-events.request.dto';
+import { GetEventsResponse } from 'apps/api/src/events/dtos/get-events.response.dto';
+import { GetStatsByDayQueryParamsDto } from 'apps/api/src/events/dtos/get-stats-by-day.request.dto';
+import { GetStatsByDayResponse } from 'apps/api/src/events/dtos/get-stats-by-day.response.dto';
+import { GetStatsByTypeQueryParamsDto } from 'apps/api/src/events/dtos/get-stats-by-type.request.dto';
+import { GetStatsByTypeResponse } from 'apps/api/src/events/dtos/get-stats-by-type.response.dto';
+import { GetStatsOverviewQueryParamsDto } from 'apps/api/src/events/dtos/get-stats-overview.request.dto';
+import { GetStatsOverviewResponse } from 'apps/api/src/events/dtos/get-stats-overview.response.dto';
 
 @Controller('events')
 export class EventsController {
-  constructor(private eventsService: EventsService) {}
+  constructor(
+    private eventsIngestionService: EventsIngestionService,
+    private eventsQueryService: EventsQueryService,
+    private eventsStatsService: EventsStatsService,
+  ) {}
   @Post()
   async CreateEvent(
-    @Body(AddEventValidationPipe) eventDto: AddEventRequestDto,
+    @Body(CreateEventValidationPipe) eventDto: CreateEventRequestDto,
   ) {
-    await this.eventsService.AddEvent(eventDto);
+    await this.eventsIngestionService.AddEvent(eventDto);
   }
 
   @Get()
   async GetEvents(
     @Query(ValidationPipe) queryParams: GetEventsQueryParamsDto,
   ): Promise<GetEventsResponse> {
-    const { data, total } = await this.eventsService.GetEvents(
+    const { data, total } = await this.eventsQueryService.GetEvents(
       queryParams.page,
       queryParams.pageSize,
       queryParams.type,
@@ -51,7 +59,7 @@ export class EventsController {
     @Query(ValidationPipe)
     queryParams: GetStatsByDayQueryParamsDto,
   ): Promise<GetStatsByDayResponse> {
-    return this.eventsService.GetStatsByDay(
+    return this.eventsStatsService.GetStatsByDay(
       queryParams.date,
       queryParams.timeZone,
     );
@@ -62,7 +70,7 @@ export class EventsController {
     @Query(ValidationPipe)
     queryParams: GetStatsByTypeQueryParamsDto,
   ): Promise<GetStatsByTypeResponse> {
-    return this.eventsService.GetStatsByType(
+    return this.eventsStatsService.GetStatsByType(
       queryParams.eventType,
       queryParams.timeZone,
       queryParams.from,
@@ -75,7 +83,7 @@ export class EventsController {
     @Query(ValidationPipe)
     queryParams: GetStatsOverviewQueryParamsDto,
   ): Promise<GetStatsOverviewResponse> {
-    const res = await this.eventsService.GetStatsOverview(
+    const res = await this.eventsStatsService.GetStatsOverview(
       queryParams.timeZone,
       queryParams.from,
       queryParams.to,

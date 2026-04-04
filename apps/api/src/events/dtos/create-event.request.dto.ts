@@ -1,3 +1,5 @@
+import type { EventType } from 'apps/api/src/events/dtos/event.types';
+import { EventTypes } from 'apps/api/src/events/dtos/event.types';
 import { ClassConstructor, Type } from 'class-transformer';
 import {
   IsDate,
@@ -9,13 +11,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-export const EventTypes = {
-  PAGE_VIEWED: 'page-viewed',
-  BUTTON_CLICKED: 'button-clicked',
-} as const;
-export type EventType = (typeof EventTypes)[keyof typeof EventTypes];
-
-abstract class BaseEventDto {
+abstract class BaseCreateEventRequestDto {
   @IsIn(Object.values(EventTypes))
   eventType: EventType;
 
@@ -38,7 +34,7 @@ class PageViewedPropertiesDto {
   page: string;
 }
 
-export class PageViewedEventDto extends BaseEventDto {
+export class PageViewedCreateEventRequestDto extends BaseCreateEventRequestDto {
   declare eventType: typeof EventTypes.PAGE_VIEWED;
 
   @ValidateNested()
@@ -57,7 +53,7 @@ class ButtonClickedPropertiesDto {
   button: string;
 }
 
-export class ButtonClickedEventDto extends BaseEventDto {
+export class ButtonClickedCreateEventRequestDto extends BaseCreateEventRequestDto {
   declare eventType: typeof EventTypes.BUTTON_CLICKED;
 
   @ValidateNested()
@@ -66,17 +62,14 @@ export class ButtonClickedEventDto extends BaseEventDto {
   properties: ButtonClickedPropertiesDto;
 }
 
-export type AddEventRequestDto = PageViewedEventDto | ButtonClickedEventDto;
+export type CreateEventRequestDto =
+  | PageViewedCreateEventRequestDto
+  | ButtonClickedCreateEventRequestDto;
 
-export function GetDtoClassByEventType(
-  type: string | null | undefined,
-): ClassConstructor<AddEventRequestDto> | null {
-  switch (type) {
-    case EventTypes.PAGE_VIEWED:
-      return PageViewedEventDto;
-    case EventTypes.BUTTON_CLICKED:
-      return ButtonClickedEventDto;
-    default:
-      return null;
-  }
-}
+export const CreateEventRequestTypeDtoMap: Record<
+  EventType,
+  ClassConstructor<CreateEventRequestDto>
+> = {
+  [EventTypes.PAGE_VIEWED]: PageViewedCreateEventRequestDto,
+  [EventTypes.BUTTON_CLICKED]: ButtonClickedCreateEventRequestDto,
+};

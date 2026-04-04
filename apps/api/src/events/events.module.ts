@@ -1,18 +1,11 @@
 import { Module } from '@nestjs/common';
-import { EventsController } from './events.controller';
-import { EventsService } from './events.service';
-import { BullModule } from '@nestjs/bullmq';
-import { environment } from '../environment';
-import { PrismaService } from 'apps/api/src/prisma.service';
+import { EventsController } from 'apps/api/src/events/events.controller';
+import { EventsIngestionModule } from 'apps/api/src/events/ingestion/event-ingestion.module';
+import { EventsQueryModule } from 'apps/api/src/events/query/event-query.module';
+import { EventsStatsModule } from 'apps/api/src/events/stats/event.stats.module';
 
 @Module({
   controllers: [EventsController],
-  imports: [
-    BullModule.forRoot({
-      connection: { url: environment.get('REDIS_URL') },
-    }),
-    BullModule.registerQueue({ name: environment.get('EVENT_QUEUE_NAME') }),
-  ],
-  providers: [EventsService, PrismaService],
+  imports: [EventsIngestionModule, EventsQueryModule, EventsStatsModule],
 })
 export class EventsModule {}
