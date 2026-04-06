@@ -5,7 +5,7 @@ import {
   IsString,
   IsTimeZone,
 } from 'class-validator';
-import { ValidatedEnv } from '@app/common';
+import { ValidatedEnvironment } from '@app/common';
 import { Transform } from 'class-transformer';
 
 class EnvironmentVariables {
@@ -27,15 +27,6 @@ class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   DATABASE_URL: string;
-
-  @IsDefined()
-  @IsTimeZone({ each: true })
-  @IsDefined({ each: true })
-  @IsNotEmpty({ each: true })
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.split(',') : undefined,
-  )
-  TIMEZONES: string[];
 }
 
-export const environment = new ValidatedEnv(EnvironmentVariables);
+export const environment = new ValidatedEnvironment(EnvironmentVariables);

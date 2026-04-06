@@ -1,8 +1,8 @@
-import { IsIn, IsDateString } from 'class-validator';
-import { environment } from '../../environment';
+import { IsDateString } from 'class-validator';
+import { IsAllowedTimezone } from '../../utils/dto.decorators';
 
 export class GetStatsOverviewQueryParamsDto {
-  @IsIn(environment.get('TIMEZONES'))
+  @IsAllowedTimezone()
   timeZone: string = 'UTC';
 
   @IsDateString()

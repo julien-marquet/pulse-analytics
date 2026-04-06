@@ -97,11 +97,23 @@ export class EventsStatsService {
   }
 
   private GetTopEventTypes(dbStats: DbDailyEventStat[], selectionSize: number) {
-    return dbStats
-      .sort((a, b) => {
-        return b.count - a.count;
+    const eventTypesTotals = dbStats.reduce<Record<string, number>>(
+      (acc, curr) => {
+        if (acc[curr.eventType] === undefined) {
+          acc[curr.eventType] = curr.count;
+        } else {
+          acc[curr.eventType] += curr.count;
+        }
+        return acc;
+      },
+      {},
+    );
+
+    return Object.entries(eventTypesTotals)
+      .sort(([_, aCount], [__, bCount]) => {
+        return bCount - aCount;
       })
       .slice(0, selectionSize)
-      .map((dbStat) => ({ eventType: dbStat.eventType, count: dbStat.count }));
+      .map(([eventType, count]) => ({ eventType, count }));
   }
 }

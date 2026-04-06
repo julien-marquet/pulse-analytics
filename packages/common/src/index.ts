@@ -1,2 +1,2 @@
-export * from './ValidatedEnv';
+export * from './EnvironmentValidation';
 export * from './date.helpers';

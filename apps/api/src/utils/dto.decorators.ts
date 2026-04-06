@@ -1,6 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { Transform } from 'class-transformer';
-import { IsDefined, IsIn } from 'class-validator';
+import { IsDefined, IsIn, Validate } from 'class-validator';
+import { IsAllowedTimezoneConstraint } from './is-allowed-timezone.validator';
 
 export function IsArrayOfAllowedValues<T extends string[]>(allowedValues: T) {
   return applyDecorators(
@@ -10,4 +11,8 @@ export function IsArrayOfAllowedValues<T extends string[]>(allowedValues: T) {
     IsDefined({ each: true }),
     IsIn(Object.values(allowedValues), { each: true }),
   );
+}
+
+export function IsAllowedTimezone() {
+  return Validate(IsAllowedTimezoneConstraint);
 }
