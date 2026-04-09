@@ -1,13 +1,17 @@
-import { getUTCMidnightForTimezone } from '@app/common';
 import { EventData } from '@app/contracts';
 import { Prisma } from '@app/database';
 import { Injectable } from '@nestjs/common';
-import { environment } from './environment';
 import { PrismaService } from './prisma.service';
+import { TypedConfigService } from '@app/common';
+import { getDailyEventsStatsUpsertQueries } from './event-persistence.service.helpers';
+import { ConfigVariables } from './config';
 
 @Injectable()
 export class EventPersistenceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: TypedConfigService<ConfigVariables>,
+  ) {}
 
   public async PersistEvent(
     id: string,
@@ -18,60 +22,53 @@ export class EventPersistenceService {
     const emittedAt = new Date(eventData.emittedAt);
 
     await this.prisma.$transaction([
-      this.prisma.event.create({
-        data: {
-          id: id,
-          type: eventData.type,
-          properties: eventData.properties as unknown as Prisma.InputJsonValue,
-          processedAt,
-          emittedAt,
-          receivedAt,
-        },
-      }),
-      ...this.getDailyEventsStatsUpsertQueries(
+      this.getCreateEventPromise(
+        id,
         eventData,
-        emittedAt,
         receivedAt,
         processedAt,
+        emittedAt,
+      ),
+      ...this.getUpsertDailyEventsPromises(
+        eventData,
+        receivedAt,
+        processedAt,
+        emittedAt,
       ),
     ]);
   }
 
-  private getDailyEventsStatsUpsertQueries(
+  private getCreateEventPromise(
+    id: string,
     eventData: EventData,
-    emittedAt: Date,
     receivedAt: Date,
     processedAt: Date,
+    emittedAt: Date,
   ) {
-    const queries = [];
+    return this.prisma.event.create({
+      data: {
+        id: id,
+        type: eventData.type,
+        properties: eventData.properties as unknown as Prisma.InputJsonValue,
+        processedAt,
+        emittedAt,
+        receivedAt,
+      },
+    });
+  }
 
-    const jobProcessingLatency = processedAt.valueOf() - receivedAt.valueOf();
-
-    for (const timezone of environment.get('TIMEZONES')) {
-      const dayDateInTimezone = getUTCMidnightForTimezone(emittedAt, timezone);
-      queries.push(
-        this.prisma.dailyEventStat.upsert({
-          where: {
-            date_eventType_timeZone: {
-              timeZone: timezone,
-              date: dayDateInTimezone,
-              eventType: eventData.type,
-            },
-          },
-          create: {
-            timeZone: timezone,
-            eventType: eventData.type,
-            count: 1,
-            date: dayDateInTimezone,
-            processingLatencyTotalMs: jobProcessingLatency,
-          },
-          update: {
-            count: { increment: 1 },
-            processingLatencyTotalMs: { increment: jobProcessingLatency },
-          },
-        }),
-      );
-    }
-    return queries;
+  private getUpsertDailyEventsPromises(
+    eventData: EventData,
+    receivedAt: Date,
+    processedAt: Date,
+    emittedAt: Date,
+  ) {
+    return getDailyEventsStatsUpsertQueries(
+      eventData,
+      emittedAt,
+      receivedAt,
+      processedAt,
+      this.config.get('TIMEZONES'),
+    ).map((query) => this.prisma.dailyEventStat.upsert(query));
   }
 }

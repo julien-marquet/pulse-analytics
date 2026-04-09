@@ -1,6 +1,6 @@
 // utils/is-allowed-timezone.validator.ts
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { TypedConfigService } from '@app/common';
 import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -10,10 +10,10 @@ import { ConfigVariables } from '../config';
 @Injectable()
 @ValidatorConstraint({ name: 'isAllowedTimezone', async: false })
 export class IsAllowedTimezoneConstraint implements ValidatorConstraintInterface {
-  constructor(private config: ConfigService<ConfigVariables>) {}
+  constructor(private config: TypedConfigService<ConfigVariables>) {}
 
   validate(value: string) {
-    return this.config.get('TIMEZONES', { infer: true })!.includes(value);
+    return this.config.get('TIMEZONES').includes(value);
   }
 
   defaultMessage() {
