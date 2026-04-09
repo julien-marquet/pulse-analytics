@@ -184,13 +184,6 @@ describe('EventStatsService', () => {
       expect(res.latestEventAt).toBe('2026-04-01T12:00:00.000Z');
     });
 
-    it('should return NaN for averageProcessingLatencyMs when there are no stats', async () => {
-      prisma.event.findFirst.mockResolvedValue(null);
-      prisma.dailyEventStat.findMany.mockResolvedValue([]);
-      const res = await service.GetStatsOverview('UTC', from, to);
-      expect(res.averageProcessingLatencyMs).toBeNaN();
-    });
-
     it('should set latestEventAt to undefined when no event exists', async () => {
       prisma.event.findFirst.mockResolvedValue(null);
       prisma.dailyEventStat.findMany.mockResolvedValue([]);

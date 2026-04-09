@@ -2,5 +2,22 @@
   "js/ts.preferences.importModuleSpecifier": "shortest",
   "postman.settings.dotenv-detection-notification-visibility": false,
   "js/ts.tsdk.path": "./node_modules/typescript/lib",
-  "js/ts.preferences.autoImportSpecifierExcludeRegexes": ["packages/"]
+  "js/ts.preferences.autoImportSpecifierExcludeRegexes": [
+    "packages/"
+  ],
+  "jest.virtualFolders": [
+    {
+      "name": "api",
+      "rootPath": "apps/api"
+    },
+    {
+      "name": "ingestion-worker",
+      "rootPath": "apps/ingestion-worker"
+    },
+        {
+      "name": "common",
+      "rootPath": "packages/common"
+    }
+  ],
+  "jest.useJest30": true
 }

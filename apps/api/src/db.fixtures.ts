@@ -2,7 +2,7 @@ import { DatePrismaConverter } from '@app/common';
 import { DailyEventStat, Event } from '@app/database';
 
 export function makeDailyStatDbEntry(
-  overrides: Partial<DailyEventStat>,
+  overrides: Partial<DailyEventStat> = {},
 ): DailyEventStat {
   return {
     date: DatePrismaConverter.toPrisma('2000-01-01'),
@@ -11,7 +11,7 @@ export function makeDailyStatDbEntry(
     ...overrides,
   } as DailyEventStat;
 }
-export function makeEventDbEntry(overrides: Partial<Event>): Event {
+export function makeEventDbEntry(overrides: Partial<Event> = {}): Event {
   return {
     id: 'ID',
     type: 'TYPE',

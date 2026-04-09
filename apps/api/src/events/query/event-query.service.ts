@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { type Event as DbEvent } from '@app/database';
 import type { EventType } from '@app/contracts';
 import { PrismaService } from '../../prisma.service';
+import { addLatenciesToDbEvents } from './event-query-helpers';
 
 @Injectable()
 export class EventsQueryService {
@@ -14,7 +14,10 @@ export class EventsQueryService {
     from?: Date,
     to?: Date,
   ) {
-    const filters = this.GetEventsFilter(type, from, to);
+    const filters = {
+      type: this.GetEventsTypeFilter(type),
+      receivedAt: this.GetEventsDateFilter(from, to),
+    };
     const [data, total] = await Promise.all([
       this.prisma.event.findMany({
         take: pageSize,
@@ -24,34 +27,8 @@ export class EventsQueryService {
       this.prisma.event.count({ where: filters }),
     ]);
     return {
-      data: this.addLatenciesToDbEvents(data),
+      data: addLatenciesToDbEvents(data),
       total,
-    };
-  }
-
-  private addLatenciesToDbEvents(data: DbEvent[]) {
-    return data.map((dbEvent) => {
-      const ingestionLatencyMs =
-        new Date(dbEvent.receivedAt).valueOf() -
-        new Date(dbEvent.emittedAt).valueOf();
-      const processingLatencyMs =
-        new Date(dbEvent.processedAt).valueOf() -
-        new Date(dbEvent.receivedAt).valueOf();
-      return {
-        ...dbEvent,
-        latencies: {
-          ingestionLatencyMs,
-          processingLatencyMs,
-          totalLatencyMs: ingestionLatencyMs + processingLatencyMs,
-        },
-      };
-    });
-  }
-
-  private GetEventsFilter(type?: EventType[], from?: Date, to?: Date) {
-    return {
-      type: this.GetEventsTypeFilter(type),
-      receivedAt: this.GetEventsDateFilter(from, to),
     };
   }
 

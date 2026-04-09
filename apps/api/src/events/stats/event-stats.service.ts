@@ -4,6 +4,7 @@ import { type DailyEventStat as DbDailyEventStat } from '@app/database';
 import { DatePrismaConverter } from '@app/common';
 import { PrismaService } from '../../prisma.service';
 import { countDistinctValueOfField } from '../../utils/collection.utils';
+import { BuildStatsOverview } from './event-stats.helper';
 
 @Injectable()
 export class EventsStatsService {
@@ -46,15 +47,7 @@ export class EventsStatsService {
       },
     });
 
-    return {
-      totalEvents: entries.reduce((acc, entry) => {
-        return acc + entry.count;
-      }, 0),
-      averageProcessingLatencyMs: this.SumAverageProcessingLatency(entries),
-      eventTypesCount: countDistinctValueOfField(entries, 'eventType'),
-      topEventTypes: this.GetTopEventTypes(entries, 3),
-      latestEventAt: lastEvent?.emittedAt.toISOString(),
-    };
+    return BuildStatsOverview(entries, lastEvent?.emittedAt);
   }
 
   public async GetStatsByType(
@@ -82,38 +75,5 @@ export class EventsStatsService {
       ...i,
       date: DatePrismaConverter.fromPrismaToDateString(i.date),
     }));
-  }
-
-  private SumAverageProcessingLatency(dbStats: DbDailyEventStat[]) {
-    let count = 0;
-    let averagesSum = 0;
-
-    dbStats.forEach((stat) => {
-      count += stat.count;
-      averagesSum += stat.processingLatencyTotalMs;
-    });
-
-    return averagesSum / count;
-  }
-
-  private GetTopEventTypes(dbStats: DbDailyEventStat[], selectionSize: number) {
-    const eventTypesTotals = dbStats.reduce<Record<string, number>>(
-      (acc, curr) => {
-        if (acc[curr.eventType] === undefined) {
-          acc[curr.eventType] = curr.count;
-        } else {
-          acc[curr.eventType] += curr.count;
-        }
-        return acc;
-      },
-      {},
-    );
-
-    return Object.entries(eventTypesTotals)
-      .sort(([_, aCount], [__, bCount]) => {
-        return bCount - aCount;
-      })
-      .slice(0, selectionSize)
-      .map(([eventType, count]) => ({ eventType, count }));
   }
 }

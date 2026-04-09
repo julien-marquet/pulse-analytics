@@ -7,7 +7,7 @@ export class ValidatedEnvironment<TEnvironmentVariables extends object> {
   private readonly env: TEnvironmentVariables;
 
   constructor(EnvironmentVariables: Type<TEnvironmentVariables>) {
-    dotenv.config();
+    dotenv.config({ quiet: true });
 
     this.env = validateEnvironment(EnvironmentVariables, process.env);
   }

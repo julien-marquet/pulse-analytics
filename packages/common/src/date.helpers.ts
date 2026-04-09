@@ -1,4 +1,4 @@
-import { format, fromZonedTime } from 'date-fns-tz';
+import { DateTime } from 'luxon';
 
 /**
  * Converters for Prisma fields backed by the Postgres native `@db.Date` type.
@@ -45,11 +45,21 @@ export const DatePrismaConverter = {
    * // → 2026-04-01T04:00:00.000Z  (midnight EDT = UTC+4h)
    */
   fromPrismaToDate: (date: Date, timeZone: string = 'UTC'): Date => {
-    return fromZonedTime(date, timeZone);
+    return DateTime.fromISO(
+      date.toISOString().slice(0, -1), // strips Z so it's not interpreted as UTC
+      {
+        zone: timeZone,
+      },
+    ).toJSDate();
   },
 
   fromPrismaToDateString: (date: Date, timeZone: string = 'UTC'): string => {
-    return format(fromZonedTime(date, timeZone), 'yyyy-MM-dd');
+    return DateTime.fromISO(
+      date.toISOString().slice(0, -1), // strips Z so it's not interpreted as UTC
+      {
+        zone: timeZone,
+      },
+    ).toFormat('yyyy-MM-dd');
   },
 };
 

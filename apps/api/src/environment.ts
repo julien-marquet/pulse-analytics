@@ -1,12 +1,5 @@
-import {
-  IsDefined,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  IsTimeZone,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ValidatedEnvironment } from '@app/common';
-import { Transform } from 'class-transformer';
 
 class EnvironmentVariables {
   @IsString()

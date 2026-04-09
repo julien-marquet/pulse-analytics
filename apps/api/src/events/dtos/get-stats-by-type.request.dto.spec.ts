@@ -1,0 +1,138 @@
+import { BadRequestException } from '@nestjs/common';
+import { useContainer, validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
+import { EventTypes } from '@app/contracts';
+import { validateAndTransformPayload } from '../../utils/validation.utils';
+import { GetStatsByTypeQueryParamsDto } from './get-stats-by-type.request.dto';
+import { setupIsAllowedTimezoneContainer } from '../../utils/is-allowed-timezone.test-helpers';
+
+const makeValidPayload = () => ({
+  eventType: EventTypes.PAGE_VIEWED,
+  timeZone: 'UTC',
+});
+
+describe('GetStatsByTypeQueryParamsDto', () => {
+  beforeEach(() => setupIsAllowedTimezoneContainer(['UTC', 'Europe/Paris']));
+  afterEach(() => useContainer(null!));
+
+  it('should pass for a valid payload', async () => {
+    const result = await validateAndTransformPayload(
+      makeValidPayload(),
+      GetStatsByTypeQueryParamsDto,
+    );
+    expect(result).toBeInstanceOf(GetStatsByTypeQueryParamsDto);
+  });
+
+  it('should throw when eventType is missing', async () => {
+    const { eventType: _, ...payload } = makeValidPayload();
+    await expect(
+      validateAndTransformPayload(payload, GetStatsByTypeQueryParamsDto),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should throw when eventType is not a valid EventType', async () => {
+    await expect(
+      validateAndTransformPayload(
+        { ...makeValidPayload(), eventType: 'unknown' },
+        GetStatsByTypeQueryParamsDto,
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should pass for each valid EventType', async () => {
+    for (const eventType of Object.values(EventTypes)) {
+      const result = await validateAndTransformPayload(
+        { ...makeValidPayload(), eventType },
+        GetStatsByTypeQueryParamsDto,
+      );
+      expect(result.eventType).toBe(eventType);
+    }
+  });
+
+  it('should use default value of UTC when timeZone is absent', async () => {
+    const instance = plainToInstance(
+      GetStatsByTypeQueryParamsDto,
+      { eventType: EventTypes.PAGE_VIEWED },
+      { exposeDefaultValues: true },
+    );
+    const errors = await validate(instance);
+    expect(errors).toHaveLength(0);
+    expect(instance.timeZone).toBe('UTC');
+  });
+
+  it('should pass for a timezone in the configured list', async () => {
+    const result = await validateAndTransformPayload(
+      { ...makeValidPayload(), timeZone: 'Europe/Paris' },
+      GetStatsByTypeQueryParamsDto,
+    );
+    expect(result.timeZone).toBe('Europe/Paris');
+  });
+
+  it('should throw when timeZone is not in the configured list', async () => {
+    await expect(
+      validateAndTransformPayload(
+        { ...makeValidPayload(), timeZone: 'America/New_York' },
+        GetStatsByTypeQueryParamsDto,
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should throw when timeZone is an empty string', async () => {
+    await expect(
+      validateAndTransformPayload(
+        { ...makeValidPayload(), timeZone: '' },
+        GetStatsByTypeQueryParamsDto,
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should pass when from is absent', async () => {
+    const result = await validateAndTransformPayload(
+      makeValidPayload(),
+      GetStatsByTypeQueryParamsDto,
+    );
+    expect(result.from).toBeUndefined();
+  });
+
+  it('should pass when from is a valid ISO date string', async () => {
+    const result = await validateAndTransformPayload(
+      { ...makeValidPayload(), from: '2026-01-01' },
+      GetStatsByTypeQueryParamsDto,
+    );
+    expect(result.from).toBe('2026-01-01');
+  });
+
+  it('should throw when from is not a valid date string', async () => {
+    await expect(
+      validateAndTransformPayload(
+        { ...makeValidPayload(), from: 'not-a-date' },
+        GetStatsByTypeQueryParamsDto,
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should pass when to is absent', async () => {
+    const result = await validateAndTransformPayload(
+      makeValidPayload(),
+      GetStatsByTypeQueryParamsDto,
+    );
+    expect(result.to).toBeUndefined();
+  });
+
+  it('should pass when to is a valid ISO date string', async () => {
+    const result = await validateAndTransformPayload(
+      { ...makeValidPayload(), to: '2026-01-31' },
+      GetStatsByTypeQueryParamsDto,
+    );
+    expect(result.to).toBe('2026-01-31');
+  });
+
+  it('should throw when to is not a valid date string', async () => {
+    await expect(
+      validateAndTransformPayload(
+        { ...makeValidPayload(), to: 'not-a-date' },
+        GetStatsByTypeQueryParamsDto,
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+});
