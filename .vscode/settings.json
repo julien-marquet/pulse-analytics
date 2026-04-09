@@ -3,7 +3,7 @@
   "postman.settings.dotenv-detection-notification-visibility": false,
   "js/ts.tsdk.path": "./node_modules/typescript/lib",
   "js/ts.preferences.autoImportSpecifierExcludeRegexes": [
-    "packages/"
+    "packages/(?!.*\\.(test-helpers|fixtures)\\.ts)"
   ],
   "jest.virtualFolders": [
     {
@@ -14,7 +14,7 @@
       "name": "ingestion-worker",
       "rootPath": "apps/ingestion-worker"
     },
-        {
+    {
       "name": "common",
       "rootPath": "packages/common"
     }

@@ -1,5 +1,5 @@
 import { IsDefined, IsNotEmpty, IsString, IsTimeZone } from 'class-validator';
-import { ValidatedEnv } from '@app/common';
+import { ValidatedEnvironment } from '@app/common';
 import { Transform } from 'class-transformer';
 
 class EnvironmentVariables {
@@ -29,4 +29,4 @@ class EnvironmentVariables {
   TIMEZONES: string[];
 }
 
-export const environment = new ValidatedEnv(EnvironmentVariables);
+export const environment = new ValidatedEnvironment(EnvironmentVariables);

@@ -3,15 +3,8 @@ import {
   BullmqQueueMock,
 } from '../../bullmq.queue.mock';
 import { EventsIngestionService } from './event-ingestion.service';
-import { EventTypes } from '@app/contracts';
 import { environment } from '../../environment';
-
-const makeEventData = () =>
-  ({
-    type: EventTypes.PAGE_VIEWED,
-    emittedAt: new Date('2026-01-01T00:00:00.000Z'),
-    properties: { source: 'web', page: '/home' },
-  }) as const;
+import { makeEventData } from '@app/contracts/src/event.fixtures';
 
 describe('EventsIngestionService', () => {
   let service: EventsIngestionService;
