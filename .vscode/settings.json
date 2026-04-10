@@ -19,5 +19,5 @@
       "rootPath": "packages/common"
     }
   ],
-  "jest.useJest30": true
+  "jest.useJest30": true,
 }

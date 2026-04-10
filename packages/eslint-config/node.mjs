@@ -1,21 +1,11 @@
-import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { defineConfig } from 'eslint/config';
+import base from './base.mjs';
 
 export default defineConfig(
-  {
-    ignores: [
-      '**/eslint.config.mjs',
-      '**/webpack.config.js',
-      'packages/database/generated/**',
-      'packages/eslint-config/**',
-    ],
-  },
-  eslint.configs.recommended,
+  ...base,
   ...tseslint.configs.recommendedTypeChecked,
-  eslintPluginPrettierRecommended,
   {
     languageOptions: {
       globals: {
@@ -25,20 +15,16 @@ export default defineConfig(
       sourceType: 'module',
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
       },
     },
   },
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
-      'prettier/prettier': ['error', { endOfLine: 'auto' }],
-      "@typescript-eslint/no-unused-vars": ["warn", { "destructuredArrayIgnorePattern": "^_" }]
     },
   },
   {
@@ -46,5 +32,5 @@ export default defineConfig(
     rules: {
       '@typescript-eslint/unbound-method': 'off',
     },
-  }
+  },
 );
