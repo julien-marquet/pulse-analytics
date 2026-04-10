@@ -6,6 +6,8 @@ export default defineConfig(
   {
     ignores: [
       '**/eslint.config.mjs',
+      'webpack.config.js',
+      'dist'
     ],
   },
   ...nodeConfig,

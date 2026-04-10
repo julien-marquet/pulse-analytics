@@ -4,7 +4,7 @@ type EventResponseDto = {
   receivedAt: Date;
   emittedAt: Date;
   processedAt: Date;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   latencies: {
     ingestionLatencyMs: number;
     processingLatencyMs: number;

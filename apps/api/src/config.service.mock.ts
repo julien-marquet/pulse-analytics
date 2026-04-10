@@ -3,7 +3,9 @@ import { TypedConfigService } from '@app/common';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { ConfigVariables } from './config';
 
-export type ConfigServiceMock = DeepMockProxy<TypedConfigService<ConfigVariables>>;
+export type ConfigServiceMock = DeepMockProxy<
+  TypedConfigService<ConfigVariables>
+>;
 export const createConfigServiceMock = (
   defaults: ConfigVariables,
 ): ConfigServiceMock => {

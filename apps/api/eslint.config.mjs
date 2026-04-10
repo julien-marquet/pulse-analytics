@@ -5,7 +5,9 @@ import nodeConfig from '@app/eslint-config/node';
 export default defineConfig(
   {
     ignores: [
-      '**/eslint.config.mjs',
+      'eslint.config.mjs',
+      'webpack.config.js',
+      'dist'
     ],
   },
   ...nodeConfig,

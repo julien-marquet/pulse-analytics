@@ -1,12 +1,12 @@
-import type { PrismaConfig } from "prisma";
-import { env } from "prisma/config";
+import type { PrismaConfig } from 'prisma';
+import { env } from 'prisma/config';
 
 export default {
-  schema: "schema.prisma",
+  schema: 'schema.prisma',
   migrations: {
-    path: "migrations",
+    path: 'migrations',
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    url: env('DATABASE_URL'),
   },
 } satisfies PrismaConfig;

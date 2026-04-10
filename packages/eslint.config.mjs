@@ -7,6 +7,7 @@ export default defineConfig(
         ignores: [
             '**/eslint.config.mjs',
             './database/generated/**',
+            './database/prisma.config.ts',
             './eslint-config/**',
         ],
     },

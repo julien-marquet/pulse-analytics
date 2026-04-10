@@ -1,3 +1,3 @@
 export default function StatsPage() {
-  return 'Stats';
+  return "Stats";
 }

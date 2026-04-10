@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React, { ReactNode } from 'react';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { ReactNode } from "react";
 
 // type NavBarProps = {}
 
@@ -34,7 +34,7 @@ function NavBarItem({ children, activePathName, pathName }: NavBarItemProps) {
 
   return (
     <li>
-      <Link className={isActive ? 'bg-black' : 'bg-white'} href={pathName}>
+      <Link className={isActive ? "bg-black" : "bg-white"} href={pathName}>
         {children}
       </Link>
     </li>

@@ -20,4 +20,22 @@
     }
   ],
   "jest.useJest30": true,
+  "eslint.workingDirectories": [
+    {
+      "directory": "apps/api",
+      "changeProcessCWD": true
+    },
+    {
+      "directory": "apps/front",
+      "changeProcessCWD": true
+    },
+    {
+      "directory": "apps/ingestion-worker",
+      "changeProcessCWD": true
+    },
+    {
+      "directory": "packages",
+      "changeProcessCWD": true
+    },
+  ]
 }
