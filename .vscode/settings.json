@@ -36,6 +36,7 @@
     {
       "directory": "packages",
       "changeProcessCWD": true
-    },
-  ]
+    }
+  ],
+  "prisma.schemaPath": "packages/database/schema.prisma"
 }
