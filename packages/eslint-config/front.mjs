@@ -1,7 +1,9 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
-import base from './base.mjs';
+import base, { eslintBaseRules } from './base.mjs';
+
+export const eslintFrontRules = eslintBaseRules;
 
 export default defineConfig(
   ...base,
@@ -9,13 +11,6 @@ export default defineConfig(
   ...nextTs,
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
   {
-    rules: {
-      'prettier/prettier': ['error', { endOfLine: 'auto' }],
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
-        { destructuredArrayIgnorePattern: '^_' },
-      ],
-    },
+    rules: eslintFrontRules
   },
 );
