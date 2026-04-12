@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import AppSidebar from '@/components/app-sidebar/app-sidebar';
 import { Separator } from '@base-ui/react';
+import AppTopBar from '@/components/app-topbar/app-topbar';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -40,9 +41,7 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <div className="flex-col w-full">
-              <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-                <SidebarTrigger className="-ml-1" />
-              </header>
+              <AppTopBar />
               <main className="p-4">{children}</main>
             </div>
           </SidebarProvider>
