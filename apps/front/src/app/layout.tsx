@@ -1,8 +1,18 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import NavBar from './_components/NavBar';
-import TopBar from './_components/TopBar';
+
 import RootProvider from './providers';
+import { Inter } from 'next/font/google';
+import { cn } from '@/lib/utils';
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
+import AppSidebar from '@/components/app-sidebar/app-sidebar';
+import { Separator } from '@base-ui/react';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,14 +25,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={` h-full antialiased`}>
+    <html
+      lang="en"
+      className={cn(
+        'h-full',
+        'antialiased',
+        'font-sans',
+        'font-sans',
+        inter.variable,
+      )}
+    >
       <body className="min-h-full flex flex-col">
         <RootProvider>
-          <TopBar />
-          <div className="flex grow">
-            <NavBar />
-            <div className="basis-full">{children}</div>
-          </div>
+          <SidebarProvider>
+            <AppSidebar />
+            <div className="flex-col w-full">
+              <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                <SidebarTrigger className="-ml-1" />
+              </header>
+              <main className="p-4">{children}</main>
+            </div>
+          </SidebarProvider>
         </RootProvider>
       </body>
     </html>
