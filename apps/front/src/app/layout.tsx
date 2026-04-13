@@ -40,9 +40,9 @@ export default function RootLayout({
         <RootProvider>
           <SidebarProvider>
             <AppSidebar />
-            <div className="flex-col w-full">
+            <div className="flex-col w-full flex flex-1">
               <AppTopBar />
-              <main className="p-4">{children}</main>
+              <main className="flex-1 p-4">{children}</main>
             </div>
           </SidebarProvider>
         </RootProvider>
