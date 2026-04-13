@@ -9,7 +9,7 @@ describe('EventStatsHelpers', () => {
   describe('BuildStatsOverview', () => {
     it('Should return empty entries stats', () => {
       expect(BuildStatsOverview([], undefined)).toEqual({
-        averageProcessingLatencyMs: NaN,
+        averageProcessingLatencyMs: null,
         eventTypesCount: 0,
         latestEventAt: undefined,
         topEventTypes: [],
@@ -150,7 +150,7 @@ describe('EventStatsHelpers', () => {
   });
   describe('SumAverageProcessingLatency', () => {
     it('Should return NaN for empty array', () => {
-      expect(SumAverageProcessingLatency([])).toBe(NaN);
+      expect(SumAverageProcessingLatency([])).toBe(null);
     });
     it('Should return processingLatencyTotalMs for length 1 and count 1', () => {
       expect(

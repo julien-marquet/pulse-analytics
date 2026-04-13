@@ -59,10 +59,19 @@ export class EventsController {
     @Query(ValidationPipe)
     queryParams: GetStatsByDayQueryParamsDto,
   ): Promise<GetStatsByDayResponse> {
-    return this.eventsStatsService.GetStatsByDay(
-      queryParams.date,
+    const eventsByDay = await this.eventsStatsService.GetStatsByDay(
       queryParams.timeZone,
+      queryParams.from,
+      queryParams.to,
     );
+    return {
+      period: {
+        from: queryParams.from,
+        to: queryParams.to,
+        timeZone: queryParams.timeZone,
+      },
+      eventsByDay,
+    };
   }
 
   @Get('/stats/by-type')

@@ -8,22 +8,28 @@ import { BuildStatsOverview } from './event-stats.helper';
 export class EventsStatsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async GetStatsByDay(dateString: string, timeZone: string) {
-    const res = await this.prisma.dailyEventStat.findMany({
-      select: {
-        count: true,
-        eventType: true,
-      },
+  public async GetStatsByDay(timeZone: string, from: string, to: string) {
+    const res = await this.prisma.dailyEventStat.groupBy({
+      by: 'date',
       where: {
-        date: { equals: DatePrismaConverter.toPrisma(dateString) },
+        date: {
+          lte: DatePrismaConverter.toPrisma(to),
+          gte: DatePrismaConverter.toPrisma(from),
+        },
         timeZone,
       },
-      orderBy: { eventType: 'asc' },
+      _sum: { count: true },
+      orderBy: { date: 'asc' },
     });
-    return res.map((r) => ({ count: r.count, eventType: r.eventType }));
+
+    return res.map((r) => ({
+      count: r._sum.count ?? 0,
+      date: DatePrismaConverter.fromPrismaToDateString(r.date),
+    }));
   }
 
   public async GetStatsOverview(timeZone: string, from: string, to: string) {
+    console.log(timeZone);
     const lastEvent = await this.prisma.event.findFirst({
       orderBy: {
         emittedAt: 'desc',

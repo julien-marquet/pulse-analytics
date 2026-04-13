@@ -17,6 +17,7 @@ export function BuildStatsOverview(
 }
 
 export function SumAverageProcessingLatency(dbStats: DbDailyEventStat[]) {
+  console.log(dbStats);
   let count = 0;
   let averagesSum = 0;
 
@@ -25,7 +26,9 @@ export function SumAverageProcessingLatency(dbStats: DbDailyEventStat[]) {
     averagesSum += stat.processingLatencyTotalMs;
   });
 
-  return averagesSum / count;
+  console.log(averagesSum / count);
+
+  return count === 0 ? null : averagesSum / count;
 }
 
 export function GetTopEventTypes(

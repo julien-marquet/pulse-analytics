@@ -7,6 +7,7 @@ export class GetStatsByTypeQueryParamsDto {
   @IsIn(Object.values(EventTypes))
   eventType: EventType;
 
+  @IsOptional()
   @IsAllowedTimezone()
   timeZone: string = 'UTC';
 

@@ -1,6 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { useContainer, validate } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
+import { useContainer } from 'class-validator';
 import { validateAndTransformPayload } from '../../utils/validation.utils';
 import { GetStatsOverviewQueryParamsDto } from './get-stats-overview.request.dto';
 import { setupIsAllowedTimezoneContainer } from '../../utils/is-allowed-timezone.test-helpers';
@@ -24,14 +23,12 @@ describe('GetStatsOverviewQueryParamsDto', () => {
   });
 
   it('should use default value of UTC when timeZone is absent', async () => {
-    const instance = plainToInstance(
+    const { timeZone: _, ...payload } = makeValidPayload();
+    const result = await validateAndTransformPayload(
+      payload,
       GetStatsOverviewQueryParamsDto,
-      { from: '2026-01-01', to: '2026-01-31' },
-      { exposeDefaultValues: true },
     );
-    const errors = await validate(instance);
-    expect(errors).toHaveLength(0);
-    expect(instance.timeZone).toBe('UTC');
+    expect(result.timeZone).toBe('UTC');
   });
 
   it('should pass for a timezone in the configured list', async () => {

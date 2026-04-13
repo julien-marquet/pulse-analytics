@@ -17,32 +17,68 @@ describe('EventStatsService', () => {
   });
 
   describe('GetStatsByDay', () => {
-    it('should return mapped entries for the given date and timezone', async () => {
-      prisma.dailyEventStat.findMany.mockResolvedValue([
-        makeDailyStatDbEntry({ eventType: 'button-clicked', count: 3 }),
-        makeDailyStatDbEntry({ eventType: 'page-viewed', count: 7 }),
-      ]);
+    const from = '2026-03-01';
+    const to = '2026-04-01';
 
-      const res = await service.GetStatsByDay('2026-04-01', 'UTC');
+    it('should return mapped results with count and date', async () => {
+      prisma.dailyEventStat.groupBy.mockResolvedValue([
+        {
+          date: DatePrismaConverter.toPrisma('2026-03-01'),
+          _sum: { count: 5 },
+        },
+        {
+          date: DatePrismaConverter.toPrisma('2026-03-02'),
+          _sum: { count: 10 },
+        },
+      ] as any);
 
-      expect(prisma.dailyEventStat.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: {
-            date: { equals: DatePrismaConverter.toPrisma('2026-04-01') },
-            timeZone: 'UTC',
-          },
-          orderBy: { eventType: 'asc' },
-        }),
-      );
+      const res = await service.GetStatsByDay('UTC', from, to);
+
       expect(res).toEqual([
-        { count: 3, eventType: 'button-clicked' },
-        { count: 7, eventType: 'page-viewed' },
+        { count: 5, date: '2026-03-01' },
+        { count: 10, date: '2026-03-02' },
       ]);
     });
 
-    it('should return an empty array when there are no stats', async () => {
-      prisma.dailyEventStat.findMany.mockResolvedValue([]);
-      const res = await service.GetStatsByDay('2026-04-01', 'UTC');
+    it('should default count to 0 when _sum.count is null', async () => {
+      prisma.dailyEventStat.groupBy.mockResolvedValue([
+        {
+          date: DatePrismaConverter.toPrisma('2026-03-01'),
+          _sum: { count: null },
+        },
+      ] as any);
+
+      const res = await service.GetStatsByDay('UTC', from, to);
+
+      expect(res).toEqual([{ count: 0, date: '2026-03-01' }]);
+    });
+
+    it('should query prisma with the correct date range and timezone', async () => {
+      prisma.dailyEventStat.groupBy.mockResolvedValue([]);
+
+      await service.GetStatsByDay('UTC', from, to);
+
+      expect(prisma.dailyEventStat.groupBy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          by: 'date',
+          where: {
+            date: {
+              gte: DatePrismaConverter.toPrisma(from),
+              lte: DatePrismaConverter.toPrisma(to),
+            },
+            timeZone: 'UTC',
+          },
+          _sum: { count: true },
+          orderBy: { date: 'asc' },
+        }),
+      );
+    });
+
+    it('should return an empty array when there are no results', async () => {
+      prisma.dailyEventStat.groupBy.mockResolvedValue([]);
+
+      const res = await service.GetStatsByDay('UTC', from, to);
+
       expect(res).toEqual([]);
     });
   });
