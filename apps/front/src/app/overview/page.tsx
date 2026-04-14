@@ -1,4 +1,5 @@
-import TopEventTypes from '@/components/events/top-events';
+import ChartEventsPerDay from '@/components/events/chart-events-per-day';
+import ChartTopEventTypes from '@/components/events/chart-top-event-types';
 import { KpiItem } from '@/components/ui/kpi';
 import { ApiClient } from '@/lib/api/api';
 import { EventsApi } from '@/lib/api/events-api';
@@ -53,7 +54,14 @@ export default async function OverviewPage() {
         />
         <KpiItem label="Last received" value={lastReceived ?? 'X'} />
       </div>
-      <TopEventTypes eventTypes={overviewData.topEventTypes} />
+      <div className="grid grid-cols-2 gap-4">
+        <ChartTopEventTypes eventTypes={overviewData.topEventTypes} />
+        <ChartEventsPerDay
+          eventsPerDay={statsByDayData.eventsByDay}
+          from={statsByDayData.period.from}
+          to={statsByDayData.period.to}
+        />
+      </div>
     </div>
   );
 }

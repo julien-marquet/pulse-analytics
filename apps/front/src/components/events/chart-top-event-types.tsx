@@ -13,11 +13,11 @@ interface TopEventsProps {
   }[];
 }
 
-export default function TopEventTypes({ eventTypes }: TopEventsProps) {
+export default function ChartTopEventTypes({ eventTypes }: TopEventsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top Events</CardTitle>
+        <CardTitle>Top event types for the last 7 days</CardTitle>
         <CardDescription>
           <div className="flex flex-col gap-2">
             {eventTypes.map(({ count, eventType }) => (
