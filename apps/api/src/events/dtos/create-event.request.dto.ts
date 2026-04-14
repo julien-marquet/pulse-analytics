@@ -1,19 +1,10 @@
-import { ClassConstructor, Type } from 'class-transformer';
-import {
-  IsDate,
-  IsDefined,
-  IsIn,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
-import { EventTypes } from '@app/contracts';
-import type { EventType } from '@app/contracts';
+import { IsDate, IsOptional, IsString, IsNotEmpty } from 'class-validator';
+import { IsJsonObject } from '../../utils/dto.decorators';
 
-abstract class BaseCreateEventRequestDto {
-  @IsIn(Object.values(EventTypes))
-  type: EventType;
+export class CreateEventRequestDto {
+  @IsString()
+  @IsNotEmpty()
+  type: string;
 
   @IsDate()
   emittedAt: Date;
@@ -22,54 +13,8 @@ abstract class BaseCreateEventRequestDto {
   @IsString()
   @IsNotEmpty()
   id: string | undefined;
+
+  @IsOptional()
+  @IsJsonObject()
+  properties: Record<string, unknown> = {};
 }
-
-class PageViewedPropertiesDto {
-  @IsString()
-  @IsNotEmpty()
-  source: string;
-
-  @IsString()
-  @IsNotEmpty()
-  page: string;
-}
-
-export class PageViewedCreateEventRequestDto extends BaseCreateEventRequestDto {
-  declare type: typeof EventTypes.PAGE_VIEWED;
-
-  @ValidateNested()
-  @IsDefined()
-  @Type(() => PageViewedPropertiesDto)
-  properties: PageViewedPropertiesDto;
-}
-
-class ButtonClickedPropertiesDto {
-  @IsString()
-  @IsNotEmpty()
-  source: string;
-
-  @IsString()
-  @IsNotEmpty()
-  button: string;
-}
-
-export class ButtonClickedCreateEventRequestDto extends BaseCreateEventRequestDto {
-  declare type: typeof EventTypes.BUTTON_CLICKED;
-
-  @ValidateNested()
-  @IsDefined()
-  @Type(() => ButtonClickedPropertiesDto)
-  properties: ButtonClickedPropertiesDto;
-}
-
-export type CreateEventRequestDto =
-  | PageViewedCreateEventRequestDto
-  | ButtonClickedCreateEventRequestDto;
-
-export const CreateEventRequestTypeDtoMap: Record<
-  EventType,
-  ClassConstructor<CreateEventRequestDto>
-> = {
-  [EventTypes.PAGE_VIEWED]: PageViewedCreateEventRequestDto,
-  [EventTypes.BUTTON_CLICKED]: ButtonClickedCreateEventRequestDto,
-};

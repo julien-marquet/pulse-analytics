@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { EventType } from '@app/contracts';
 import { DatePrismaConverter } from '@app/common';
 import { PrismaService } from '../../prisma.service';
 import { BuildStatsOverview } from './event-stats.helper';
@@ -55,7 +54,7 @@ export class EventsStatsService {
   }
 
   public async GetStatsByType(
-    eventType: EventType,
+    eventType: string,
     timeZone: string,
     from?: string,
     to?: string,

@@ -1,5 +1,4 @@
 import { BadRequestException } from '@nestjs/common';
-import { EventTypes } from '@app/contracts';
 import { validateAndTransformPayload } from '../../utils/validation.utils';
 import { GetEventsQueryParamsDto } from './get-events.request.dto';
 
@@ -129,31 +128,20 @@ describe('GetEventsQueryParamsDto', () => {
       const result = await validateAndTransformPayload(
         {
           ...makeValidPayload(),
-          type: `${EventTypes.PAGE_VIEWED},${EventTypes.BUTTON_CLICKED}`,
+          type: `PAGE_VIEWED,BUTTON_CLICKED`,
         },
         GetEventsQueryParamsDto,
       );
-      expect(result.type).toEqual([
-        EventTypes.PAGE_VIEWED,
-        EventTypes.BUTTON_CLICKED,
-      ]);
+
+      expect(result.type).toEqual(['PAGE_VIEWED', 'BUTTON_CLICKED']);
     });
 
     it('should pass when type contains a single valid event type', async () => {
       const result = await validateAndTransformPayload(
-        { ...makeValidPayload(), type: EventTypes.PAGE_VIEWED },
+        { ...makeValidPayload(), type: 'PAGE_VIEWED' },
         GetEventsQueryParamsDto,
       );
-      expect(result.type).toEqual([EventTypes.PAGE_VIEWED]);
-    });
-
-    it('should throw when type contains an unknown event type', async () => {
-      await expect(
-        validateAndTransformPayload(
-          { ...makeValidPayload(), type: 'unknown-type' },
-          GetEventsQueryParamsDto,
-        ),
-      ).rejects.toThrow(BadRequestException);
+      expect(result.type).toEqual(['PAGE_VIEWED']);
     });
   });
 });

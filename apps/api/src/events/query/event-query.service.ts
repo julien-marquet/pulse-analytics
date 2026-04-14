@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import type { EventType } from '@app/contracts';
 import { PrismaService } from '../../prisma.service';
 import { addLatenciesToDbEvents } from './event-query-helpers';
 
@@ -10,7 +9,7 @@ export class EventsQueryService {
   public async GetEvents(
     page: number,
     pageSize: number,
-    type?: EventType[],
+    type?: string[],
     from?: Date,
     to?: Date,
   ) {
@@ -32,7 +31,7 @@ export class EventsQueryService {
     };
   }
 
-  private GetEventsTypeFilter(type?: EventType[]) {
+  private GetEventsTypeFilter(type?: string[]) {
     if (!type || type.length === 0) return undefined;
     return { in: type };
   }

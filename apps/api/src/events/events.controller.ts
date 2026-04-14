@@ -6,7 +6,6 @@ import {
   Query,
   ValidationPipe,
 } from '@nestjs/common';
-import { CreateEventValidationPipe } from './create-event-validation.pipe';
 import type { CreateEventRequestDto } from './dtos/create-event.request.dto';
 import { GetEventsQueryParamsDto } from './dtos/get-events.request.dto';
 import { GetEventsResponse } from './dtos/get-events.response.dto';
@@ -28,9 +27,7 @@ export class EventsController {
     private eventsStatsService: EventsStatsService,
   ) {}
   @Post()
-  async CreateEvent(
-    @Body(CreateEventValidationPipe) eventDto: CreateEventRequestDto,
-  ) {
+  async CreateEvent(@Body(ValidationPipe) eventDto: CreateEventRequestDto) {
     await this.eventsIngestionService.AddEvent(eventDto.id, eventDto);
   }
 

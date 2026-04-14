@@ -1,100 +1,124 @@
 import { BadRequestException } from '@nestjs/common';
-import { EventTypes } from '@app/contracts';
-import {
-  PageViewedCreateEventRequestDto,
-  ButtonClickedCreateEventRequestDto,
-} from './create-event.request.dto';
-import { describeBaseCreateEventRequestDto } from './create-event.request.dto.test-helpers';
 import { validateAndTransformPayload } from '../../utils/validation.utils';
+import { CreateEventRequestDto } from './create-event.request.dto';
 
-describe('PageViewedCreateEventRequestDto', () => {
-  const makeValidPayload = () => ({
-    type: EventTypes.PAGE_VIEWED,
-    emittedAt: '2026-01-01T00:00:00.000Z',
-    properties: { source: 'web', page: '/home' },
-  });
-
-  describeBaseCreateEventRequestDto(
-    PageViewedCreateEventRequestDto,
-    makeValidPayload,
-  );
-
-  it('should pass for a valid payload', async () => {
-    const result = await validateAndTransformPayload(
-      makeValidPayload(),
-      PageViewedCreateEventRequestDto,
-    );
-    expect(result).toBeInstanceOf(PageViewedCreateEventRequestDto);
-  });
-
-  it('should throw when properties is missing', async () => {
-    const { properties: _, ...payload } = makeValidPayload();
-    await expect(
-      validateAndTransformPayload(payload, PageViewedCreateEventRequestDto),
-    ).rejects.toThrow(BadRequestException);
-  });
-
-  it('should throw when properties.source is missing', async () => {
-    await expect(
-      validateAndTransformPayload(
-        { ...makeValidPayload(), properties: { page: '/home' } },
-        PageViewedCreateEventRequestDto,
-      ),
-    ).rejects.toThrow(BadRequestException);
-  });
-
-  it('should throw when properties.page is missing', async () => {
-    await expect(
-      validateAndTransformPayload(
-        { ...makeValidPayload(), properties: { source: 'web' } },
-        PageViewedCreateEventRequestDto,
-      ),
-    ).rejects.toThrow(BadRequestException);
-  });
+const makeValidPayload = () => ({
+  type: 'PAGE_VIEWED',
+  emittedAt: '2026-01-01T00:00:00.000Z',
 });
 
-describe('ButtonClickedCreateEventRequestDto', () => {
-  const makeValidPayload = () => ({
-    type: EventTypes.BUTTON_CLICKED,
-    emittedAt: '2026-01-01T00:00:00.000Z',
-    properties: { source: 'web', button: 'submit' },
-  });
-
-  describeBaseCreateEventRequestDto(
-    ButtonClickedCreateEventRequestDto,
-    makeValidPayload,
-  );
-
-  it('should pass for a valid payload', async () => {
+describe('CreateEventRequestDto', () => {
+  it('should pass for a minimal valid payload', async () => {
     const result = await validateAndTransformPayload(
       makeValidPayload(),
-      ButtonClickedCreateEventRequestDto,
+      CreateEventRequestDto,
     );
-    expect(result).toBeInstanceOf(ButtonClickedCreateEventRequestDto);
+    expect(result).toBeInstanceOf(CreateEventRequestDto);
   });
 
-  it('should throw when properties is missing', async () => {
-    const { properties: _, ...payload } = makeValidPayload();
-    await expect(
-      validateAndTransformPayload(payload, ButtonClickedCreateEventRequestDto),
-    ).rejects.toThrow(BadRequestException);
+  describe('type', () => {
+    it('should throw when type is missing', async () => {
+      const { type: _, ...payload } = makeValidPayload();
+      await expect(
+        validateAndTransformPayload(payload, CreateEventRequestDto),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw when type is an empty string', async () => {
+      await expect(
+        validateAndTransformPayload(
+          { ...makeValidPayload(), type: '' },
+          CreateEventRequestDto,
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
   });
 
-  it('should throw when properties.button is missing', async () => {
-    await expect(
-      validateAndTransformPayload(
-        { ...makeValidPayload(), properties: { source: 'web' } },
-        ButtonClickedCreateEventRequestDto,
-      ),
-    ).rejects.toThrow(BadRequestException);
+  describe('emittedAt', () => {
+    it('should coerce an ISO string to a Date instance', async () => {
+      const result = await validateAndTransformPayload(
+        makeValidPayload(),
+        CreateEventRequestDto,
+      );
+      expect(result.emittedAt).toBeInstanceOf(Date);
+    });
+
+    it('should throw when emittedAt is missing', async () => {
+      const { emittedAt: _, ...payload } = makeValidPayload();
+      await expect(
+        validateAndTransformPayload(payload, CreateEventRequestDto),
+      ).rejects.toThrow(BadRequestException);
+    });
   });
 
-  it('should throw when properties.source is missing', async () => {
-    await expect(
-      validateAndTransformPayload(
-        { ...makeValidPayload(), properties: { button: 'submit' } },
-        ButtonClickedCreateEventRequestDto,
-      ),
-    ).rejects.toThrow(BadRequestException);
+  describe('id', () => {
+    it('should pass when id is provided', async () => {
+      const result = await validateAndTransformPayload(
+        { ...makeValidPayload(), id: 'my-id' },
+        CreateEventRequestDto,
+      );
+      expect(result.id).toBe('my-id');
+    });
+
+    it('should pass when id is absent', async () => {
+      const result = await validateAndTransformPayload(
+        makeValidPayload(),
+        CreateEventRequestDto,
+      );
+      expect(result.id).toBeUndefined();
+    });
+
+    it('should throw when id is an empty string', async () => {
+      await expect(
+        validateAndTransformPayload(
+          { ...makeValidPayload(), id: '' },
+          CreateEventRequestDto,
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('properties', () => {
+    it('should default to an empty object when absent', async () => {
+      const result = await validateAndTransformPayload(
+        makeValidPayload(),
+        CreateEventRequestDto,
+      );
+      expect(result.properties).toEqual({});
+    });
+
+    it('should pass for a valid JSON object', async () => {
+      const result = await validateAndTransformPayload(
+        { ...makeValidPayload(), properties: { key: 'value', count: 1 } },
+        CreateEventRequestDto,
+      );
+      expect(result.properties).toEqual({ key: 'value', count: 1 });
+    });
+
+    it('should pass for a nested JSON object', async () => {
+      const result = await validateAndTransformPayload(
+        { ...makeValidPayload(), properties: { nested: { a: 1 } } },
+        CreateEventRequestDto,
+      );
+      expect(result.properties).toEqual({ nested: { a: 1 } });
+    });
+
+    it('should throw when properties is a string', async () => {
+      await expect(
+        validateAndTransformPayload(
+          { ...makeValidPayload(), properties: 'not-an-object' },
+          CreateEventRequestDto,
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw when properties is an array', async () => {
+      await expect(
+        validateAndTransformPayload(
+          { ...makeValidPayload(), properties: [1, 2, 3] },
+          CreateEventRequestDto,
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
   });
 });

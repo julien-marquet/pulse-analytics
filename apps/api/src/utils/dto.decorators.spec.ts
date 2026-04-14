@@ -1,12 +1,10 @@
 import { plainToInstance } from 'class-transformer';
 import { useContainer, validate } from 'class-validator';
-import { IsAllowedTimezone, IsArrayOfAllowedValues } from './dto.decorators';
+import { IsAllowedTimezone, IsStringArray } from './dto.decorators';
 import { setupIsAllowedTimezoneContainer } from './is-allowed-timezone.test-helpers';
 
-const ALLOWED = ['a', 'b', 'c'] as const;
-
 class IsArrayOfAllowedValuesTestDto {
-  @IsArrayOfAllowedValues([...ALLOWED])
+  @IsStringArray()
   values: string[];
 }
 
@@ -53,7 +51,7 @@ describe('DtoDecorators', () => {
     });
   });
 
-  describe('IsArrayOfAllowedValues', () => {
+  describe('IsStringArray', () => {
     it('should split a comma-separated string into an array', () => {
       const instance = plainToInstance(IsArrayOfAllowedValuesTestDto, {
         values: 'a,b',
@@ -68,20 +66,12 @@ describe('DtoDecorators', () => {
       expect(instance.values).toEqual(['a']);
     });
 
-    it('should pass when all values are allowed', async () => {
+    it('should pass when all values are string', async () => {
       const instance = plainToInstance(IsArrayOfAllowedValuesTestDto, {
         values: 'a,b',
       });
       const errors = await validate(instance);
       expect(errors).toHaveLength(0);
-    });
-
-    it('should fail when a value is not in the allowed list', async () => {
-      const instance = plainToInstance(IsArrayOfAllowedValuesTestDto, {
-        values: 'a,z',
-      });
-      const errors = await validate(instance);
-      expect(errors).toHaveLength(1);
     });
 
     it('should fail when the field is missing', async () => {

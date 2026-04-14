@@ -1,6 +1,5 @@
 import { IsNumber, Min, Max, IsDate, IsOptional } from 'class-validator';
-import { EventTypes, EventType } from '@app/contracts';
-import { IsArrayOfAllowedValues } from '../../utils/dto.decorators';
+import { IsStringArray } from '../../utils/dto.decorators';
 
 export class GetEventsQueryParamsDto {
   @IsNumber()
@@ -20,7 +19,7 @@ export class GetEventsQueryParamsDto {
   @IsOptional()
   to?: Date;
 
-  @IsArrayOfAllowedValues(Object.values(EventTypes))
+  @IsStringArray()
   @IsOptional()
-  type?: EventType[];
+  type?: string[];
 }

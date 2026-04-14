@@ -1,11 +1,15 @@
-import { IsIn, IsDateString, IsOptional } from 'class-validator';
-import { EventTypes } from '@app/contracts';
-import type { EventType } from '@app/contracts';
+import {
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+} from 'class-validator';
 import { IsAllowedTimezone } from '../../utils/dto.decorators';
 
 export class GetStatsByTypeQueryParamsDto {
-  @IsIn(Object.values(EventTypes))
-  eventType: EventType;
+  @IsNotEmpty()
+  @IsString()
+  eventType: string;
 
   @IsOptional()
   @IsAllowedTimezone()

@@ -1,12 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import { EventTypes } from '@app/contracts';
 import { validateAndTransformPayload } from '../../utils/validation.utils';
 import { GetStatsByTypeQueryParamsDto } from './get-stats-by-type.request.dto';
 import { setupIsAllowedTimezoneContainer } from '../../utils/is-allowed-timezone.test-helpers';
 
 const makeValidPayload = () => ({
-  eventType: EventTypes.PAGE_VIEWED,
+  eventType: 'PAGE_VIEWED',
   timeZone: 'UTC',
 });
 
@@ -27,25 +26,6 @@ describe('GetStatsByTypeQueryParamsDto', () => {
     await expect(
       validateAndTransformPayload(payload, GetStatsByTypeQueryParamsDto),
     ).rejects.toThrow(BadRequestException);
-  });
-
-  it('should throw when eventType is not a valid EventType', async () => {
-    await expect(
-      validateAndTransformPayload(
-        { ...makeValidPayload(), eventType: 'unknown' },
-        GetStatsByTypeQueryParamsDto,
-      ),
-    ).rejects.toThrow(BadRequestException);
-  });
-
-  it('should pass for each valid EventType', async () => {
-    for (const eventType of Object.values(EventTypes)) {
-      const result = await validateAndTransformPayload(
-        { ...makeValidPayload(), eventType },
-        GetStatsByTypeQueryParamsDto,
-      );
-      expect(result.eventType).toBe(eventType);
-    }
   });
 
   it('should use default value of UTC when timeZone is absent', async () => {

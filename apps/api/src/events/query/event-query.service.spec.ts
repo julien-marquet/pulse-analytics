@@ -4,7 +4,6 @@ import {
   PrismaServiceMock,
 } from '../../prisma.service.mock';
 import { EventsQueryService } from './event-query.service';
-import { EventTypes } from '@app/contracts';
 
 describe('EventQueryService', () => {
   let service: EventsQueryService;
@@ -56,10 +55,10 @@ describe('EventQueryService', () => {
       prisma.event.findMany.mockResolvedValue([]);
       prisma.event.count.mockResolvedValue(0);
 
-      await service.GetEvents(1, 10, [EventTypes.PAGE_VIEWED]);
+      await service.GetEvents(1, 10, ['PAGE_VIEWED']);
 
       const expectedWhere = expect.objectContaining({
-        type: { in: [EventTypes.PAGE_VIEWED] },
+        type: { in: ['PAGE_VIEWED'] },
       });
       expect(prisma.event.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: expectedWhere }),
@@ -117,7 +116,7 @@ describe('EventQueryService', () => {
       prisma.event.findMany.mockResolvedValue([]);
       prisma.event.count.mockResolvedValue(0);
 
-      await service.GetEvents(1, 10, [EventTypes.BUTTON_CLICKED], from);
+      await service.GetEvents(1, 10, ['BUTTON_CLICKED'], from);
 
       const findManyWhere = prisma.event.findMany.mock.calls[0][0]?.where;
       const countWhere = prisma.event.count.mock.calls[0][0]?.where;
