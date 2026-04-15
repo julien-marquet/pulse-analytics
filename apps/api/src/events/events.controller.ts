@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Query,
-  ValidationPipe,
-} from '@nestjs/common';
-import type { CreateEventRequestDto } from './dtos/create-event.request.dto';
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import { GetEventsQueryParamsDto } from './dtos/get-events.request.dto';
 import { GetEventsResponse } from './dtos/get-events.response.dto';
 import { GetStatsByDayQueryParamsDto } from './dtos/get-stats-by-day.request.dto';
@@ -18,6 +10,8 @@ import { GetStatsOverviewResponse } from './dtos/get-stats-overview.response.dto
 import { EventsIngestionService } from './ingestion/event-ingestion.service';
 import { EventsQueryService } from './query/event-query.service';
 import { EventsStatsService } from './stats/event-stats.service';
+import { ValidationPipe } from '../validation.pipe';
+import { CreateEventRequestDto } from './dtos/create-event.request.dto';
 
 @Controller('events')
 export class EventsController {
@@ -93,6 +87,7 @@ export class EventsController {
       queryParams.timeZone,
       queryParams.from,
       queryParams.to,
+      queryParams.nSelectedTopEvents,
     );
     return {
       period: {

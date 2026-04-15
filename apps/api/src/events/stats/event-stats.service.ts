@@ -27,8 +27,12 @@ export class EventsStatsService {
     }));
   }
 
-  public async GetStatsOverview(timeZone: string, from: string, to: string) {
-    console.log(timeZone);
+  public async GetStatsOverview(
+    timeZone: string,
+    from: string,
+    to: string,
+    nSelectedTopEvents: number,
+  ) {
     const lastEvent = await this.prisma.event.findFirst({
       orderBy: {
         emittedAt: 'desc',
@@ -50,7 +54,11 @@ export class EventsStatsService {
       },
     });
 
-    return BuildStatsOverview(entries, lastEvent?.emittedAt);
+    return BuildStatsOverview(
+      entries,
+      lastEvent?.emittedAt,
+      nSelectedTopEvents,
+    );
   }
 
   public async GetStatsByType(

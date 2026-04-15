@@ -8,7 +8,7 @@ import {
 describe('EventStatsHelpers', () => {
   describe('BuildStatsOverview', () => {
     it('Should return empty entries stats', () => {
-      expect(BuildStatsOverview([], undefined)).toEqual({
+      expect(BuildStatsOverview([], undefined, 1)).toEqual({
         averageProcessingLatencyMs: null,
         eventTypesCount: 0,
         latestEventAt: undefined,
@@ -32,6 +32,7 @@ describe('EventStatsHelpers', () => {
             }),
           ],
           new Date('2026-04-01T00:00:00.000Z'),
+          3,
         ),
       ).toEqual({
         averageProcessingLatencyMs: 15,
@@ -57,6 +58,7 @@ describe('EventStatsHelpers', () => {
             }),
           ],
           undefined,
+          3,
         ),
       ).toEqual({
         averageProcessingLatencyMs: 10,
@@ -79,12 +81,11 @@ describe('EventStatsHelpers', () => {
             makeDailyStatDbEntry({ eventType: '2', count: 3 }),
             makeDailyStatDbEntry({ eventType: '3', count: 1 }),
           ],
-          3,
+          2,
         ),
       ).toEqual([
         { eventType: '2', count: 3 },
         { eventType: '1', count: 2 },
-        { eventType: '3', count: 1 },
       ]);
     });
     it('Should return sorted array with duplicated eventType', () => {

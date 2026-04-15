@@ -17,6 +17,7 @@ export default async function OverviewPage() {
   const { data: overviewData } = await eventApi.getStatsOverview({
     from,
     to,
+    nSelectedTopEvents: 5,
   });
 
   const { data: statsByDayData } = await eventApi.getStatsByDay({
@@ -32,7 +33,7 @@ export default async function OverviewPage() {
     : null;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-w-400">
       <div className="grid grid-cols-4 gap-4">
         <KpiItem
           className="col-span-1"
@@ -47,16 +48,21 @@ export default async function OverviewPage() {
           label="Latency"
           value={
             overviewData.averageProcessingLatencyMs
-              ? overviewData.averageProcessingLatencyMs.toString()
+              ? overviewData.averageProcessingLatencyMs.toFixed(0).toString()
               : 'X'
           }
           unit="ms"
         />
         <KpiItem label="Last received" value={lastReceived ?? 'X'} />
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <ChartTopEventTypes eventTypes={overviewData.topEventTypes} />
+      <div className="grid grid-cols-2 gap-4 h-120">
+        <ChartTopEventTypes
+          className="col-span-1"
+          eventTypes={overviewData.topEventTypes}
+          totalEvents={overviewData.totalEvents}
+        />
         <ChartEventsPerDay
+          className="col-span-1 "
           eventsPerDay={statsByDayData.eventsByDay}
           from={statsByDayData.period.from}
           to={statsByDayData.period.to}

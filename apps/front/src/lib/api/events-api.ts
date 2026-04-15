@@ -5,6 +5,7 @@ interface GetStatsOverviewParams {
   timeZone?: string;
   from: string;
   to: string;
+  nSelectedTopEvents?: number;
 }
 
 interface GetStatsOverviewResponse {

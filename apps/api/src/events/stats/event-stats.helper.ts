@@ -4,6 +4,7 @@ import { type DailyEventStat as DbDailyEventStat } from '@app/database';
 export function BuildStatsOverview(
   entries: DbDailyEventStat[],
   latestEventAt: Date | undefined,
+  nSelectedTopEvents: number,
 ) {
   return {
     totalEvents: entries.reduce((acc, entry) => {
@@ -11,13 +12,12 @@ export function BuildStatsOverview(
     }, 0),
     averageProcessingLatencyMs: SumAverageProcessingLatency(entries),
     eventTypesCount: countDistinctValueOfField(entries, 'eventType'),
-    topEventTypes: GetTopEventTypes(entries, 3),
+    topEventTypes: GetTopEventTypes(entries, nSelectedTopEvents),
     latestEventAt: latestEventAt?.toISOString(),
   };
 }
 
 export function SumAverageProcessingLatency(dbStats: DbDailyEventStat[]) {
-  console.log(dbStats);
   let count = 0;
   let averagesSum = 0;
 
@@ -25,8 +25,6 @@ export function SumAverageProcessingLatency(dbStats: DbDailyEventStat[]) {
     count += stat.count;
     averagesSum += stat.processingLatencyTotalMs;
   });
-
-  console.log(averagesSum / count);
 
   return count === 0 ? null : averagesSum / count;
 }

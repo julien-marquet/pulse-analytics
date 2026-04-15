@@ -8,7 +8,8 @@
   "scripts": {
     "build": "...",
     "test": "...",
-    "lint": "..."
+    "lint": "...",
+    "seed": "ts-node --project tsconfig.base.json scripts/seed-events.ts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

@@ -8,6 +8,7 @@ const makeValidPayload = () => ({
   timeZone: 'UTC',
   from: '2026-01-01',
   to: '2026-01-31',
+  nSelectedTopEvents: 0,
 });
 
 describe('GetStatsOverviewQueryParamsDto', () => {
@@ -52,6 +53,24 @@ describe('GetStatsOverviewQueryParamsDto', () => {
     await expect(
       validateAndTransformPayload(
         { ...makeValidPayload(), timeZone: '' },
+        GetStatsOverviewQueryParamsDto,
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should throw when nSelectedTopEvents is not a number', async () => {
+    await expect(
+      validateAndTransformPayload(
+        { ...makeValidPayload(), nSelectedTopEvent: 'invalid' },
+        GetStatsOverviewQueryParamsDto,
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('should throw when nSelectedTopEvents is negative', async () => {
+    await expect(
+      validateAndTransformPayload(
+        { ...makeValidPayload(), nSelectedTopEvent: -1 },
         GetStatsOverviewQueryParamsDto,
       ),
     ).rejects.toThrow(BadRequestException);

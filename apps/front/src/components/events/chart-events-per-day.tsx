@@ -1,6 +1,6 @@
 'use client';
 
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   Card,
   CardHeader,
@@ -26,6 +26,7 @@ interface ChartEventsPerDayProps {
   eventsPerDay: EventPerDay[];
   from: string;
   to: string;
+  className?: string;
 }
 
 function getChartData(eventsPerDay: EventPerDay[], from: string, to: string) {
@@ -55,24 +56,19 @@ export default function ChartEventsPerDay({
   eventsPerDay,
   from,
   to,
+  className,
 }: ChartEventsPerDayProps) {
   const chartData = getChartData(eventsPerDay, from, to);
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Number of events for the last 7 days</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <AreaChart
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
+      <CardContent className="w-full h-full">
+        <ChartContainer className="w-full h-full -mx-1.5" config={chartConfig}>
+          <AreaChart data={chartData}>
             <defs>
               <linearGradient id="eventsGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop
@@ -91,8 +87,11 @@ export default function ChartEventsPerDay({
             <XAxis
               type="category"
               dataKey="day"
+              tickFormatter={(v: string) => v.slice(5)}
               padding={{ left: 24, right: 24 }}
             />
+            <YAxis width="auto" stroke="var(--color-text-3)" />
+
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dot" />}

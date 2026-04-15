@@ -1,4 +1,4 @@
-import { IsDateString, IsOptional } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, Min } from 'class-validator';
 import { IsAllowedTimezone } from '../../utils/dto.decorators';
 
 export class GetStatsOverviewQueryParamsDto {
@@ -11,4 +11,9 @@ export class GetStatsOverviewQueryParamsDto {
 
   @IsDateString()
   to: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  nSelectedTopEvents: number = 3;
 }

@@ -187,7 +187,7 @@ describe('EventStatsService', () => {
 
     it('should compute all aggregate fields correctly', async () => {
       prisma.event.findFirst.mockResolvedValue(
-        makeEventDbEntry({ emittedAt: new Date('2026-04-01T12:00:00Z') }),
+        makeEventDbEntry({ emittedAt: new Date('2026-04-01T12:00:00.000Z') }),
       );
 
       prisma.dailyEventStat.findMany.mockResolvedValue([
@@ -208,7 +208,7 @@ describe('EventStatsService', () => {
         }),
       ]);
 
-      const res = await service.GetStatsOverview('UTC', from, to);
+      const res = await service.GetStatsOverview('UTC', from, to, 3);
 
       expect(res.totalEvents).toBe(35); // 10+5+20
       expect(res.averageProcessingLatencyMs).toBe(100); // 3500/35
@@ -224,7 +224,7 @@ describe('EventStatsService', () => {
       prisma.event.findFirst.mockResolvedValue(null);
       prisma.dailyEventStat.findMany.mockResolvedValue([]);
 
-      const res = await service.GetStatsOverview('UTC', from, to);
+      const res = await service.GetStatsOverview('UTC', from, to, 3);
 
       expect(res.latestEventAt).toBeUndefined();
     });
@@ -233,7 +233,7 @@ describe('EventStatsService', () => {
       prisma.event.findFirst.mockResolvedValue(null);
       prisma.dailyEventStat.findMany.mockResolvedValue([]);
 
-      await service.GetStatsOverview('UTC', from, to);
+      await service.GetStatsOverview('UTC', from, to, 3);
 
       const expectedRange = {
         gte: DatePrismaConverter.toPrisma(from),
