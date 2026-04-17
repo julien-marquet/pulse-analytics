@@ -14,8 +14,8 @@ import { DateTime } from 'luxon';
 type DatePickerSimpleProps = {
   label: string;
   id: string;
-  value: Date | undefined;
-  onChange: (value: Date | undefined) => void;
+  value: Date | null;
+  onChange: (value: Date | null) => void;
   defaultTime?: string;
 };
 
@@ -78,9 +78,9 @@ export function DatePickerSimple({
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
-              selected={value}
+              selected={value ?? undefined}
               onSelect={handleDateChange}
-              defaultMonth={value}
+              defaultMonth={value ?? undefined}
             />
           </PopoverContent>
         </Popover>
@@ -91,7 +91,7 @@ export function DatePickerSimple({
           id={`${id}-time`}
           step="60"
           autoComplete="off" // https://github.com/vercel/next.js/discussions/21999
-          disabled={value === undefined}
+          disabled={value === null}
           onChange={(e) => handleTimeChange(e.target.value)}
           value={time ?? ''}
           className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"

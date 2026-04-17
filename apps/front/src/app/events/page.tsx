@@ -33,16 +33,20 @@ export default async function EventsPage({
     new ApiClient({ baseUrl: process.env.API_URL }),
   );
 
-  const { body } = await eventApi.getEvents(apiParams);
+  const [{ body: bodyEvents }, { body: bodyTypes }] = await Promise.all([
+    eventApi.getEvents(apiParams),
+    eventApi.getTypes(),
+  ]);
 
+  console.log(bodyTypes);
   return (
     <div className="max-w-400 flex flex-col gap-4">
-      <EventsFilters className="basis-full" />
-      <ServerDataTable columns={columns} data={body.data} />
+      <EventsFilters className="basis-full" eventTypes={bodyTypes.types} />
+      <ServerDataTable columns={columns} data={bodyEvents.data} />
       <UrlPagination
-        totalItems={body.total}
-        page={body.page}
-        pageSize={body.pageSize}
+        totalItems={bodyEvents.total}
+        page={bodyEvents.page}
+        pageSize={bodyEvents.pageSize}
       />
     </div>
   );

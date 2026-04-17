@@ -12,6 +12,7 @@ import { EventsQueryService } from './query/event-query.service';
 import { EventsStatsService } from './stats/event-stats.service';
 import { ValidationPipe } from '../validation.pipe';
 import { CreateEventRequestDto } from './dtos/create-event.request.dto';
+import { GetTypesResponse } from './dtos/get-types.response.dto';
 
 @Controller('events')
 export class EventsController {
@@ -45,6 +46,12 @@ export class EventsController {
     };
   }
 
+  @Get('/types')
+  async GetTypes(): Promise<GetTypesResponse> {
+    const types = await this.eventsQueryService.GetTypes();
+
+    return { types };
+  }
   @Get('/stats/by-day')
   async GetStatsByDay(
     @Query(ValidationPipe)

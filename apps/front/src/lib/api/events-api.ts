@@ -71,6 +71,10 @@ export type GetEventsRequestParams = {
   type?: string[];
 };
 
+type GetTypesResponse = {
+  types: string[];
+};
+
 export class EventsApi {
   constructor(private client: ApiClient) {}
 
@@ -90,5 +94,9 @@ export class EventsApi {
     return this.client.get<GetEventsResponse>('/events', {
       params: toSearchParams(params),
     });
+  }
+
+  getTypes() {
+    return this.client.get<GetTypesResponse>('/events/types');
   }
 }
