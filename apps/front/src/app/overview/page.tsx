@@ -14,13 +14,13 @@ export default async function OverviewPage() {
   const from = now.minus({ days: 7 }).toISODate()!;
   const to = now.toISODate()!;
 
-  const { data: overviewData } = await eventApi.getStatsOverview({
+  const { body: overviewData } = await eventApi.getStatsOverview({
     from,
     to,
     nSelectedTopEvents: 5,
   });
 
-  const { data: statsByDayData } = await eventApi.getStatsByDay({
+  const { body: statsByDayData } = await eventApi.getStatsByDay({
     from,
     to,
   });

@@ -1,10 +1,16 @@
 // @ts-nocheck
 import { defineConfig } from 'eslint/config';
-import frontConfig from '@app/eslint-config/front';
+import frontConfig, { eslintFrontRules } from '@app/eslint-config/front';
 
 export default defineConfig(
+    ...frontConfig,
   {
     ignores: ['eslint.config.mjs'],
   },
-  ...frontConfig,
+  {
+    rules: {
+      ...eslintFrontRules,
+      "react-hooks/incompatible-library": "off"
+    }
+  }
 );

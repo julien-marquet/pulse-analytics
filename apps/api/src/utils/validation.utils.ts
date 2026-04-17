@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
+import { validate, ValidationError } from 'class-validator';
 
 export async function validateAndTransformPayload<
   TPayload,
@@ -18,7 +18,8 @@ export async function validateAndTransformPayload<
   });
 
   if (errors.length > 0) {
-    throw new BadRequestException(errors);
+    const messages = errors.flatMap((e) => Object.values(e.constraints ?? {}));
+    throw new BadRequestException(messages);
   }
 
   return instance;

@@ -15,22 +15,6 @@ const EVENT_TYPES = [
     "ACCORDION_EXPANDED",
     "FORM_STARTED",
     "FORM_SUBMITTED",
-    "FORM_ABANDONED",
-    "FORM_ERROR_SHOWN",
-    "SEARCH_PERFORMED",
-    "SEARCH_RESULT_CLICKED",
-    "FILTER_APPLIED",
-    "SORT_CHANGED",
-    "PRODUCT_VIEWED",
-    "PRODUCT_ADDED_TO_CART",
-    "PRODUCT_REMOVED_FROM_CART",
-    "CHECKOUT_STARTED",
-    "CHECKOUT_COMPLETED",
-    "PURCHASE_COMPLETED",
-    "PRODUCT_VIEWED",
-    "PRODUCT_ADDED_TO_CART",
-    "PRODUCT_REMOVED_FROM_CART",
-    "CHECKOUT_STARTED",
     "CHECKOUT_COMPLETED",
     "PURCHASE_COMPLETED",
     "VIDEO_PLAYED",
@@ -126,7 +110,7 @@ function generateRandomId(): string {
 }
 
 // at the bottom of the file, replacing the current seed() call
-const [, , quantity = '10000', from = '2026-04-07', to = '2026-04-14'] = process.argv;
+const [, , quantity = '100', from = '2026-04-07', to = '2026-04-14'] = process.argv;
 
 seed(
     Number(quantity),

@@ -5,7 +5,7 @@ export interface ApiConfig {
 }
 
 export interface ApiResponse<T = any> {
-  data: T;
+  body: T;
   status: number;
   headers: Headers;
 }
@@ -43,7 +43,6 @@ export class ApiClient {
     { params, ...options }: ApiRequestOptions,
   ): Promise<ApiResponse<T>> {
     const url = this.buildUrl(endpoint, params);
-    console.log(url);
     const requestOptions = this.buildRequestOptions(options);
 
     try {
@@ -61,20 +60,26 @@ export class ApiClient {
 
       clearTimeout(timeoutId);
 
-      // Here's the key: we check the status and throw for errors
       if (!response.ok) {
-        throw new ApiError(
-          `HTTP ${response.status}: ${response.statusText}`,
-          response.status,
-          response,
-        );
+        let message = `HTTP ${response.status}: ${response.statusText}`;
+        try {
+          const body = await response.json();
+          if (body?.message) {
+            message = Array.isArray(body.message)
+              ? body.message.join(', ')
+              : String(body.message);
+          }
+        } catch {
+          // ignore parse errors, use default message
+        }
+        throw new ApiError(message, response.status, response);
       }
 
       // Parse JSON safely
       const data = await this.parseResponse<T>(response);
 
       return {
-        data,
+        body: data,
         status: response.status,
         headers: response.headers,
       };

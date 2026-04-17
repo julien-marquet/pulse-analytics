@@ -42,6 +42,35 @@ interface GetStatsByDayResponse {
   }[];
 }
 
+type EventResponseDto = {
+  type: string;
+  id: string;
+  receivedAt: string;
+  emittedAt: string;
+  processedAt: string;
+  properties: Record<string, unknown>;
+  latencies: {
+    ingestionLatencyMs: number;
+    processingLatencyMs: number;
+    totalLatencyMs: number;
+  };
+};
+
+type GetEventsResponse = {
+  page: number;
+  pageSize: number;
+  total: number;
+  data: EventResponseDto[];
+};
+
+export type GetEventsRequestParams = {
+  page?: number;
+  pageSize?: number;
+  from?: string;
+  to?: string;
+  type?: string[];
+};
+
 export class EventsApi {
   constructor(private client: ApiClient) {}
 
@@ -53,6 +82,12 @@ export class EventsApi {
 
   getStatsByDay(params: GetStatsByDayParams) {
     return this.client.get<GetStatsByDayResponse>('/events/stats/by-day', {
+      params: toSearchParams(params),
+    });
+  }
+
+  getEvents(params: GetEventsRequestParams) {
+    return this.client.get<GetEventsResponse>('/events', {
       params: toSearchParams(params),
     });
   }
