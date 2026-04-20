@@ -25,9 +25,6 @@ export default async function OverviewPage() {
     to,
   });
 
-  console.log(overviewData);
-  console.log(statsByDayData);
-
   const lastReceived = overviewData.latestEventAt
     ? DateTime.fromISO(overviewData.latestEventAt).toRelative()
     : null;

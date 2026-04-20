@@ -21,10 +21,12 @@ export class EventsQueryService {
     from?: Date,
     to?: Date,
   ) {
+    console.log(from);
     const filters = {
       type: this.GetEventsTypeFilter(type),
-      receivedAt: this.GetEventsDateFilter(from, to),
+      emittedAt: this.GetEventsDateFilter(from, to),
     };
+    console.log(filters);
     const [data, total] = await Promise.all([
       this.prisma.event.findMany({
         take: pageSize,
@@ -33,6 +35,7 @@ export class EventsQueryService {
       }),
       this.prisma.event.count({ where: filters }),
     ]);
+    console.log(data);
     return {
       data: addLatenciesToDbEvents(data),
       total,
