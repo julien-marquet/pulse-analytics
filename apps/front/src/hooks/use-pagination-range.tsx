@@ -50,11 +50,8 @@ export function usePaginationRange({
   const pages = calculatePaginationRange();
 
   const showLeftEllipsis = pages.length > 0 && pages[0] > 1;
-
   const showRightEllipsis =
-    pages.length > 0 &&
-    pages[pages.length - 1] < totalPages &&
-    pages[pages.length - 1] < totalPages - 1;
+    pages.length > 0 && pages[pages.length - 1] < totalPages;
 
   return {
     pages,
