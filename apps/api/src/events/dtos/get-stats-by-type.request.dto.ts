@@ -16,10 +16,8 @@ export class GetStatsByTypeQueryParamsDto {
   timeZone: string = 'UTC';
 
   @IsDateString()
-  @IsOptional()
-  from?: string;
+  from: string;
 
   @IsDateString()
-  @IsOptional()
-  to?: string;
+  to: string;
 }

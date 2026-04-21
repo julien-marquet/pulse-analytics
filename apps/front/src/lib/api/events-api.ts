@@ -1,3 +1,4 @@
+import { types } from 'util';
 import { toSearchParams } from '../utils';
 import { ApiClient } from './api';
 
@@ -75,6 +76,21 @@ type GetTypesResponse = {
   types: string[];
 };
 
+type GetTimezonesResponse = {
+  timezones: string[];
+};
+
+export type GetStatsByDayTypeParams = {
+  eventType: string;
+  timeZone?: string;
+  from: string;
+  to: string;
+};
+
+type GetStatsByTypeResponse = {
+  total: number;
+  types: { type: string; count: number }[];
+};
 export class EventsApi {
   constructor(private client: ApiClient) {}
 
@@ -90,6 +106,12 @@ export class EventsApi {
     });
   }
 
+  getStatsByType(params: GetStatsByDayTypeParams) {
+    return this.client.get<GetStatsByTypeResponse>('/events/stats/by-type', {
+      params: toSearchParams(params),
+    });
+  }
+
   getEvents(params: GetEventsRequestParams) {
     return this.client.get<GetEventsResponse>('/events', {
       params: toSearchParams(params),
@@ -98,5 +120,9 @@ export class EventsApi {
 
   getTypes() {
     return this.client.get<GetTypesResponse>('/events/types');
+  }
+
+  getTimezones() {
+    return this.client.get<GetTimezonesResponse>('/events/stats/timezones');
   }
 }

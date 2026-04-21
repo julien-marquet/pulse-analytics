@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { DatePrismaConverter } from '@app/common';
+import { DatePrismaConverter, TypedConfigService } from '@app/common';
 import { PrismaService } from '../../prisma.service';
 import { BuildStatsOverview } from './event-stats.helper';
+import { ConfigVariables } from '../../config';
 
 @Injectable()
 export class EventsStatsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: TypedConfigService<ConfigVariables>,
+  ) {}
+
+  public GetTimeZones() {
+    return this.config.get('TIMEZONES');
+  }
 
   public async GetStatsByDay(timeZone: string, from: string, to: string) {
     const res = await this.prisma.dailyEventStat.groupBy({
@@ -61,30 +69,34 @@ export class EventsStatsService {
     );
   }
 
-  public async GetStatsByType(
-    eventType: string,
-    timeZone: string,
-    from?: string,
-    to?: string,
-  ) {
-    const res = await this.prisma.dailyEventStat.findMany({
-      select: {
-        count: true,
-        date: true,
-      },
+  public async GetStatsByType(timeZone: string, from: string, to: string) {
+    const res = await this.prisma.dailyEventStat.groupBy({
+      by: 'eventType',
       where: {
-        eventType,
-        timeZone,
         date: {
-          gte: from ? DatePrismaConverter.toPrisma(from) : undefined,
-          lte: to ? DatePrismaConverter.toPrisma(to) : undefined,
+          lte: DatePrismaConverter.toPrisma(to),
+          gte: DatePrismaConverter.toPrisma(from),
         },
+        timeZone,
       },
-      orderBy: { date: 'desc' },
+      _sum: { count: true },
+      orderBy: {
+        _sum: { count: 'desc' },
+      },
     });
-    return res.map((i) => ({
-      ...i,
-      date: DatePrismaConverter.fromPrismaToDateString(i.date),
-    }));
+
+    let total = 0;
+    const types = res.map((i) => {
+      total += i._sum.count ?? 0;
+      return {
+        type: i.eventType,
+        count: i._sum.count ?? 0,
+      };
+    });
+
+    return {
+      total,
+      types,
+    };
   }
 }

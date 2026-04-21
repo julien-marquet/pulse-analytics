@@ -1,4 +1,11 @@
 export type StatsFilters = {
-  from: Date | null;
-  to: Date | null;
+  from: string;
+  to: string;
+  timezone: string;
+};
+
+export type StatsDefaultFilters = {
+  from: string;
+  to: string;
+  timezone: string;
 };

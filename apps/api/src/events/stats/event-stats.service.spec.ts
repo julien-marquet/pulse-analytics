@@ -84,101 +84,66 @@ describe('EventStatsService', () => {
   });
 
   describe('GetStatsByType', () => {
-    it('should get stats by type with no date limit', async () => {
-      prisma.dailyEventStat.findMany.mockResolvedValue([
-        {
-          count: 1,
-          date: DatePrismaConverter.toPrisma('2026-04-01'),
-        } as DailyEventStat,
-      ]);
+    const from = '2026-03-01';
+    const to = '2026-04-01';
 
-      const res = await service.GetStatsByType('button-clicked', 'UTC');
+    it('should return mapped results with total and types ordered by count desc', async () => {
+      prisma.dailyEventStat.groupBy.mockResolvedValue([
+        { eventType: 'page-viewed', _sum: { count: 20 } },
+        { eventType: 'button-clicked', _sum: { count: 15 } },
+      ] as any);
 
-      expect(prisma.dailyEventStat.findMany).toHaveBeenCalledWith(
+      const res = await service.GetStatsByType('UTC', from, to);
+
+      expect(res).toEqual({
+        total: 35,
+        types: [
+          { type: 'page-viewed', count: 20 },
+          { type: 'button-clicked', count: 15 },
+        ],
+      });
+    });
+
+    it('should default count to 0 when _sum.count is null', async () => {
+      prisma.dailyEventStat.groupBy.mockResolvedValue([
+        { eventType: 'page-viewed', _sum: { count: null } },
+      ] as any);
+
+      const res = await service.GetStatsByType('UTC', from, to);
+
+      expect(res).toEqual({
+        total: 0,
+        types: [{ type: 'page-viewed', count: 0 }],
+      });
+    });
+
+    it('should return empty total and types when there are no results', async () => {
+      prisma.dailyEventStat.groupBy.mockResolvedValue([]);
+
+      const res = await service.GetStatsByType('UTC', from, to);
+
+      expect(res).toEqual({ total: 0, types: [] });
+    });
+
+    it('should query prisma with the correct date range, timezone, and orderBy', async () => {
+      prisma.dailyEventStat.groupBy.mockResolvedValue([]);
+
+      await service.GetStatsByType('UTC', from, to);
+
+      expect(prisma.dailyEventStat.groupBy).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({
-            eventType: 'button-clicked',
+          by: 'eventType',
+          where: {
+            date: {
+              gte: DatePrismaConverter.toPrisma(from),
+              lte: DatePrismaConverter.toPrisma(to),
+            },
             timeZone: 'UTC',
-          }),
-          orderBy: { date: 'desc' },
+          },
+          _sum: { count: true },
+          orderBy: { _sum: { count: 'desc' } },
         }),
       );
-      expect(res).toEqual([{ count: 1, date: '2026-04-01' }]);
-    });
-
-    it('should get stats by type with only a from bound', async () => {
-      prisma.dailyEventStat.findMany.mockResolvedValue([]);
-
-      await service.GetStatsByType('button-clicked', 'UTC', '2020-01-01');
-
-      expect(prisma.dailyEventStat.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: expect.objectContaining({
-            date: {
-              gte: DatePrismaConverter.toPrisma('2020-01-01'),
-              lte: undefined,
-            },
-          }),
-        }),
-      );
-    });
-
-    it('should get stats by type with only a to bound', async () => {
-      prisma.dailyEventStat.findMany.mockResolvedValue([]);
-
-      await service.GetStatsByType(
-        'button-clicked',
-        'UTC',
-        undefined,
-        '2020-12-31',
-      );
-
-      expect(prisma.dailyEventStat.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: expect.objectContaining({
-            date: {
-              gte: undefined,
-              lte: DatePrismaConverter.toPrisma('2020-12-31'),
-            },
-          }),
-        }),
-      );
-    });
-
-    it('should get stats by type and date limit', async () => {
-      prisma.dailyEventStat.findMany.mockResolvedValue([
-        {
-          count: 1,
-          date: DatePrismaConverter.toPrisma('2020-12-31'),
-        } as DailyEventStat,
-      ]);
-
-      const res = await service.GetStatsByType(
-        'button-clicked',
-        'UTC',
-        '2020-12-31',
-        '2021-01-01',
-      );
-
-      expect(prisma.dailyEventStat.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: expect.objectContaining({
-            eventType: 'button-clicked',
-            timeZone: 'UTC',
-            date: {
-              gte: DatePrismaConverter.toPrisma('2020-12-31'),
-              lte: DatePrismaConverter.toPrisma('2021-01-01'),
-            },
-          }),
-          orderBy: { date: 'desc' },
-        }),
-      );
-      expect(res).toEqual([
-        {
-          count: 1,
-          date: '2020-12-31',
-        },
-      ]);
     });
   });
   describe('GetStatsOverview', () => {

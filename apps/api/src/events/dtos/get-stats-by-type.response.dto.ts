@@ -1,4 +1,7 @@
 export type GetStatsByTypeResponse = {
-  date: string;
-  count: number;
-}[];
+  total: number;
+  types: {
+    type: string;
+    count: number;
+  }[];
+};

@@ -13,6 +13,7 @@ import { EventsStatsService } from './stats/event-stats.service';
 import { ValidationPipe } from '../validation.pipe';
 import { CreateEventRequestDto } from './dtos/create-event.request.dto';
 import { GetTypesResponse } from './dtos/get-types.response.dto';
+import type { GetTimezonesResponse } from './dtos/get-timezones.response.dto';
 
 @Controller('events')
 export class EventsController {
@@ -52,6 +53,14 @@ export class EventsController {
 
     return { types };
   }
+
+  @Get('/stats/timezones')
+  GetTimezones(): GetTimezonesResponse {
+    const timezones = this.eventsStatsService.GetTimeZones();
+
+    return { timezones };
+  }
+
   @Get('/stats/by-day')
   async GetStatsByDay(
     @Query(ValidationPipe)
@@ -78,7 +87,6 @@ export class EventsController {
     queryParams: GetStatsByTypeQueryParamsDto,
   ): Promise<GetStatsByTypeResponse> {
     return this.eventsStatsService.GetStatsByType(
-      queryParams.eventType,
       queryParams.timeZone,
       queryParams.from,
       queryParams.to,
