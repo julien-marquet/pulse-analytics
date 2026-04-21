@@ -22,14 +22,14 @@ const chartConfig = {
 
 type EventPerDay = { count: number; date: string };
 
-interface ChartEventsPerDayProps {
-  eventsPerDay: EventPerDay[];
-  from: string;
-  to: string;
-  className?: string;
-}
-
-function getChartData(eventsPerDay: EventPerDay[], from: string, to: string) {
+function getChartData(
+  eventsPerDay: EventPerDay[],
+  from: string | null,
+  to: string | null,
+) {
+  if (from === null || to === null) {
+    return [];
+  }
   const start = DateTime.fromFormat(from, 'yyyy-MM-dd');
   const end = DateTime.fromFormat(to, 'yyyy-MM-dd');
   const diff = end.diff(start, 'days');
@@ -52,18 +52,27 @@ function getChartData(eventsPerDay: EventPerDay[], from: string, to: string) {
   return chartData;
 }
 
+interface ChartEventsPerDayProps {
+  eventsPerDay: EventPerDay[];
+  from: string | null;
+  to: string | null;
+  className?: string;
+  title: string;
+}
+
 export default function ChartEventsPerDay({
   eventsPerDay,
   from,
   to,
   className,
+  title,
 }: ChartEventsPerDayProps) {
   const chartData = getChartData(eventsPerDay, from, to);
 
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>Number of events for the last 7 days</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="w-full h-full">

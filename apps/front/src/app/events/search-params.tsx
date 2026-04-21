@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon';
-import { EventFilters } from './types';
+import { EventsFilters } from './types';
 import { defaultPage, defaultPageSize } from './consts';
 
-export function serializeToSearchParams(
+export function filtersToSearchParams(
   prevParams: URLSearchParams,
-  filters: Partial<EventFilters>,
+  filters: Partial<EventsFilters>,
 ): URLSearchParams {
   const serialized = new URLSearchParams(prevParams);
   if (filters.from != null) {
@@ -31,13 +31,13 @@ export function serializeToSearchParams(
   return serialized;
 }
 
-export function getPageParamsFromUrl(searchParams: {
+export function searchParamsToFilters(searchParams: {
   from?: string;
   to?: string;
   page?: string;
   pageSize?: string;
   type?: string;
-}): EventFilters {
+}): EventsFilters {
   const { from, to, page, pageSize, type } = searchParams;
 
   return {

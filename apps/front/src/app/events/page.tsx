@@ -1,15 +1,15 @@
 import { ApiClient } from '@/lib/api/api';
 import { EventsApi } from '@/lib/api/events-api';
 import { ServerDataTable } from '../../components/datatable/server-datatable';
-import { columns } from './columns';
+import { columns } from './table-columns';
 import { UrlPagination } from '../../components/datatable/url-pagination';
-import { EventsFilters } from './events-filters';
-import { getPageParamsFromUrl } from './parse-filters';
+import { TableFilters } from './table-filters';
+import { searchParamsToFilters } from './search-params';
 
 export default async function EventsPage({
   searchParams,
 }: PageProps<'/events'>) {
-  const params = getPageParamsFromUrl(await searchParams);
+  const params = searchParamsToFilters(await searchParams);
   const eventApi = new EventsApi(
     new ApiClient({ baseUrl: process.env.API_URL }),
   );
@@ -26,7 +26,7 @@ export default async function EventsPage({
 
   return (
     <div className="max-w-400 flex flex-col gap-4">
-      <EventsFilters
+      <TableFilters
         className="basis-full"
         eventTypes={bodyTypes.types}
         values={{

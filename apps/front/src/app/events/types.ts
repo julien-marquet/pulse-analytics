@@ -1,4 +1,4 @@
-export type EventFilters = {
+export type EventsFilters = {
   from: Date | null;
   to: Date | null;
   type: string[];

@@ -3,16 +3,16 @@
 import { useCallback } from 'react';
 import { FieldGroup } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import { DatePickerSimple } from './date-picker';
+import { DateTimeFieldGroup } from '../../components/ui/date-time-field-group';
 import { DateTime } from 'luxon';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Combobox from '../../components/ui/combobox';
 import { Badge } from '@/components/ui/badge';
-import { serializeToSearchParams } from './parse-filters';
+import { filtersToSearchParams } from './search-params';
 import { defaultTimeFrom, defaultTimeTo } from './consts';
-import { EventFilters } from './types';
+import { EventsFilters } from './types';
 
-type FieldsValues = Pick<EventFilters, 'from' | 'to' | 'type'>;
+type FieldsValues = Pick<EventsFilters, 'from' | 'to' | 'type'>;
 
 type UpdatedField = {
   [K in keyof FieldsValues]: {
@@ -60,24 +60,24 @@ function reducer(currentValues: FieldsValues, updatedField: UpdatedField) {
   }
 }
 
-type EventsFilterProps = {
+type TableFilterProps = {
   className?: string;
   eventTypes: string[];
   values: FieldsValues;
 };
 
-export function EventsFilters({
+export function TableFilters({
   className,
   eventTypes,
   values,
-}: EventsFilterProps) {
+}: TableFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const handleChange = useCallback(
     (action: UpdatedField) => {
       const next = reducer(values, action);
-      const params = serializeToSearchParams(searchParams, next);
+      const params = filtersToSearchParams(searchParams, next);
       router.push(`?${params.toString()}`);
     },
     [values, router, searchParams],
@@ -101,15 +101,15 @@ export function EventsFilters({
           </span>
         )}
       />
-      <DatePickerSimple
-        id="from"
+      <DateTimeFieldGroup
+        idPrefix="from"
         label="From"
         defaultTime={defaultTimeFrom}
         value={values.from}
         onChange={(date) => handleChange({ field: 'from', value: date })}
       />
-      <DatePickerSimple
-        id="to"
+      <DateTimeFieldGroup
+        idPrefix="to"
         label="To"
         defaultTime={defaultTimeTo}
         value={values.to}

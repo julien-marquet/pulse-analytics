@@ -59,7 +59,8 @@ export default async function OverviewPage() {
           totalEvents={overviewData.totalEvents}
         />
         <ChartEventsPerDay
-          className="col-span-1 "
+          className="col-span-1"
+          title="Number of events for the last 7 days"
           eventsPerDay={statsByDayData.eventsByDay}
           from={statsByDayData.period.from}
           to={statsByDayData.period.to}

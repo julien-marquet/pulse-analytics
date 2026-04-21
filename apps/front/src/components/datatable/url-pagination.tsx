@@ -1,6 +1,6 @@
 'use client';
 
-import { serializeToSearchParams } from '@/app/events/parse-filters';
+import { filtersToSearchParams } from '@/app/events/search-params';
 import { PaginationBar } from '@/components/ui/pagination-bar';
 import { useSearchParams, useRouter } from 'next/navigation';
 
@@ -19,7 +19,7 @@ export function UrlPagination({
   const searchParams = useSearchParams();
 
   function handlePaginationChange(page: number, pageSize: number) {
-    const params = serializeToSearchParams(searchParams, { page, pageSize });
+    const params = filtersToSearchParams(searchParams, { page, pageSize });
     router.push(`?${params.toString()}`);
   }
 
