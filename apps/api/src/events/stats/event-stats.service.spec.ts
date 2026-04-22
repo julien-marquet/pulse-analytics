@@ -3,17 +3,26 @@ import {
   createPrismaServiceMock,
   PrismaServiceMock,
 } from '../../prisma.service.mock';
-import { DatePrismaConverter } from '@app/common';
-import { DailyEventStat } from '@app/database';
+import { DatePrismaConverter, TypedConfigService } from '@app/common';
 import { makeDailyStatDbEntry, makeEventDbEntry } from '../../db.fixtures';
+import { ConfigVariables } from '../../config';
 
 describe('EventStatsService', () => {
   let service: EventsStatsService;
   let prisma: PrismaServiceMock;
+  let config: TypedConfigService<ConfigVariables>;
 
   beforeEach(() => {
     prisma = createPrismaServiceMock();
-    service = new EventsStatsService(prisma);
+    config = new TypedConfigService<ConfigVariables>({ TIMEZONES: ['UTC'] });
+    service = new EventsStatsService(prisma, config);
+  });
+
+  describe('GetTimeZones', () => {
+    it('should return the configured timezones', () => {
+      const result = service.GetTimeZones();
+      expect(result).toEqual(['UTC']);
+    });
   });
 
   describe('GetStatsByDay', () => {
@@ -98,8 +107,8 @@ describe('EventStatsService', () => {
       expect(res).toEqual({
         total: 35,
         types: [
-          { type: 'page-viewed', count: 20 },
-          { type: 'button-clicked', count: 15 },
+          { eventType: 'page-viewed', count: 20 },
+          { eventType: 'button-clicked', count: 15 },
         ],
       });
     });
@@ -113,7 +122,7 @@ describe('EventStatsService', () => {
 
       expect(res).toEqual({
         total: 0,
-        types: [{ type: 'page-viewed', count: 0 }],
+        types: [{ eventType: 'page-viewed', count: 0 }],
       });
     });
 

@@ -54,6 +54,7 @@ export default async function OverviewPage() {
       </div>
       <div className="grid grid-cols-2 gap-4 h-120">
         <ChartTopEventTypes
+          title="Top event types for the last 7 days"
           className="col-span-1"
           eventTypes={overviewData.topEventTypes}
           totalEvents={overviewData.totalEvents}

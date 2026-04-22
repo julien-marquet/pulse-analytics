@@ -81,7 +81,6 @@ type GetTimezonesResponse = {
 };
 
 export type GetStatsByDayTypeParams = {
-  eventType: string;
   timeZone?: string;
   from: string;
   to: string;
@@ -89,7 +88,7 @@ export type GetStatsByDayTypeParams = {
 
 type GetStatsByTypeResponse = {
   total: number;
-  types: { type: string; count: number }[];
+  types: { eventType: string; count: number }[];
 };
 export class EventsApi {
   constructor(private client: ApiClient) {}

@@ -89,7 +89,7 @@ export class EventsStatsService {
     const types = res.map((i) => {
       total += i._sum.count ?? 0;
       return {
-        type: i.eventType,
+        eventType: i.eventType,
         count: i._sum.count ?? 0,
       };
     });

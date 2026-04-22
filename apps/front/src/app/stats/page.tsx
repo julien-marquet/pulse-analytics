@@ -5,6 +5,8 @@ import { EventsApi } from '@/lib/api/events-api';
 import { ApiClient } from '@/lib/api/api';
 import { DateTime } from 'luxon';
 import ChartEventsPerDay from '@/components/events/chart-events-per-day';
+import ChartTopEventTypes from '@/components/events/chart-top-event-types';
+import { TableEventTypes } from '@/components/events/table-event-types';
 
 function getDefaultValues() {
   return {
@@ -26,6 +28,12 @@ export default async function StatsPage({ searchParams }: PageProps<'/stats'>) {
   } = await eventApi.getStatsByDay({
     from: params.from,
     to: params.to,
+  });
+
+  const { body: statsByType } = await eventApi.getStatsByType({
+    from: params.from,
+    to: params.to,
+    timeZone: params.timezone,
   });
 
   const {
@@ -52,14 +60,17 @@ export default async function StatsPage({ searchParams }: PageProps<'/stats'>) {
           from={params.from}
           to={params.to}
         />
-        <Card className="col-span-1">Event Type Distribution </Card>
-        <Card className="col-span-1">
-          {/* <ChartTopEventTypes
-            className="col-span-1"
-            eventTypes={overviewData.topEventTypes}
-            totalEvents={overviewData.totalEvents}
-          /> */}
-        </Card>
+        <ChartTopEventTypes
+          title="Event type distribution"
+          className="col-span-1"
+          eventTypes={statsByType.types.slice(0, 5)}
+          totalEvents={statsByType.total}
+        />
+        <TableEventTypes
+          className="col-span-1"
+          eventTypes={statsByType.types}
+          totalEvents={statsByType.total}
+        />
         <Card className="col-span-2">Processing Latency Over Time</Card>
       </div>
       {/*

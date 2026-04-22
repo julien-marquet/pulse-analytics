@@ -1,7 +1,7 @@
 export type GetStatsByTypeResponse = {
   total: number;
   types: {
-    type: string;
+    eventType: string;
     count: number;
   }[];
 };

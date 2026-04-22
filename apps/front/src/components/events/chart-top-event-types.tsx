@@ -8,17 +8,6 @@ import { CircleSmall } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
-interface EventTypes {
-  eventType: string;
-  count: number;
-}
-
-interface TopEventsProps {
-  totalEvents: number;
-  eventTypes: EventTypes[];
-  className?: string;
-}
-
 function getChartData(eventTypes: EventTypes[], totalEvents: number) {
   const chartData = [];
   let totalInTop = 0;
@@ -58,10 +47,23 @@ function getChartConfig(eventTypes: EventTypes[]) {
   return chartConfig;
 }
 
+interface EventTypes {
+  eventType: string;
+  count: number;
+}
+
+interface TopEventsProps {
+  totalEvents: number;
+  eventTypes: EventTypes[];
+  className?: string;
+  title: string;
+}
+
 export default function ChartTopEventTypes({
   eventTypes,
   totalEvents,
   className,
+  title,
 }: TopEventsProps) {
   const chartConfig = getChartConfig(eventTypes);
   const chartData = getChartData(eventTypes, totalEvents);
@@ -81,7 +83,7 @@ export default function ChartTopEventTypes({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>Top event types for the last 7 days</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent className="flex w-full h-full gap-4 min-w-0 min-h-0 items-center">
         <ChartContainer

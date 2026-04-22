@@ -5,8 +5,8 @@ import { GetStatsByTypeQueryParamsDto } from './get-stats-by-type.request.dto';
 import { setupIsAllowedTimezoneContainer } from '../../utils/is-allowed-timezone.test-helpers';
 
 const makeValidPayload = () => ({
-  eventType: 'PAGE_VIEWED',
-  timeZone: 'UTC',
+  from: '2021-02-01',
+  to: '2021-02-04',
 });
 
 describe('GetStatsByTypeQueryParamsDto', () => {
@@ -21,15 +21,8 @@ describe('GetStatsByTypeQueryParamsDto', () => {
     expect(result).toBeInstanceOf(GetStatsByTypeQueryParamsDto);
   });
 
-  it('should throw when eventType is missing', async () => {
-    const { eventType: _, ...payload } = makeValidPayload();
-    await expect(
-      validateAndTransformPayload(payload, GetStatsByTypeQueryParamsDto),
-    ).rejects.toThrow(BadRequestException);
-  });
-
   it('should use default value of UTC when timeZone is absent', async () => {
-    const { timeZone: _, ...payload } = makeValidPayload();
+    const { ...payload } = makeValidPayload();
     const result = await validateAndTransformPayload(
       payload,
       GetStatsByTypeQueryParamsDto,
@@ -63,12 +56,11 @@ describe('GetStatsByTypeQueryParamsDto', () => {
     ).rejects.toThrow(BadRequestException);
   });
 
-  it('should pass when from is absent', async () => {
-    const result = await validateAndTransformPayload(
-      makeValidPayload(),
-      GetStatsByTypeQueryParamsDto,
-    );
-    expect(result.from).toBeUndefined();
+  it('should throw when from is absent', async () => {
+    const { from: _, ...payload } = makeValidPayload();
+    await expect(
+      validateAndTransformPayload(payload, GetStatsByTypeQueryParamsDto),
+    ).rejects.toThrow(BadRequestException);
   });
 
   it('should pass when from is a valid ISO date string', async () => {
@@ -88,12 +80,11 @@ describe('GetStatsByTypeQueryParamsDto', () => {
     ).rejects.toThrow(BadRequestException);
   });
 
-  it('should pass when to is absent', async () => {
-    const result = await validateAndTransformPayload(
-      makeValidPayload(),
-      GetStatsByTypeQueryParamsDto,
-    );
-    expect(result.to).toBeUndefined();
+  it('should throw when to is absent', async () => {
+    const { to: _, ...payload } = makeValidPayload();
+    await expect(
+      validateAndTransformPayload(payload, GetStatsByTypeQueryParamsDto),
+    ).rejects.toThrow(BadRequestException);
   });
 
   it('should pass when to is a valid ISO date string', async () => {
