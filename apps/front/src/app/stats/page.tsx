@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import ChartEventsPerDay from '@/components/events/chart-events-per-day';
 import ChartTopEventTypes from '@/components/events/chart-top-event-types';
 import { TableEventTypes } from '@/components/events/table-event-types';
+import ChartLatencyPerDay from '@/components/events/chart-latency-per-day';
 
 function getDefaultValues() {
   return {
@@ -62,16 +63,22 @@ export default async function StatsPage({ searchParams }: PageProps<'/stats'>) {
         />
         <ChartTopEventTypes
           title="Event type distribution"
-          className="col-span-1"
+          className="col-span-1 h-100"
           eventTypes={statsByType.types.slice(0, 5)}
           totalEvents={statsByType.total}
         />
         <TableEventTypes
-          className="col-span-1"
+          className="col-span-1 h-100"
           eventTypes={statsByType.types}
           totalEvents={statsByType.total}
         />
-        <Card className="col-span-2">Processing Latency Over Time</Card>
+        <ChartLatencyPerDay
+          title="Processing Latency Over Time"
+          className="col-span-2 h-100"
+          eventsPerDay={eventsByDay}
+          from={params.from}
+          to={params.to}
+        />
       </div>
       {/*
       Events by day chart

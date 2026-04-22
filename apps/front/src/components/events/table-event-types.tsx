@@ -1,4 +1,3 @@
-import { ColumnDef, flexRender } from '@tanstack/react-table';
 import {
   Table,
   TableBody,
@@ -59,14 +58,14 @@ export function TableEventTypes({
   }));
 
   return (
-    <Card className={cn('h-100 flex flex-col', className)}>
+    <Card className={cn('flex flex-col', className)}>
       <CardHeader>
         <CardTitle>Details</CardTitle>
       </CardHeader>
       <CardContent className="basis-full min-h-0">
         <ScrollArea
           scrollBarClassName="pt-10 pb-0 -right-4.5!"
-          className="h-full"
+          className="-mt-3 h-full"
         >
           <Table noWrapper>
             <TableHeader className="sticky top-0 bg-background z-10">

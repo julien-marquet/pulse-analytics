@@ -20,10 +20,10 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type EventPerDay = { count: number; date: string };
+type LatencyPerDay = { averageLatencyMs: number; date: string };
 
 function getChartData(
-  eventsPerDay: EventPerDay[],
+  eventsPerDay: LatencyPerDay[],
   from: string | null,
   to: string | null,
 ) {
@@ -37,7 +37,7 @@ function getChartData(
   const map = eventsPerDay.reduce<Record<string, number>>((acc, curr) => {
     if (acc[curr.date] != undefined)
       throw Error('duplicated entry in chart data');
-    acc[curr.date] = curr.count;
+    acc[curr.date] = curr.averageLatencyMs;
     return acc;
   }, {});
 
@@ -46,29 +46,29 @@ function getChartData(
     const date = start.plus({ days: i }).toFormat('yyyy-MM-dd');
     chartData.push({
       day: date,
-      events: map[date] ?? 0,
+      latency: map[date] ?? null,
     });
   }
   return chartData;
 }
 
-interface ChartEventsPerDayProps {
-  eventsPerDay: EventPerDay[];
+interface ChartLatencyPerDayProps {
+  eventsPerDay: LatencyPerDay[];
   from: string | null;
   to: string | null;
   className?: string;
   title: string;
 }
 
-export default function ChartEventsPerDay({
+export default function ChartLatencyPerDay({
   eventsPerDay,
   from,
   to,
   className,
   title,
-}: ChartEventsPerDayProps) {
+}: ChartLatencyPerDayProps) {
   const chartData = getChartData(eventsPerDay, from, to);
-
+  console.log(chartData);
   return (
     <Card className={className}>
       <CardHeader>
@@ -82,7 +82,7 @@ export default function ChartEventsPerDay({
               <linearGradient id="eventsGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--chart-3)"
+                  stopColor="var(--chart-5)"
                   stopOpacity={0.8}
                 />
                 <stop
@@ -106,7 +106,7 @@ export default function ChartEventsPerDay({
               content={<ChartTooltipContent indicator="dot" />}
             />
             <Area
-              dataKey="events"
+              dataKey="latency"
               type="monotone"
               fill="url(#eventsGradient)"
               fillOpacity={1}

@@ -40,6 +40,7 @@ interface GetStatsByDayResponse {
   eventsByDay: {
     date: string;
     count: number;
+    averageLatencyMs: number;
   }[];
 }
 

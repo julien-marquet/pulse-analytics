@@ -25,12 +25,16 @@ export class EventsStatsService {
         },
         timeZone,
       },
-      _sum: { count: true },
+      _sum: { count: true, processingLatencyTotalMs: true },
       orderBy: { date: 'asc' },
     });
 
     return res.map((r) => ({
       count: r._sum.count ?? 0,
+      averageLatencyMs:
+        (r._sum.count &&
+          (r._sum.processingLatencyTotalMs ?? 0) / (r._sum.count ?? 0)) ??
+        0,
       date: DatePrismaConverter.fromPrismaToDateString(r.date),
     }));
   }
