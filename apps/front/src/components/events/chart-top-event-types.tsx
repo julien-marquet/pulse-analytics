@@ -76,7 +76,7 @@ export default function ChartTopEventTypes({
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex w-full h-full gap-4 min-w-0 min-h-0 items-center">
+      <CardContent className="h-100 flex w-full gap-4 min-w-0 min-h-0 items-center">
         <ChartContainer
           config={chartConfig}
           className="w-full min-w-0 h-full max-h-full max-w-full aspect-square [&_.recharts-pie-label-text]:fill-foreground"
@@ -85,7 +85,7 @@ export default function ChartTopEventTypes({
             accessibilityLayer
             data={chartData}
             layout="vertical"
-            margin={{ top: 12, right: 52 }}
+            margin={{ top: 2, right: 64, bottom: -20 }}
           >
             <XAxis type="number" dataKey="count" hide />
             <YAxis type="category" display="none" axisLine={false} mirror />
