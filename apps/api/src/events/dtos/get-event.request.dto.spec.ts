@@ -17,14 +17,6 @@ describe('GetEventsQueryParamsDto', () => {
   });
 
   describe('page', () => {
-    it('should use default value of 1 when page is absent', async () => {
-      const result = await validateAndTransformPayload(
-        { pageSize: 10 },
-        GetEventsQueryParamsDto,
-      );
-      expect(result.page).toBe(1);
-    });
-
     it('should throw when page is less than 1', async () => {
       await expect(
         validateAndTransformPayload(

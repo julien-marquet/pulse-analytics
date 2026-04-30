@@ -14,15 +14,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 
 interface ServerDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  className?: string;
+  tableClassName?: string;
 }
 
 export function ServerDataTable<TData, TValue>({
   columns,
   data,
+  className,
+  tableClassName,
 }: ServerDataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -33,8 +38,8 @@ export function ServerDataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md border">
-      <Table>
+    <div className={cn(className, 'rounded-md border')}>
+      <Table className={tableClassName}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

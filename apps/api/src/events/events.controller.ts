@@ -37,6 +37,8 @@ export class EventsController {
       queryParams.type,
       queryParams.from,
       queryParams.to,
+      queryParams.sortBy,
+      queryParams.sortAsc,
     );
 
     return {

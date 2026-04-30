@@ -101,7 +101,7 @@ describe('EventQueryService', () => {
       await service.GetEvents(1, 10, undefined, from, to);
 
       const expectedWhere = expect.objectContaining({
-        receivedAt: { gte: from, lte: to },
+        emittedAt: { gte: from, lte: to },
       });
       expect(prisma.event.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: expectedWhere }),
@@ -130,6 +130,52 @@ describe('EventQueryService', () => {
       const result = await service.GetEvents(1, 10);
 
       expect(result).toEqual({ data: [], total: 0 });
+    });
+    it('should sort by emittedAt desc by default', async () => {
+      prisma.event.findMany.mockResolvedValue([]);
+      prisma.event.count.mockResolvedValue(0);
+
+      await service.GetEvents(1, 10);
+
+      expect(prisma.event.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { emittedAt: 'desc' },
+        }),
+      );
+    });
+
+    it('should sort by type when asked', async () => {
+      prisma.event.findMany.mockResolvedValue([]);
+      prisma.event.count.mockResolvedValue(0);
+
+      await service.GetEvents(1, 10, undefined, undefined, undefined, 'type');
+
+      expect(prisma.event.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { type: 'desc' },
+        }),
+      );
+    });
+
+    it('should sort asc when asked', async () => {
+      prisma.event.findMany.mockResolvedValue([]);
+      prisma.event.count.mockResolvedValue(0);
+
+      await service.GetEvents(
+        1,
+        10,
+        undefined,
+        undefined,
+        undefined,
+        'emittedAt',
+        true,
+      );
+
+      expect(prisma.event.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { emittedAt: 'asc' },
+        }),
+      );
     });
   });
 });

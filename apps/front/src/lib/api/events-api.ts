@@ -44,7 +44,7 @@ interface GetStatsByDayResponse {
   }[];
 }
 
-type EventResponseDto = {
+export type EventResponseDto = {
   type: string;
   id: string;
   receivedAt: string;
@@ -71,6 +71,8 @@ export type GetEventsRequestParams = {
   from?: string;
   to?: string;
   type?: string[];
+  sortBy?: 'emittedAt' | 'type';
+  sortAsc?: boolean;
 };
 
 type GetTypesResponse = {

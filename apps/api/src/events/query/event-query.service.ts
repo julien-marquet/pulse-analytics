@@ -20,33 +20,48 @@ export class EventsQueryService {
     type?: string[],
     from?: Date,
     to?: Date,
+    sortBy?: 'emittedAt' | 'type',
+    sortAsc?: boolean,
   ) {
-    console.log(from);
     const filters = {
-      type: this.GetEventsTypeFilter(type),
-      emittedAt: this.GetEventsDateFilter(from, to),
+      type: this._getEventsTypeFilter(type),
+      emittedAt: this._getEventsDateFilter(from, to),
     };
-    console.log(filters);
+
     const [data, total] = await Promise.all([
       this.prisma.event.findMany({
         take: pageSize,
         skip: (page - 1) * pageSize,
         where: filters,
+        orderBy: this._getEventsOrderBy(sortBy, sortAsc),
       }),
       this.prisma.event.count({ where: filters }),
     ]);
-    console.log(data);
     return {
       data: addLatenciesToDbEvents(data),
       total,
     };
   }
 
-  private GetEventsTypeFilter(type?: string[]) {
+  private _getEventsOrderBy(
+    sortBy: 'emittedAt' | 'type' = 'emittedAt',
+    sortAsc: boolean = false,
+  ) {
+    const sortOrder: 'asc' | 'desc' = sortAsc ? 'asc' : 'desc';
+    return sortBy == 'emittedAt'
+      ? {
+          emittedAt: sortOrder,
+        }
+      : {
+          type: sortOrder,
+        };
+  }
+
+  private _getEventsTypeFilter(type?: string[]) {
     if (!type || type.length === 0) return undefined;
     return { in: type };
   }
-  private GetEventsDateFilter(from?: Date, to?: Date) {
+  private _getEventsDateFilter(from?: Date, to?: Date) {
     return {
       lte: to,
       gte: from,

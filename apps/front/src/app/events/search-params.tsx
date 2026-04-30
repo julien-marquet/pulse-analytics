@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { EventsFilters } from './types';
+import { EventsFilters, EventsSortingParams } from './types';
 
 export const defaultPage = 1;
 export const defaultPageSize = 25;
@@ -48,5 +48,53 @@ export function searchParamsToFilters(searchParams: {
     type: type ? type.split(',') : [],
     page: page ? parseInt(page) : defaultPage,
     pageSize: pageSize ? parseInt(pageSize) : defaultPageSize,
+  };
+}
+
+const defaultApiSortBy = 'emittedAt';
+const defaultApiSortAsc = false;
+
+export function sortingParamsToSearchParams(
+  prevParams: URLSearchParams,
+  sortingParams: Partial<EventsSortingParams>,
+): URLSearchParams {
+  const serialized = new URLSearchParams(prevParams);
+  if (
+    sortingParams.sortBy != null &&
+    sortingParams.sortBy !== defaultApiSortBy
+  ) {
+    serialized.set('sortBy', sortingParams.sortBy);
+  } else {
+    serialized.delete('sortBy');
+  }
+
+  if (
+    sortingParams.sortAsc != null &&
+    sortingParams.sortAsc !== defaultApiSortAsc
+  ) {
+    serialized.set('sortAsc', String(sortingParams.sortAsc));
+  } else {
+    serialized.delete('sortAsc');
+  }
+  return serialized;
+}
+
+export function searchParamsToSortingParams(searchParams: {
+  sortBy?: string;
+  sortAsc?: string;
+}): EventsSortingParams {
+  const { sortBy, sortAsc } = searchParams;
+
+  return {
+    sortBy:
+      sortBy && ['emittedAt', 'type'].includes(sortBy)
+        ? (sortBy as EventsSortingParams['sortBy'])
+        : defaultApiSortBy,
+    sortAsc:
+      sortAsc === 'true'
+        ? true
+        : sortAsc === 'false'
+          ? false
+          : defaultApiSortAsc,
   };
 }

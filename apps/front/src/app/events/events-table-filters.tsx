@@ -62,17 +62,17 @@ function reducer(currentValues: FieldsValues, updatedField: UpdatedField) {
   }
 }
 
-type TableFilterProps = {
+type EventsTableFilterProps = {
   className?: string;
   eventTypes: string[];
   values: FieldsValues;
 };
 
-export function TableFilters({
+export function EventsTableFilters({
   className,
   eventTypes,
   values,
-}: TableFilterProps) {
+}: EventsTableFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
