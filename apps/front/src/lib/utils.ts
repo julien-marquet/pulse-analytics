@@ -12,3 +12,13 @@ export function toSearchParams<T extends object>(params: T): URLSearchParams {
     ) as Record<string, string>,
   );
 }
+
+export function times<T extends (index: number) => any>(n: number) {
+  return (f: T) => {
+    const results = [];
+    for (let i = 0; i < n; i++) {
+      results.push(f(i));
+    }
+    return results;
+  };
+}

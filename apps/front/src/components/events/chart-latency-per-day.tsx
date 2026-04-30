@@ -12,6 +12,9 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
 
 import { type ChartConfig } from '@/components/ui/chart';
 import { DateTime } from 'luxon';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '../ui/skeleton';
+import { FadingSkeleton } from './loading';
 
 const chartConfig = {
   events: {
@@ -70,53 +73,58 @@ export default function ChartLatencyPerDay({
   const chartData = getChartData(eventsPerDay, from, to);
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription></CardDescription>
-      </CardHeader>
-      <CardContent className="w-full h-full">
-        <ChartContainer className="w-full h-full -mx-1.5" config={chartConfig}>
-          <AreaChart data={chartData}>
-            <defs>
-              <linearGradient id="eventsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--chart-5)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--chart-3)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              type="category"
-              dataKey="day"
-              tickFormatter={(v: string) => v.slice(5)}
-              padding={{ left: 24, right: 24 }}
-            />
-            <YAxis width="auto" stroke="var(--color-text-3)" />
+    <FadingSkeleton className={className} transitionDuration={100}>
+      <Card className={'h-full w-full'}>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription></CardDescription>
+        </CardHeader>
+        <CardContent className="w-full h-full">
+          <ChartContainer
+            className="w-full h-full -mx-1.5"
+            config={chartConfig}
+          >
+            <AreaChart data={chartData}>
+              <defs>
+                <linearGradient id="eventsGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--chart-5)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--chart-3)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                type="category"
+                dataKey="day"
+                tickFormatter={(v: string) => v.slice(5)}
+                padding={{ left: 24, right: 24 }}
+              />
+              <YAxis width="auto" stroke="var(--color-text-3)" />
 
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dot" />}
-            />
-            <Area
-              dataKey="latency"
-              type="monotone"
-              fill="url(#eventsGradient)"
-              fillOpacity={1}
-              animationDuration={0}
-              activeDot={false}
-              stroke="var(--chart-5)"
-            />
-          </AreaChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="dot" />}
+              />
+              <Area
+                isAnimationActive={false}
+                dataKey="latency"
+                type="monotone"
+                fill="url(#eventsGradient)"
+                fillOpacity={1}
+                activeDot={false}
+                stroke="var(--chart-5)"
+              />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    </FadingSkeleton>
   );
 }

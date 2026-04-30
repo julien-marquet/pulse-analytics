@@ -41,7 +41,7 @@ export default async function StatsPage({ searchParams }: PageProps<'/stats'>) {
   } = await eventApi.getTimezones();
 
   return (
-    <div className="max-w-400 flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <PageFilters
         className="basis-full"
         timezones={timezones}

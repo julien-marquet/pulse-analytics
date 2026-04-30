@@ -25,7 +25,7 @@ export default async function EventsPage({
   ]);
 
   return (
-    <div className="max-w-400 flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <TableFilters
         className="basis-full"
         eventTypes={bodyTypes.types}
