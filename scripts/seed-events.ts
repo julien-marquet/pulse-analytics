@@ -110,7 +110,7 @@ function generateRandomId(): string {
 }
 
 // at the bottom of the file, replacing the current seed() call
-const [, , quantity = '100', from = '2026-04-13', to = '2026-04-20'] = process.argv;
+const [, , quantity = '100', from = '2026-04-24', to = '2026-04-30'] = process.argv;
 
 seed(
     Number(quantity),

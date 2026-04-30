@@ -1,17 +1,6 @@
 'use client';
 
-import {
-  Bar,
-  BarChart,
-  LabelList,
-  LabelProps,
-  Pie,
-  PieChart,
-  PieSectorShapeProps,
-  Sector,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, BarChart, LabelList, LabelProps, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import {
   ChartConfig,
@@ -28,7 +17,6 @@ function getChartData(eventTypes: EventTypes[], totalEvents: number) {
       count: eventTypes[i].count,
       percent: (eventTypes[i].count / totalEvents) * 100,
       eventType: eventTypes[i].eventType,
-      // fill: `var(--chart-${(i % 5) + 1})`,
     });
   }
 
@@ -36,7 +24,6 @@ function getChartData(eventTypes: EventTypes[], totalEvents: number) {
     count: number;
     percent: number;
     eventType: string;
-    // fill: string;
   }>;
 }
 function getChartConfig(eventTypes: EventTypes[]) {

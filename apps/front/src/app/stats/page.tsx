@@ -1,4 +1,3 @@
-import { Card } from '@/components/ui/card';
 import { PageFilters } from './page-filters';
 import { searchParamsToFilters } from './search-params';
 import { EventsApi } from '@/lib/api/events-api';
@@ -80,12 +79,6 @@ export default async function StatsPage({ searchParams }: PageProps<'/stats'>) {
           to={params.to}
         />
       </div>
-      {/*
-      Events by day chart
-      Event type distribution chart
-      Event type breakdown table
-      Average processing latency by day chart if available
-  */}
     </div>
   );
 }

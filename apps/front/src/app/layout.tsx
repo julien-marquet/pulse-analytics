@@ -1,16 +1,10 @@
 import './globals.css';
 import type { Metadata } from 'next';
-
 import RootProvider from './providers';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import AppSidebar from '@/components/app-sidebar/app-sidebar';
-import { Separator } from '@base-ui/react';
 import AppTopBar from '@/components/app-topbar/app-topbar';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });

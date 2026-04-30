@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useState } from 'react';
-import { ChevronsUpDownIcon, X, XIcon } from 'lucide-react';
+import { ChevronsUpDownIcon, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -17,7 +17,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Field, FieldLabel } from '@/components/ui/field';
-import { InputGroupAddon, InputGroupButton } from './input-group';
 import { ButtonGroup } from './button-group';
 
 type Props = {

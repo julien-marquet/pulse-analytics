@@ -1,5 +1,3 @@
-'use client';
-
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { DateTime } from 'luxon';
 import { DateInput } from './date-input';

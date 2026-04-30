@@ -68,7 +68,7 @@ export default function ChartLatencyPerDay({
   title,
 }: ChartLatencyPerDayProps) {
   const chartData = getChartData(eventsPerDay, from, to);
-  console.log(chartData);
+
   return (
     <Card className={className}>
       <CardHeader>
