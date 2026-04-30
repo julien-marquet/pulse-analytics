@@ -9,8 +9,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Combobox from '../../components/ui/combobox';
 import { Badge } from '@/components/ui/badge';
 import { filtersToSearchParams } from './search-params';
-import { defaultTimeFrom, defaultTimeTo } from './consts';
 import { EventsFilters } from './types';
+
+export const defaultTimeTo = '23:59';
+export const defaultTimeFrom = '00:00';
 
 type FieldsValues = Pick<EventsFilters, 'from' | 'to' | 'type'>;
 

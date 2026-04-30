@@ -12,9 +12,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
 
 import { type ChartConfig } from '@/components/ui/chart';
 import { DateTime } from 'luxon';
-import { useEffect, useState } from 'react';
-import { Skeleton } from '../ui/skeleton';
-import { FadingSkeleton } from './loading';
+import { FadingSkeleton } from '../skeletons/FadingSkeleton';
 
 const chartConfig = {
   events: {
@@ -73,7 +71,7 @@ export default function ChartLatencyPerDay({
   const chartData = getChartData(eventsPerDay, from, to);
 
   return (
-    <FadingSkeleton className={className} transitionDuration={100}>
+    <FadingSkeleton className={className}>
       <Card className={'h-full w-full'}>
         <CardHeader>
           <CardTitle>{title}</CardTitle>

@@ -9,9 +9,7 @@ import {
   ChartTooltipContent,
 } from '../ui/chart';
 import { ChartData } from 'recharts/types/state/chartDataSlice';
-import { useEffect, useState } from 'react';
-import { Skeleton } from '../ui/skeleton';
-import { FadingSkeleton } from './loading';
+import { FadingSkeleton } from '../skeletons/FadingSkeleton';
 
 function getChartData(eventTypes: EventTypes[], totalEvents: number) {
   const chartData = [];
@@ -62,7 +60,7 @@ export default function ChartTopEventTypes({
   const chartConfig = getChartConfig(eventTypes);
   const chartData = getChartData(eventTypes, totalEvents);
   return (
-    <FadingSkeleton transitionDuration={100} className={className}>
+    <FadingSkeleton className={className}>
       <Card className="w-full h-full">
         <CardHeader>
           <CardTitle>{title}</CardTitle>

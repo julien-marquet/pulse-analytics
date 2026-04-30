@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon';
 import { EventsFilters } from './types';
-import { defaultPage, defaultPageSize } from './consts';
+
+export const defaultPage = 1;
+export const defaultPageSize = 25;
 
 export function filtersToSearchParams(
   prevParams: URLSearchParams,
