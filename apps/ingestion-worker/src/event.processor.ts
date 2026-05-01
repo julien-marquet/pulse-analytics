@@ -1,5 +1,10 @@
 import { Job } from 'bullmq';
-import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
+import {
+  OnQueueEvent,
+  OnWorkerEvent,
+  Processor,
+  WorkerHost,
+} from '@nestjs/bullmq';
 import { environment } from './environment';
 import { CreateEventJobData } from '@app/contracts';
 import { EventPersistenceService } from './event-persistence.service';
@@ -37,5 +42,19 @@ export class EventProcessor extends WorkerHost {
   @OnWorkerEvent('error')
   onError(error: Error): void {
     console.error(error);
+  }
+
+  @OnQueueEvent('deduplicated')
+  onDeduplicated({
+    jobId,
+    deduplicationId,
+    deduplicatedJobId,
+  }: {
+    jobId: string;
+    deduplicationId: string;
+    deduplicatedJobId: string;
+  }): void {
+    console.log(`Job ${deduplicatedJobId} was deduplicated due to existing job ${jobId} 
+  with deduplication ID ${deduplicationId}`);
   }
 }

@@ -16,10 +16,14 @@ export class EventsIngestionService {
     if (id == undefined) {
       id = this.generateEventId();
     }
-    await this.eventQueue.add(environment.get('ADD_EVENT_JOB_NAME'), {
-      id,
-      ...eventData,
-    });
+    await this.eventQueue.add(
+      environment.get('ADD_EVENT_JOB_NAME'),
+      {
+        id,
+        ...eventData,
+      },
+      { jobId: id },
+    );
   }
 
   private generateEventId() {
