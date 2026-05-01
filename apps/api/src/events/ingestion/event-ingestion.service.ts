@@ -22,7 +22,14 @@ export class EventsIngestionService {
         id,
         ...eventData,
       },
-      { jobId: id },
+      {
+        jobId: id,
+        attempts: 2,
+        backoff: {
+          type: 'fixed',
+          delay: 3000,
+        },
+      },
     );
   }
 
