@@ -1,6 +1,6 @@
 import { EventData } from '@app/contracts';
 import { Prisma } from '@app/database';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { TypedConfigService } from '@app/common';
 import { getDailyEventsStatsUpsertQueries } from './event-persistence.service.helpers';

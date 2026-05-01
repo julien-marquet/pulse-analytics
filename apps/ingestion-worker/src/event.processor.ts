@@ -1,25 +1,30 @@
 import { Job } from 'bullmq';
-import {
-  OnQueueEvent,
-  OnWorkerEvent,
-  Processor,
-  WorkerHost,
-} from '@nestjs/bullmq';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { environment } from './environment';
 import { CreateEventJobData } from '@app/contracts';
 import { EventPersistenceService } from './event-persistence.service';
+import { PinoLogger } from 'nestjs-pino';
 
 @Processor(environment.get('EVENT_QUEUE_NAME'))
 export class EventProcessor extends WorkerHost {
   constructor(
+    private readonly logger: PinoLogger,
     private readonly eventPersistenceService: EventPersistenceService,
   ) {
     super();
+    logger.setContext(EventProcessor.name);
   }
 
   async process(job: Job<CreateEventJobData>): Promise<void> {
-    if (job.name != environment.get('ADD_EVENT_JOB_NAME'))
-      throw new Error(`Unknown job name ${job.name}`);
+    const metrics = {
+      jobId: job.id,
+      eventId: job.data.id,
+      eventType: job.data.type,
+      queueLatency: Date.now() - job.timestamp,
+      attemptsMade: job.attemptsMade,
+    };
+
+    const startTime = Date.now();
 
     try {
       await this.eventPersistenceService.PersistEvent(
@@ -28,33 +33,21 @@ export class EventProcessor extends WorkerHost {
         new Date(job.timestamp),
         new Date(),
       );
-    } catch (err) {
-      console.error(err);
+
+      this.logger.info({
+        msg: 'Event processed',
+        ...metrics,
+        processingTimeMs: Date.now() - startTime,
+      });
+    } catch (err: unknown) {
+      this.logger.error({
+        msg: 'Failed to process event',
+        ...metrics,
+        processingTimeMs: Date.now() - startTime,
+        error: err instanceof Error ? err.message : String(err),
+        stack: err instanceof Error ? err.stack : undefined,
+      });
       throw err;
     }
-  }
-
-  @OnWorkerEvent('completed')
-  onCompleted(): void {
-    console.info('completed');
-  }
-
-  @OnWorkerEvent('error')
-  onError(error: Error): void {
-    console.error(error);
-  }
-
-  @OnQueueEvent('deduplicated')
-  onDeduplicated({
-    jobId,
-    deduplicationId,
-    deduplicatedJobId,
-  }: {
-    jobId: string;
-    deduplicationId: string;
-    deduplicatedJobId: string;
-  }): void {
-    console.log(`Job ${deduplicatedJobId} was deduplicated due to existing job ${jobId} 
-  with deduplication ID ${deduplicationId}`);
   }
 }

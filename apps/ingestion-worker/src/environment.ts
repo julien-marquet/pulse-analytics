@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ValidatedEnvironment } from '@app/common';
 
 class EnvironmentVariables {
@@ -17,6 +17,14 @@ class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   ADD_EVENT_JOB_NAME: string;
+
+  @IsString()
+  @IsOptional()
+  LOG_LEVEL?: string = 'info';
+
+  @IsString()
+  @IsOptional()
+  NODE_ENV?: string = 'development';
 }
 
 export const environment = new ValidatedEnvironment(EnvironmentVariables);

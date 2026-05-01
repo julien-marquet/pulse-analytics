@@ -4,9 +4,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { environment } from './environment';
 import { useContainer } from 'class-validator';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
   useContainer(app.select(AppModule), { fallbackOnErrors: true }); // enable DI for class-validator
   await app.listen(environment.get('PORT'));
 }

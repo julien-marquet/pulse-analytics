@@ -29,37 +29,39 @@ describe('EventStatsService', () => {
     const from = '2026-03-01';
     const to = '2026-04-01';
 
-    it('should return mapped results with count and date', async () => {
+    it('should return mapped results with count, date and averageLatency', async () => {
       prisma.dailyEventStat.groupBy.mockResolvedValue([
         {
           date: DatePrismaConverter.toPrisma('2026-03-01'),
-          _sum: { count: 5 },
+          _sum: { count: 5, processingLatencyTotalMs: 10 },
         },
         {
           date: DatePrismaConverter.toPrisma('2026-03-02'),
-          _sum: { count: 10 },
+          _sum: { count: 10, processingLatencyTotalMs: 5 },
         },
       ] as any);
 
       const res = await service.GetStatsByDay('UTC', from, to);
 
       expect(res).toEqual([
-        { count: 5, date: '2026-03-01' },
-        { count: 10, date: '2026-03-02' },
+        { count: 5, date: '2026-03-01', averageLatencyMs: 2 },
+        { count: 10, date: '2026-03-02', averageLatencyMs: 0.5 },
       ]);
     });
 
-    it('should default count to 0 when _sum.count is null', async () => {
+    it('should default count to 0 when _sum.count or _sum.processingLatencyTotalMs is null', async () => {
       prisma.dailyEventStat.groupBy.mockResolvedValue([
         {
           date: DatePrismaConverter.toPrisma('2026-03-01'),
-          _sum: { count: null },
+          _sum: { count: null, processingLatencyTotalMs: null },
         },
       ] as any);
 
       const res = await service.GetStatsByDay('UTC', from, to);
 
-      expect(res).toEqual([{ count: 0, date: '2026-03-01' }]);
+      expect(res).toEqual([
+        { count: 0, date: '2026-03-01', averageLatencyMs: 0 },
+      ]);
     });
 
     it('should query prisma with the correct date range and timezone', async () => {
@@ -77,7 +79,7 @@ describe('EventStatsService', () => {
             },
             timeZone: 'UTC',
           },
-          _sum: { count: true },
+          _sum: { count: true, processingLatencyTotalMs: true },
           orderBy: { date: 'asc' },
         }),
       );
