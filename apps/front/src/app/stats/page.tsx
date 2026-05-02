@@ -10,7 +10,7 @@ import ChartLatencyPerDay from '@/components/events/chart-latency-per-day';
 
 function getDefaultValues() {
   return {
-    from: DateTime.now().minus({ days: 7 }).toISODate(),
+    from: DateTime.now().minus({ days: 6 }).toISODate(),
     to: DateTime.now().toISODate(),
     timezone: 'UTC',
   };

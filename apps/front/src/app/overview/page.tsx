@@ -4,7 +4,6 @@ import { KpiItem } from '@/components/ui/kpi';
 import { ApiClient } from '@/lib/api/api';
 import { EventsApi } from '@/lib/api/events-api';
 import { DateTime } from 'luxon';
-import Loading from './loading';
 
 export default async function OverviewPage() {
   const eventApi = new EventsApi(
@@ -12,7 +11,7 @@ export default async function OverviewPage() {
   );
 
   const now = DateTime.now();
-  const from = now.minus({ days: 7 }).toISODate()!;
+  const from = now.minus({ days: 6 }).toISODate()!;
   const to = now.toISODate()!;
 
   const { body: overviewData } = await eventApi.getStatsOverview({

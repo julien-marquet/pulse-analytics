@@ -43,7 +43,7 @@ function getChartData(
   }, {});
 
   const chartData = [];
-  for (let i = 0; i < diff.days; i++) {
+  for (let i = 0; i < diff.days + 1; i++) {
     const date = start.plus({ days: i }).toFormat('yyyy-MM-dd');
     chartData.push({
       day: date,
