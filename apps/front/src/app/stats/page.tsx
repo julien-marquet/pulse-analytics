@@ -16,6 +16,8 @@ function getDefaultValues() {
   };
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function StatsPage({ searchParams }: PageProps<'/stats'>) {
   const defaultValues = getDefaultValues();
   const params = searchParamsToFilters(await searchParams, defaultValues);

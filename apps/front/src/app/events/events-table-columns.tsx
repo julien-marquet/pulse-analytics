@@ -1,5 +1,3 @@
-'use client';
-
 import { ColumnDef } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { EventsSortingParams, EventsTableEntry } from './types';
@@ -28,9 +26,13 @@ export function getEventsTableColumns(
       },
       cell: ({ row }) => {
         const formatted = DateTime.fromISO(row.getValue('emittedAt')).toFormat(
-          'LLL dd HH:mm:ss',
+          'yyyy-MM-dd HH:mm:ss',
         );
-        return <div className="font-mono">{formatted}</div>;
+        return (
+          <div className="font-mono" suppressHydrationWarning>
+            {formatted}
+          </div>
+        );
       },
     },
     {

@@ -1,8 +1,9 @@
+import { ReactNode } from 'react';
 import { Item, ItemContent, ItemDescription, ItemTitle } from './item';
 
 interface KpiItemProps {
-  label: string;
-  value: string;
+  label: string | ReactNode;
+  value: string | ReactNode;
   unit?: string;
   className?: string;
 }

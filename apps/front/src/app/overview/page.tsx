@@ -5,6 +5,8 @@ import { ApiClient } from '@/lib/api/api';
 import { EventsApi } from '@/lib/api/events-api';
 import { DateTime } from 'luxon';
 
+export const dynamic = 'force-dynamic';
+
 export default async function OverviewPage() {
   const eventApi = new EventsApi(
     new ApiClient({ baseUrl: process.env.API_URL }),

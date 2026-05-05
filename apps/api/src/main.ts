@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.useLogger(app.get(Logger));
   useContainer(app.select(AppModule), { fallbackOnErrors: true }); // enable DI for class-validator
-  await app.listen(environment.get('PORT'));
+  await app.listen(environment.get('PORT'), '0.0.0.0');
 }
 bootstrap()
   .then(() => {})

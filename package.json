@@ -1,14 +1,12 @@
 {
   "name": "realtime-product-analytics-platform",
+  "packageManager": "npm@11.12.0",
   "private": true,
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "build": "...",
-    "test": "...",
-    "lint": "...",
     "seed": "ts-node --project tsconfig.base.json scripts/seed-events.ts"
   },
   "devDependencies": {
