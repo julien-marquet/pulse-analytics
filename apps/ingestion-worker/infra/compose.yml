@@ -1,0 +1,14 @@
+networks:
+  app-network:
+    external: true
+
+services:
+  ingestion-worker:
+    build:
+      dockerfile: apps/ingestion-worker/Dockerfile
+    networks:
+      - app-network
+    env_file:
+      - ./apps/ingestion-worker/.env
+    environment:
+      - REDIS_URL=redis://redis:6379

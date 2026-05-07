@@ -1,0 +1,15 @@
+networks:
+  app-network:
+    external: true
+
+services:
+  api:
+    build:
+      dockerfile: apps/api/Dockerfile
+    networks:
+      - app-network
+    env_file:
+      - ./apps/api/.env
+    environment:
+      - PORT=8080
+      - REDIS_URL=redis://redis:6379

@@ -7,15 +7,9 @@ services:
       - postgresql_data:/var/lib/postgresql
       - ./initdb.d:/docker-entrypoint-initdb.d
     env_file:
-      - .env    
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
+      - ./infra/database/.env
     networks:
-      - postgres_network
+      - app-network
   pgadmin:
     # https://hub.docker.com/r/dpage/pgadmin4
     image: dpage/pgadmin4:latest
@@ -24,17 +18,13 @@ services:
       - pgadmin_working_dir:/var/lib/pgadmin
       - pgadmin_config_dir:/pgadmin4
     env_file:
-      - .env    
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - ./infra/database/.env
     depends_on:
       - postgres
     ports:
       - "5433:80"
     networks:
-      - postgres_network
+      - app-network
 
 volumes:
   postgresql_data:
@@ -45,5 +35,5 @@ volumes:
     driver: local
 
 networks:
-  postgres_network:
-    driver: bridge
+  app-network:
+    external: true

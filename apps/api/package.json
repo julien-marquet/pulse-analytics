@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "@app/api",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@app/common": "*",
+    "@app/contracts": "*",
     "@app/database": "*",
     "@nestjs/platform-express": "^11.1.17",
     "nestjs-pino": "^4.6.1",

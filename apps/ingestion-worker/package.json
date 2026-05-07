@@ -1,5 +1,5 @@
 {
-  "name": "ingestion-worker",
+  "name": "@app/ingestion-worker",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -53,6 +53,9 @@
   },
   "dependencies": {
     "nestjs-pino": "^4.6.1",
-    "pino-http": "^11.0.0"
+    "pino-http": "^11.0.0",
+    "@app/common": "*",
+    "@app/contracts": "*",
+    "@app/database": "*"
   }
 }

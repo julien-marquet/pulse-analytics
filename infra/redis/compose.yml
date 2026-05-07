@@ -1,11 +1,15 @@
+networks:
+  app-network:
+    external: true
+
 services:
   redis:
     image: redis:8.6-alpine
     restart: always
-    ports:
-      - "6379:6379"
-    environment:
-      REDIS_PASSWORD: secret
+    env_file:
+      - ./infra/redis/.env
+    networks:
+      - app-network
   redis-insight:
     image: redis/redisinsight:latest
     restart: always
@@ -13,6 +17,8 @@ services:
       - "5540:5540"
     volumes:
       - redis-insight:/data
+    networks:
+      - app-network
 
 volumes:
   redis-insight:
