@@ -1,13 +1,6 @@
-import { Transform } from 'class-transformer';
-import { IsDefined, IsTimeZone, IsNotEmpty } from 'class-validator';
+import { IsTimezoneList } from '@app/common';
 
 export class ConfigVariables {
-  @IsDefined()
-  @IsTimeZone({ each: true })
-  @IsDefined({ each: true })
-  @IsNotEmpty({ each: true })
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.split(',') : undefined,
-  )
+  @IsTimezoneList()
   TIMEZONES: string[];
 }
