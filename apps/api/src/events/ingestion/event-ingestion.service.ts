@@ -12,7 +12,7 @@ export class EventsIngestionService {
     private readonly eventQueue: Queue<CreateEventJobData>,
   ) {}
 
-  public async AddEvent(id: string | undefined, eventData: EventData) {
+  public async addEvent(id: string | undefined, eventData: EventData) {
     if (id == undefined) {
       id = this.generateEventId();
     }

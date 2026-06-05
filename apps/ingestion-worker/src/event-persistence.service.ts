@@ -13,7 +13,7 @@ export class EventPersistenceService {
     private readonly config: TypedConfigService<ConfigVariables>,
   ) {}
 
-  public async PersistEvent(
+  public async persistEvent(
     id: string,
     eventData: EventData,
     receivedAt: Date,

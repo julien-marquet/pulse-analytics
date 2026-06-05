@@ -10,11 +10,11 @@ export class EventsStatsService {
     private readonly config: TypedConfigService<ConfigVariables>,
   ) {}
 
-  public GetTimeZones() {
+  public getTimeZones() {
     return this.config.get('TIMEZONES');
   }
 
-  public async GetStatsByDay(timeZone: string, from: string, to: string) {
+  public async getStatsByDay(timeZone: string, from: string, to: string) {
     const res = await this.prisma.dailyEventStat.groupBy({
       by: 'date',
       where: {
@@ -38,7 +38,7 @@ export class EventsStatsService {
     }));
   }
 
-  public async GetStatsOverview(
+  public async getStatsOverview(
     timeZone: string,
     from: string,
     to: string,
@@ -81,7 +81,7 @@ export class EventsStatsService {
     };
   }
 
-  public async GetStatsByType(timeZone: string, from: string, to: string) {
+  public async getStatsByType(timeZone: string, from: string, to: string) {
     const res = await this.prisma.dailyEventStat.groupBy({
       by: 'eventType',
       where: {

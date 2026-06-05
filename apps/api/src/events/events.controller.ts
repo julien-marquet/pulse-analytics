@@ -24,14 +24,14 @@ export class EventsController {
   ) {}
   @Post()
   async CreateEvent(@Body(ValidationPipe) eventDto: CreateEventRequestDto) {
-    await this.eventsIngestionService.AddEvent(eventDto.id, eventDto);
+    await this.eventsIngestionService.addEvent(eventDto.id, eventDto);
   }
 
   @Get()
-  async GetEvents(
+  async getEvents(
     @Query(ValidationPipe) queryParams: GetEventsQueryParamsDto,
   ): Promise<GetEventsResponse> {
-    const { data, total } = await this.eventsQueryService.GetEvents(
+    const { data, total } = await this.eventsQueryService.getEvents(
       queryParams.page,
       queryParams.pageSize,
       queryParams.type,
@@ -50,25 +50,25 @@ export class EventsController {
   }
 
   @Get('/types')
-  async GetTypes(): Promise<GetTypesResponse> {
-    const types = await this.eventsQueryService.GetTypes();
+  async getTypes(): Promise<GetTypesResponse> {
+    const types = await this.eventsQueryService.getTypes();
 
     return { types };
   }
 
   @Get('/stats/timezones')
   GetTimezones(): GetTimezonesResponse {
-    const timezones = this.eventsStatsService.GetTimeZones();
+    const timezones = this.eventsStatsService.getTimeZones();
 
     return { timezones };
   }
 
   @Get('/stats/by-day')
-  async GetStatsByDay(
+  async getStatsByDay(
     @Query(ValidationPipe)
     queryParams: GetStatsByDayQueryParamsDto,
   ): Promise<GetStatsByDayResponse> {
-    const eventsByDay = await this.eventsStatsService.GetStatsByDay(
+    const eventsByDay = await this.eventsStatsService.getStatsByDay(
       queryParams.timeZone,
       queryParams.from,
       queryParams.to,
@@ -84,11 +84,11 @@ export class EventsController {
   }
 
   @Get('/stats/by-type')
-  async GetStatsByType(
+  async getStatsByType(
     @Query(ValidationPipe)
     queryParams: GetStatsByTypeQueryParamsDto,
   ): Promise<GetStatsByTypeResponse> {
-    return this.eventsStatsService.GetStatsByType(
+    return this.eventsStatsService.getStatsByType(
       queryParams.timeZone,
       queryParams.from,
       queryParams.to,
@@ -96,11 +96,11 @@ export class EventsController {
   }
 
   @Get('/stats/overview')
-  async GetStatsOverview(
+  async getStatsOverview(
     @Query(ValidationPipe)
     queryParams: GetStatsOverviewQueryParamsDto,
   ): Promise<GetStatsOverviewResponse> {
-    const res = await this.eventsStatsService.GetStatsOverview(
+    const res = await this.eventsStatsService.getStatsOverview(
       queryParams.timeZone,
       queryParams.from,
       queryParams.to,

@@ -24,11 +24,11 @@ describe('EventPersistenceService', () => {
     service = new EventPersistenceService(prisma, config);
   });
 
-  describe('PersistEvent', () => {
+  describe('persistEvent', () => {
     it('should call $transaction', async () => {
       const eventData = makeEventData();
 
-      await service.PersistEvent(
+      await service.persistEvent(
         'event-id',
         eventData,
         new Date('2026-04-09T12:00:01.000Z'),
@@ -43,7 +43,7 @@ describe('EventPersistenceService', () => {
       const receivedAt = new Date('2026-04-09T12:00:01.000Z');
       const processedAt = new Date('2026-04-09T12:00:02.000Z');
 
-      await service.PersistEvent(
+      await service.persistEvent(
         'event-id',
         eventData,
         receivedAt,
@@ -65,7 +65,7 @@ describe('EventPersistenceService', () => {
     it('should upsert one dailyEventStat per timezone', async () => {
       const eventData = makeEventData();
 
-      await service.PersistEvent(
+      await service.persistEvent(
         'event-id',
         eventData,
         new Date('2026-04-09T12:00:01.000Z'),
@@ -80,7 +80,7 @@ describe('EventPersistenceService', () => {
     it('should read TIMEZONES from config', async () => {
       const eventData = makeEventData();
 
-      await service.PersistEvent(
+      await service.persistEvent(
         'event-id',
         eventData,
         new Date('2026-04-09T12:00:01.000Z'),
@@ -94,7 +94,7 @@ describe('EventPersistenceService', () => {
       const emittedAt = new Date('2026-03-15T08:30:00.000Z');
       const eventData = makeEventData({ emittedAt });
 
-      await service.PersistEvent(
+      await service.persistEvent(
         'event-id',
         eventData,
         new Date('2026-03-15T08:30:01.000Z'),

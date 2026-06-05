@@ -18,14 +18,14 @@ describe('EventStatsService', () => {
     service = new EventsStatsService(prisma, config);
   });
 
-  describe('GetTimeZones', () => {
+  describe('getTimeZones', () => {
     it('should return the configured timezones', () => {
-      const result = service.GetTimeZones();
+      const result = service.getTimeZones();
       expect(result).toEqual(['UTC']);
     });
   });
 
-  describe('GetStatsByDay', () => {
+  describe('getStatsByDay', () => {
     const from = '2026-03-01';
     const to = '2026-04-01';
 
@@ -41,7 +41,7 @@ describe('EventStatsService', () => {
         },
       ] as any);
 
-      const res = await service.GetStatsByDay('UTC', from, to);
+      const res = await service.getStatsByDay('UTC', from, to);
 
       expect(res).toEqual([
         { count: 5, date: '2026-03-01', averageLatencyMs: 2 },
@@ -57,7 +57,7 @@ describe('EventStatsService', () => {
         },
       ] as any);
 
-      const res = await service.GetStatsByDay('UTC', from, to);
+      const res = await service.getStatsByDay('UTC', from, to);
 
       expect(res).toEqual([
         { count: 0, date: '2026-03-01', averageLatencyMs: 0 },
@@ -67,7 +67,7 @@ describe('EventStatsService', () => {
     it('should query prisma with the correct date range and timezone', async () => {
       prisma.dailyEventStat.groupBy.mockResolvedValue([]);
 
-      await service.GetStatsByDay('UTC', from, to);
+      await service.getStatsByDay('UTC', from, to);
 
       expect(prisma.dailyEventStat.groupBy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -88,13 +88,13 @@ describe('EventStatsService', () => {
     it('should return an empty array when there are no results', async () => {
       prisma.dailyEventStat.groupBy.mockResolvedValue([]);
 
-      const res = await service.GetStatsByDay('UTC', from, to);
+      const res = await service.getStatsByDay('UTC', from, to);
 
       expect(res).toEqual([]);
     });
   });
 
-  describe('GetStatsByType', () => {
+  describe('getStatsByType', () => {
     const from = '2026-03-01';
     const to = '2026-04-01';
 
@@ -104,7 +104,7 @@ describe('EventStatsService', () => {
         { eventType: 'button-clicked', _sum: { count: 15 } },
       ] as any);
 
-      const res = await service.GetStatsByType('UTC', from, to);
+      const res = await service.getStatsByType('UTC', from, to);
 
       expect(res).toEqual({
         total: 35,
@@ -120,7 +120,7 @@ describe('EventStatsService', () => {
         { eventType: 'page-viewed', _sum: { count: null } },
       ] as any);
 
-      const res = await service.GetStatsByType('UTC', from, to);
+      const res = await service.getStatsByType('UTC', from, to);
 
       expect(res).toEqual({
         total: 0,
@@ -131,7 +131,7 @@ describe('EventStatsService', () => {
     it('should return empty total and types when there are no results', async () => {
       prisma.dailyEventStat.groupBy.mockResolvedValue([]);
 
-      const res = await service.GetStatsByType('UTC', from, to);
+      const res = await service.getStatsByType('UTC', from, to);
 
       expect(res).toEqual({ total: 0, types: [] });
     });
@@ -139,7 +139,7 @@ describe('EventStatsService', () => {
     it('should query prisma with the correct date range, timezone, and orderBy', async () => {
       prisma.dailyEventStat.groupBy.mockResolvedValue([]);
 
-      await service.GetStatsByType('UTC', from, to);
+      await service.getStatsByType('UTC', from, to);
 
       expect(prisma.dailyEventStat.groupBy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -157,7 +157,7 @@ describe('EventStatsService', () => {
       );
     });
   });
-  describe('GetStatsOverview', () => {
+  describe('getStatsOverview', () => {
     const from = '2026-03-01';
     const to = '2026-04-01';
 
@@ -177,7 +177,7 @@ describe('EventStatsService', () => {
         },
       ] as any);
 
-      const res = await service.GetStatsOverview('UTC', from, to, 3);
+      const res = await service.getStatsOverview('UTC', from, to, 3);
 
       expect(res.totalEvents).toBe(35);
       expect(res.averageProcessingLatencyMs).toBe(100); // 3500/35
@@ -193,7 +193,7 @@ describe('EventStatsService', () => {
       prisma.event.findFirst.mockResolvedValue(null);
       prisma.dailyEventStat.groupBy.mockResolvedValue([]);
 
-      const res = await service.GetStatsOverview('UTC', from, to, 3);
+      const res = await service.getStatsOverview('UTC', from, to, 3);
 
       expect(res.latestEventAt).toBeUndefined();
     });
@@ -202,7 +202,7 @@ describe('EventStatsService', () => {
       prisma.event.findFirst.mockResolvedValue(null);
       prisma.dailyEventStat.groupBy.mockResolvedValue([]);
 
-      await service.GetStatsOverview('UTC', from, to, 3);
+      await service.getStatsOverview('UTC', from, to, 3);
 
       const expectedRange = {
         gte: DatePrismaConverter.toPrisma(from),

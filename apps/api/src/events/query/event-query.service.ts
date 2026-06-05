@@ -6,7 +6,7 @@ import { addLatenciesToDbEvents } from './event-query-helpers';
 export class EventsQueryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async GetTypes() {
+  public async getTypes() {
     const response = await this.prisma.event.findMany({
       select: { type: true },
       distinct: 'type',
@@ -14,7 +14,7 @@ export class EventsQueryService {
 
     return response.map((i) => i.type);
   }
-  public async GetEvents(
+  public async getEvents(
     page: number,
     pageSize: number,
     type?: string[],

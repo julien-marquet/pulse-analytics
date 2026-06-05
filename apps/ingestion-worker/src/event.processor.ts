@@ -27,7 +27,7 @@ export class EventProcessor extends WorkerHost {
     const startTime = Date.now();
 
     try {
-      await this.eventPersistenceService.PersistEvent(
+      await this.eventPersistenceService.persistEvent(
         job.data.id,
         job.data,
         new Date(job.timestamp),

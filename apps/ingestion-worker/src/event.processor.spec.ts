@@ -27,12 +27,12 @@ describe('EventProcessor', () => {
   });
 
   describe('process', () => {
-    it('should call PersistEvent with the correct arguments', async () => {
+    it('should call persistEvent with the correct arguments', async () => {
       const job = makeJob();
 
       await processor.process(job);
 
-      expect(eventPersistenceService.PersistEvent).toHaveBeenCalledWith(
+      expect(eventPersistenceService.persistEvent).toHaveBeenCalledWith(
         job.data.id,
         job.data,
         new Date(job.timestamp),
@@ -40,18 +40,18 @@ describe('EventProcessor', () => {
       );
     });
 
-    it('should rethrow errors from PersistEvent', async () => {
+    it('should rethrow errors from persistEvent', async () => {
       const error = new Error('DB failure');
-      eventPersistenceService.PersistEvent.mockRejectedValue(error);
+      eventPersistenceService.persistEvent.mockRejectedValue(error);
 
       const job = makeJob();
 
       await expect(processor.process(job)).rejects.toThrow('DB failure');
     });
 
-    it('should log an error when PersistEvent throws', async () => {
+    it('should log an error when persistEvent throws', async () => {
       const error = new Error('DB failure');
-      eventPersistenceService.PersistEvent.mockRejectedValue(error);
+      eventPersistenceService.persistEvent.mockRejectedValue(error);
 
       const job = makeJob();
 
