@@ -35,12 +35,24 @@ describe('CreateEventRequestDto', () => {
   });
 
   describe('emittedAt', () => {
-    it('should coerce an ISO string to a Date instance', async () => {
+    it('should accept an ISO string', async () => {
       const result = await validateAndTransformPayload(
         makeValidPayload(),
         CreateEventRequestDto,
       );
-      expect(result.emittedAt).toBeInstanceOf(Date);
+      expect(result.emittedAt).toBe('2026-01-01T00:00:00.000Z');
+    });
+
+    it('should throw when field is not a valid ISO string', async () => {
+      await expect(
+        validateAndTransformPayload(
+          {
+            type: 'PAGE_VIEWED',
+            emittedAt: '2026-01:00:00.000Z',
+          },
+          CreateEventRequestDto,
+        ),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw when emittedAt is missing', async () => {

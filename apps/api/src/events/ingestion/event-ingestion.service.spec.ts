@@ -26,6 +26,7 @@ describe('EventsIngestionService', () => {
           id: 'my-id',
           ...eventData,
         },
+        expect.anything(),
       );
     });
 

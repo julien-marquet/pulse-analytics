@@ -1,5 +1,5 @@
 export type EventData = {
   type: string;
-  emittedAt: Date;
+  emittedAt: string;
   properties: Record<string, unknown>;
 };

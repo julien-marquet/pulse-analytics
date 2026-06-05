@@ -1,4 +1,9 @@
-import { IsDate, IsOptional, IsString, IsNotEmpty } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+  IsDateString,
+} from 'class-validator';
 import { IsJsonObject } from '../../utils/dto.decorators';
 
 export class CreateEventRequestDto {
@@ -6,8 +11,8 @@ export class CreateEventRequestDto {
   @IsNotEmpty()
   type: string;
 
-  @IsDate()
-  emittedAt: Date;
+  @IsDateString()
+  emittedAt: string;
 
   @IsOptional()
   @IsString()
