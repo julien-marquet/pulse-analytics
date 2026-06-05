@@ -7,6 +7,7 @@ export class ValidatedEnvironment<TEnvironmentVariables extends object> {
 
   constructor(EnvironmentVariables: Type<TEnvironmentVariables>) {
     dotenv.config({ quiet: true });
+    dotenv.config({ path: '.env.local', override: true, quiet: true });
 
     this.env = validateEnvironment(EnvironmentVariables, process.env);
   }

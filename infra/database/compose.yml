@@ -8,6 +8,8 @@ services:
       - ./initdb.d:/docker-entrypoint-initdb.d
     env_file:
       - ./infra/database/.env
+    ports:
+      - "5432:5432"
     networks:
       - app-network
   pgadmin:
