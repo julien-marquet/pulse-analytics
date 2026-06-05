@@ -5,9 +5,6 @@ import { EventsIngestionService } from './event-ingestion.service';
 
 @Module({
   imports: [
-    BullModule.forRoot({
-      connection: { url: environment.get('REDIS_URL') },
-    }),
     BullModule.registerQueue({ name: environment.get('EVENT_QUEUE_NAME') }),
   ],
   providers: [EventsIngestionService],

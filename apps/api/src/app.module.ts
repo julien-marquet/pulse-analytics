@@ -7,9 +7,14 @@ import { ConfigVariables } from './config';
 import { IsAllowedTimezoneConstraint } from './utils/is-allowed-timezone.validator';
 import { LoggerModule } from 'nestjs-pino';
 import pretty from 'pino-pretty';
+import { BullModule } from '@nestjs/bullmq';
+import { environment } from './environment';
 
 @Module({
   imports: [
+    BullModule.forRoot({
+      connection: { url: environment.get('REDIS_URL') },
+    }),
     LoggerModule.forRoot({
       pinoHttp: [
         {
