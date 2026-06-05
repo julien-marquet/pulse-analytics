@@ -14,6 +14,9 @@ model Event {
   receivedAt  DateTime @db.Timestamptz(3)
   processedAt DateTime @db.Timestamptz(3)
   properties  Json?
+
+  @@index([emittedAt(sort: Desc)])
+  @@index([type])
 }
 
 model DailyEventStat {
@@ -24,4 +27,5 @@ model DailyEventStat {
   processingLatencyTotalMs Int
 
   @@id([date, eventType, timeZone])
+  @@index([timeZone, date])
 }
