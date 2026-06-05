@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatePrismaConverter, TypedConfigService } from '@app/common';
 import { PrismaService } from '../../prisma.service';
-import { BuildStatsOverview } from './event-stats.helper';
 import { ConfigVariables } from '../../config';
 
 @Injectable()
@@ -45,32 +44,41 @@ export class EventsStatsService {
     to: string,
     nSelectedTopEvents: number,
   ) {
-    const lastEvent = await this.prisma.event.findFirst({
-      orderBy: {
-        emittedAt: 'desc',
-      },
-      where: {
-        emittedAt: {
-          lte: DatePrismaConverter.toPrisma(to),
-          gte: DatePrismaConverter.toPrisma(from),
-        },
-      },
-    });
-    const entries = await this.prisma.dailyEventStat.findMany({
-      where: {
-        date: {
-          lte: DatePrismaConverter.toPrisma(to),
-          gte: DatePrismaConverter.toPrisma(from),
-        },
-        timeZone,
-      },
-    });
+    const dateFilter = {
+      lte: DatePrismaConverter.toPrisma(to),
+      gte: DatePrismaConverter.toPrisma(from),
+    };
 
-    return BuildStatsOverview(
-      entries,
-      lastEvent?.emittedAt,
-      nSelectedTopEvents,
-    );
+    const [lastEvent, byType] = await Promise.all([
+      this.prisma.event.findFirst({
+        orderBy: { emittedAt: 'desc' },
+        where: { emittedAt: dateFilter },
+      }),
+      this.prisma.dailyEventStat.groupBy({
+        by: 'eventType',
+        where: { date: dateFilter, timeZone },
+        _sum: { count: true, processingLatencyTotalMs: true },
+        orderBy: { _sum: { count: 'desc' } },
+      }),
+    ]);
+
+    let totalEvents = 0;
+    let totalLatencyMs = 0;
+    for (const row of byType) {
+      totalEvents += row._sum.count ?? 0;
+      totalLatencyMs += row._sum.processingLatencyTotalMs ?? 0;
+    }
+
+    return {
+      totalEvents,
+      averageProcessingLatencyMs:
+        totalEvents === 0 ? null : totalLatencyMs / totalEvents,
+      eventTypesCount: byType.length,
+      topEventTypes: byType
+        .slice(0, nSelectedTopEvents)
+        .map((r) => ({ eventType: r.eventType, count: r._sum.count ?? 0 })),
+      latestEventAt: lastEvent?.emittedAt.toISOString(),
+    };
   }
 
   public async GetStatsByType(timeZone: string, from: string, to: string) {

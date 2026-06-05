@@ -25,7 +25,7 @@ async function seed(quantity: number, from: Date, to?: Date) {
     }
 }
 
-const [, , quantity = '100', from = '2000-01-01', to] = process.argv;
+const [, , quantity = '100', from = '2026-06-05', to] = process.argv;
 
 seed(
     Number(quantity),
