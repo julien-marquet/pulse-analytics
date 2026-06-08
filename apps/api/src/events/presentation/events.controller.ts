@@ -9,11 +9,11 @@ import { GetStatsOverviewQueryParamsDto } from './dtos/get-stats-overview.reques
 import { GetStatsOverviewResponse } from './dtos/get-stats-overview.response.dto';
 import { EventsIngestionService } from '../application/event-ingestion.service';
 import { EventsQueryService } from '../application/event-query.service';
-import { EventsStatsService } from '../stats/event-stats.service';
 import { ValidationPipe } from '../../validation.pipe';
 import { CreateEventRequestDto } from './dtos/create-event.request.dto';
 import { GetTypesResponse } from './dtos/get-types.response.dto';
 import type { GetTimezonesResponse } from './dtos/get-timezones.response.dto';
+import { EventsStatsService } from '../application/event-stats.service';
 
 @Controller('events')
 export class EventsController {
@@ -31,21 +31,14 @@ export class EventsController {
   async getEvents(
     @Query(ValidationPipe) queryParams: GetEventsQueryParamsDto,
   ): Promise<GetEventsResponse> {
-    const { data, total } = await this.eventsQueryService.getEvents(
-      queryParams.page,
-      queryParams.pageSize,
-      queryParams.type,
-      queryParams.from,
-      queryParams.to,
-      queryParams.sortBy,
-      queryParams.sortAsc,
-    );
+    const { data, total } =
+      await this.eventsQueryService.getEvents(queryParams);
 
     return {
       page: queryParams.page,
       pageSize: queryParams.pageSize,
       total,
-      data: data as GetEventsResponse['data'],
+      data: data,
     };
   }
 
@@ -68,11 +61,8 @@ export class EventsController {
     @Query(ValidationPipe)
     queryParams: GetStatsByDayQueryParamsDto,
   ): Promise<GetStatsByDayResponse> {
-    const eventsByDay = await this.eventsStatsService.getStatsByDay(
-      queryParams.timeZone,
-      queryParams.from,
-      queryParams.to,
-    );
+    const eventsByDay =
+      await this.eventsStatsService.getStatsByDay(queryParams);
     return {
       period: {
         from: queryParams.from,
@@ -88,11 +78,7 @@ export class EventsController {
     @Query(ValidationPipe)
     queryParams: GetStatsByTypeQueryParamsDto,
   ): Promise<GetStatsByTypeResponse> {
-    return this.eventsStatsService.getStatsByType(
-      queryParams.timeZone,
-      queryParams.from,
-      queryParams.to,
-    );
+    return this.eventsStatsService.getStatsByType(queryParams);
   }
 
   @Get('/stats/overview')
@@ -101,9 +87,7 @@ export class EventsController {
     queryParams: GetStatsOverviewQueryParamsDto,
   ): Promise<GetStatsOverviewResponse> {
     const res = await this.eventsStatsService.getStatsOverview(
-      queryParams.timeZone,
-      queryParams.from,
-      queryParams.to,
+      queryParams,
       queryParams.nSelectedTopEvents,
     );
     return {

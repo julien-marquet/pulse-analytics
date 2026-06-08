@@ -3,15 +3,15 @@
   "compilerOptions": {
     "outDir": "./dist"
   },
-  "references": [ // for IDE performance
-    {
-      "path": "../../packages/common"
-    },
-    {
-      "path": "../../packages/database"
-    },
-    {
-      "path": "../../packages/contracts"
-    }
-  ]
+  // "references": [ // for IDE performance
+  //   {
+  //     "path": "../../packages/common"
+  //   },
+  //   {
+  //     "path": "../../packages/database"
+  //   },
+  //   {
+  //     "path": "../../packages/contracts"
+  //   }
+  // ]
 }

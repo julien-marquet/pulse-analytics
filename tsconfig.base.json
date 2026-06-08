@@ -23,7 +23,7 @@
         "noFallthroughCasesInSwitch": true,
         "paths": {
             "@app/database": [
-                "packages/database/src/index.ts"
+                "packages/database/src/client.ts"
             ],
             "@app/common": [
                 "packages/common/src/index.ts"
