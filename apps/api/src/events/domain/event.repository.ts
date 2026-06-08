@@ -1,3 +1,5 @@
+import { Event } from './event.aggregate';
+
 export const EVENT_REPOSITORY = Symbol('IEventRepository');
 
 export interface EventQuery {

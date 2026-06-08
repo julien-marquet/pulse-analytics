@@ -1,6 +1,7 @@
 import { type Event as DbEvent } from '@app/database';
+import { Event } from '../event.aggregate';
 
-export function addLatenciesToDbEvents(data: DbEvent[]) {
+export function addLatenciesToDbEvents(data: DbEvent[]): Event[] {
   return data.map((dbEvent) => {
     const ingestionLatencyMs =
       new Date(dbEvent.receivedAt).valueOf() -
@@ -15,6 +16,6 @@ export function addLatenciesToDbEvents(data: DbEvent[]) {
         processingLatencyMs,
         totalLatencyMs: ingestionLatencyMs + processingLatencyMs,
       },
-    };
+    } as unknown as Event;
   });
 }
