@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { validateAndTransformPayload } from '../../utils/validation.utils';
+import { validateAndTransformPayload } from '../../../utils/validation.utils';
 import { CreateEventRequestDto } from './create-event.request.dto';
 
 const makeValidPayload = () => ({

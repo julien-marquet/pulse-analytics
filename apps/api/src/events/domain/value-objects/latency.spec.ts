@@ -1,7 +1,7 @@
-import { makeEventDbEntry } from '../../db.fixtures';
-import { addLatenciesToDbEvents } from './event-query-helpers';
+import { makeEventDbEntry } from '../../../db.fixtures';
+import { addLatenciesToDbEvents } from './latency';
 
-describe('EventQueryHelpers', () => {
+describe('latency', () => {
   describe('addLatenciesToDbEvents', () => {
     it('should return an empty array when given an empty array', () => {
       expect(addLatenciesToDbEvents([])).toEqual([]);

@@ -21,8 +21,13 @@ import { environment } from './environment';
           autoLogging: true,
           level: process.env.LOG_LEVEL || 'info',
           serializers: {
-            req: (req) => ({ method: req.method, url: req.url }),
-            res: (res) => ({ statusCode: res.statusCode }),
+            req: (req: { method: string; url: string }) => ({
+              method: req.method,
+              url: req.url,
+            }),
+            res: (res: { statusCode: number }) => ({
+              statusCode: res.statusCode,
+            }),
           },
         },
         process.env.NODE_ENV !== 'production'

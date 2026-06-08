@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import { validateAndTransformPayload } from '../../utils/validation.utils';
+import { validateAndTransformPayload } from '../../../utils/validation.utils';
 import { GetStatsOverviewQueryParamsDto } from './get-stats-overview.request.dto';
-import { setupIsAllowedTimezoneContainer } from '../../utils/is-allowed-timezone.test-helpers';
+import { setupIsAllowedTimezoneContainer } from '../../../utils/is-allowed-timezone.test-helpers';
 
 const makeValidPayload = () => ({
   timeZone: 'UTC',

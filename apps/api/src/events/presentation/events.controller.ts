@@ -7,10 +7,10 @@ import { GetStatsByTypeQueryParamsDto } from './dtos/get-stats-by-type.request.d
 import { GetStatsByTypeResponse } from './dtos/get-stats-by-type.response.dto';
 import { GetStatsOverviewQueryParamsDto } from './dtos/get-stats-overview.request.dto';
 import { GetStatsOverviewResponse } from './dtos/get-stats-overview.response.dto';
-import { EventsIngestionService } from './ingestion/event-ingestion.service';
-import { EventsQueryService } from './query/event-query.service';
-import { EventsStatsService } from './stats/event-stats.service';
-import { ValidationPipe } from '../validation.pipe';
+import { EventsIngestionService } from '../ingestion/event-ingestion.service';
+import { EventsQueryService } from '../query/event-query.service';
+import { EventsStatsService } from '../stats/event-stats.service';
+import { ValidationPipe } from '../../validation.pipe';
 import { CreateEventRequestDto } from './dtos/create-event.request.dto';
 import { GetTypesResponse } from './dtos/get-types.response.dto';
 import type { GetTimezonesResponse } from './dtos/get-timezones.response.dto';

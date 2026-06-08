@@ -1,7 +1,7 @@
 import { IsDateString, IsOptional } from 'class-validator';
-import { IsAllowedTimezone } from '../../utils/dto.decorators';
+import { IsAllowedTimezone } from '../../../utils/dto.decorators';
 
-export class GetStatsByDayQueryParamsDto {
+export class GetStatsByTypeQueryParamsDto {
   @IsOptional()
   @IsAllowedTimezone()
   timeZone: string = 'UTC';

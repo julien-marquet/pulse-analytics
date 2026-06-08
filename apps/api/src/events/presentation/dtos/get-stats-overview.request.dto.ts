@@ -1,5 +1,5 @@
 import { IsDateString, IsNumber, IsOptional, Min } from 'class-validator';
-import { IsAllowedTimezone } from '../../utils/dto.decorators';
+import { IsAllowedTimezone } from '../../../utils/dto.decorators';
 
 export class GetStatsOverviewQueryParamsDto {
   @IsOptional()

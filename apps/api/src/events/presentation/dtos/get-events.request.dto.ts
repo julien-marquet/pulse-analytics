@@ -7,10 +7,9 @@ import {
   IsString,
   IsNotEmpty,
   IsIn,
-  IsBooleanString,
   IsBoolean,
 } from 'class-validator';
-import { IsStringArray } from '../../utils/dto.decorators';
+import { IsStringArray } from '../../../utils/dto.decorators';
 import { Transform } from 'class-transformer';
 
 export class GetEventsQueryParamsDto {

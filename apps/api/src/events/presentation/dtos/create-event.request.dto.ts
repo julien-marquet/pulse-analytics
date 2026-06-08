@@ -4,7 +4,7 @@ import {
   IsNotEmpty,
   IsDateString,
 } from 'class-validator';
-import { IsJsonObject } from '../../utils/dto.decorators';
+import { IsJsonObject } from '../../../utils/dto.decorators';
 
 export class CreateEventRequestDto {
   @IsString()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
-import { addLatenciesToDbEvents } from './event-query-helpers';
+import { addLatenciesToDbEvents } from '../domain/value-objects/latency';
 
 @Injectable()
 export class EventsQueryService {
