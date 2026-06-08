@@ -10,6 +10,7 @@ import {
   StatsQuery,
   type EventStatsRepository,
 } from '../domain/event-stats.repository';
+import { weightedStats } from '../../utils/aggregate.utils';
 
 @Injectable()
 export class EventsStatsService {
@@ -34,17 +35,16 @@ export class EventsStatsService {
       this.statsRepo.groupByType(query),
     ]);
 
-    let totalEvents = 0;
-    let totalLatencyMs = 0;
-    for (const row of byType) {
-      totalEvents += row.count ?? 0;
-      totalLatencyMs += row.processingLatencyTotalMs ?? 0;
-    }
+    const { average: averageProcessingLatencyMs, totalWeight: totalEvents } =
+      weightedStats(
+        byType,
+        (i) => i.count,
+        (i) => i.processingLatencyTotalMs,
+      );
 
     return {
       totalEvents,
-      averageProcessingLatencyMs:
-        totalEvents === 0 ? null : totalLatencyMs / totalEvents,
+      averageProcessingLatencyMs,
       eventTypesCount: byType.length,
       topEventTypes: byType
         .slice(0, nSelectedTopEvents)
