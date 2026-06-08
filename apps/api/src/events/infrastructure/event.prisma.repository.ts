@@ -2,7 +2,6 @@ import { DatePrismaConverter } from '@app/common';
 import { PrismaService } from '../../prisma.service';
 import { Event } from '../domain/event.aggregate';
 import { EventQuery, EventRepository } from '../domain/event.repository';
-import { Latency } from '../domain/value-objects/latency';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -32,13 +31,7 @@ export class EventPrismaRepository implements EventRepository {
       }),
       this.prisma.event.count({ where: filters }),
     ]);
-    return {
-      data: rows.map((row) => ({
-        ...row,
-        latencies: new Latency(row.emittedAt, row.receivedAt, row.processedAt),
-      })) as unknown as Event[],
-      total,
-    };
+    return { data: rows.map(Event.fromDb), total };
   }
 
   async findLatestEmittedAt(from?: string, to?: string): Promise<Date | null> {
