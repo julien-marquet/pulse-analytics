@@ -1,21 +1,11 @@
-import { type Event as DbEvent } from '@app/database';
-import { Event } from '../event.aggregate';
+export class Latency {
+  readonly ingestionLatencyMs: number;
+  readonly processingLatencyMs: number;
+  readonly totalLatencyMs: number;
 
-export function addLatenciesToDbEvents(data: DbEvent[]): Event[] {
-  return data.map((dbEvent) => {
-    const ingestionLatencyMs =
-      new Date(dbEvent.receivedAt).valueOf() -
-      new Date(dbEvent.emittedAt).valueOf();
-    const processingLatencyMs =
-      new Date(dbEvent.processedAt).valueOf() -
-      new Date(dbEvent.receivedAt).valueOf();
-    return {
-      ...dbEvent,
-      latencies: {
-        ingestionLatencyMs,
-        processingLatencyMs,
-        totalLatencyMs: ingestionLatencyMs + processingLatencyMs,
-      },
-    } as unknown as Event;
-  });
+  constructor(emittedAt: Date, receivedAt: Date, processedAt: Date) {
+    this.ingestionLatencyMs = receivedAt.valueOf() - emittedAt.valueOf();
+    this.processingLatencyMs = processedAt.valueOf() - receivedAt.valueOf();
+    this.totalLatencyMs = this.ingestionLatencyMs + this.processingLatencyMs;
+  }
 }
