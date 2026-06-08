@@ -6,7 +6,9 @@ import {
   StatsQuery,
   TypeStatRow,
 } from '../domain/event-stats.repository';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class EventStatsPrismaRepository implements EventStatsRepository {
   constructor(private readonly prisma: PrismaService) {}
 

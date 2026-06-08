@@ -3,7 +3,9 @@ import { PrismaService } from '../../prisma.service';
 import { Event } from '../domain/event.aggregate';
 import { EventQuery, EventRepository } from '../domain/event.repository';
 import { addLatenciesToDbEvents } from '../domain/value-objects/latency';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class EventPrismaRepository implements EventRepository {
   constructor(private readonly prisma: PrismaService) {}
 
