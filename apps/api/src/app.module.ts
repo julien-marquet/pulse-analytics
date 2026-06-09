@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { EventsModule } from './events/events.module';
 import { TypedConfigModule } from '@app/common';
 import { ConfigVariables } from './config';
@@ -45,6 +44,6 @@ import { environment } from './environment';
     TypedConfigModule.forRoot(ConfigVariables),
   ],
   controllers: [AppController],
-  providers: [AppService, IsAllowedTimezoneConstraint],
+  providers: [IsAllowedTimezoneConstraint],
 })
 export class AppModule {}
