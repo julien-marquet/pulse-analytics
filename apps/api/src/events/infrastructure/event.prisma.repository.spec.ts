@@ -50,22 +50,27 @@ describe('EventPrismaRepository', () => {
       );
     });
 
-    it('should return data with computed latencies and total count', async () => {
-      const dbEvents = [
-        makeEventDbEntry({
-          id: '1',
-          emittedAt: new Date('2026-01-01T00:00:00.000Z'),
-          receivedAt: new Date('2026-01-01T00:00:00.100Z'),
-          processedAt: new Date('2026-01-01T00:00:00.150Z'),
-        }),
-      ];
-      prisma.event.findMany.mockResolvedValue(dbEvents);
+    it('should map all db fields to the domain object', async () => {
+      const dbEvent = makeEventDbEntry({
+        id: 'evt-1',
+        type: 'click',
+        emittedAt: new Date('2026-01-01T00:00:00.000Z'),
+        receivedAt: new Date('2026-01-01T00:00:00.100Z'),
+        processedAt: new Date('2026-01-01T00:00:00.150Z'),
+        properties: { key: 'value' },
+      });
+      prisma.event.findMany.mockResolvedValue([dbEvent]);
       prisma.event.count.mockResolvedValue(1);
 
-      const result = await repo.findMany({ page: 1, pageSize: 10 });
+      const { data } = await repo.findMany({ page: 1, pageSize: 10 });
 
-      expect(result.total).toBe(1);
-      expect(result.data[0].latencies).toEqual({
+      expect(data[0].id).toBe('evt-1');
+      expect(data[0].type).toBe('click');
+      expect(data[0].emittedAt).toEqual(new Date('2026-01-01T00:00:00.000Z'));
+      expect(data[0].receivedAt).toEqual(new Date('2026-01-01T00:00:00.100Z'));
+      expect(data[0].processedAt).toEqual(new Date('2026-01-01T00:00:00.150Z'));
+      expect(data[0].properties).toEqual({ key: 'value' });
+      expect(data[0].latencies).toEqual({
         ingestionLatencyMs: 100,
         processingLatencyMs: 50,
         totalLatencyMs: 150,
