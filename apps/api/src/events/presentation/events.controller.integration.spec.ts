@@ -20,7 +20,6 @@ import { Event } from '../domain/event.aggregate';
 import { IsAllowedTimezoneConstraint } from '../../utils/is-allowed-timezone.validator';
 import { createBullmqQueueMock } from '../../bullmq.queue.mock';
 import { createConfigServiceMock } from '../../config.service.mock';
-import { makeEventDbEntry } from '../../db.fixtures';
 import { environment } from '../../environment';
 
 describe('EventsController (integration)', () => {
@@ -28,9 +27,14 @@ describe('EventsController (integration)', () => {
   let eventRepo: jest.Mocked<EventRepository>;
   let statsRepo: jest.Mocked<EventStatsRepository>;
 
-  const mockEvent = Event.fromDb(
-    makeEventDbEntry({ id: 'evt-1', type: 'click' }),
-  );
+  const mockEvent = Event.create({
+    id: 'evt-1',
+    type: 'click',
+    emittedAt: new Date(),
+    receivedAt: new Date(),
+    processedAt: new Date(),
+    properties: {},
+  });
 
   beforeAll(async () => {
     eventRepo = {

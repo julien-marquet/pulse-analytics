@@ -1,4 +1,5 @@
 import { DatePrismaConverter } from '@app/common';
+import { type Event as DbEvent } from '@app/database';
 import { PrismaService } from '../../prisma.service';
 import { Event } from '../domain/event.aggregate';
 import { EventQuery, EventRepository } from '../domain/event.repository';
@@ -31,7 +32,7 @@ export class EventPrismaRepository implements EventRepository {
       }),
       this.prisma.event.count({ where: filters }),
     ]);
-    return { data: rows.map(Event.fromDb), total };
+    return { data: rows.map((row) => this.toDomain(row)), total };
   }
 
   async findLatestEmittedAt(from?: string, to?: string): Promise<Date | null> {
@@ -45,6 +46,17 @@ export class EventPrismaRepository implements EventRepository {
       },
     });
     return row?.emittedAt ?? null;
+  }
+
+  private toDomain(row: DbEvent): Event {
+    return Event.create({
+      id: row.id,
+      type: row.type,
+      emittedAt: row.emittedAt,
+      receivedAt: row.receivedAt,
+      processedAt: row.processedAt,
+      properties: (row.properties ?? {}) as Record<string, unknown>,
+    });
   }
 
   private _getEventsOrderBy(

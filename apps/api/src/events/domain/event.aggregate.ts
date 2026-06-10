@@ -1,4 +1,3 @@
-import { type Event as DbEvent } from '@app/database';
 import { Latency } from './value-objects/latency';
 
 export class Event {
@@ -28,15 +27,17 @@ export class Event {
     this.latencies = data.latencies;
   }
 
-  static fromDb(this: void, row: DbEvent): Event {
+  static create(data: {
+    id: string;
+    type: string;
+    emittedAt: Date;
+    receivedAt: Date;
+    processedAt: Date;
+    properties: Record<string, unknown>;
+  }): Event {
     return new Event({
-      id: row.id,
-      type: row.type,
-      emittedAt: row.emittedAt,
-      receivedAt: row.receivedAt,
-      processedAt: row.processedAt,
-      properties: (row.properties ?? {}) as Record<string, unknown>,
-      latencies: new Latency(row.emittedAt, row.receivedAt, row.processedAt),
+      ...data,
+      latencies: new Latency(data.emittedAt, data.receivedAt, data.processedAt),
     });
   }
 }
