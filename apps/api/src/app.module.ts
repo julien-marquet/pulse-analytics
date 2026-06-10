@@ -8,6 +8,7 @@ import { LoggerModule } from 'nestjs-pino';
 import pretty from 'pino-pretty';
 import { BullModule } from '@nestjs/bullmq';
 import { environment } from './environment';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { environment } from './environment';
       forRoutes: ['*'],
     }),
     EventsModule,
+    UsersModule,
     TypedConfigModule.forRoot(ConfigVariables),
   ],
   controllers: [AppController],
