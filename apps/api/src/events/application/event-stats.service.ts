@@ -4,7 +4,7 @@ import { ConfigVariables } from '../../config';
 import {
   EVENT_REPOSITORY,
   type EventRepository,
-} from '../domain/event.repository';
+} from '@app/events-domain';
 import {
   EVENT_STATS_REPOSITORY,
   StatsQuery,

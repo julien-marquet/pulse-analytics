@@ -1,9 +1,9 @@
 import { DatePrismaConverter } from '@app/common';
 import { type Event as DbEvent } from '@app/database';
-import { PrismaService } from '../../prisma.service';
-import { Event } from '../domain/event.aggregate';
-import { EventQuery, EventRepository } from '../domain/event.repository';
+import { Event, EventQuery, EventRepository } from '@app/events-domain';
+import { Prisma } from '@app/database';
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../prisma.service';
 
 @Injectable()
 export class EventPrismaRepository implements EventRepository {

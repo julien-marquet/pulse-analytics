@@ -1,5 +1,5 @@
 import { EventsQueryService } from './event-query.service';
-import { EventRepository } from '../domain/event.repository';
+import { EventRepository } from '@app/events-domain';
 
 describe('EventQueryService', () => {
   let service: EventsQueryService;

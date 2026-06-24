@@ -3,7 +3,7 @@ import {
   EVENT_REPOSITORY,
   EventQuery,
   type EventRepository,
-} from '../domain/event.repository';
+} from '@app/events-domain';
 
 @Injectable()
 export class EventsQueryService {

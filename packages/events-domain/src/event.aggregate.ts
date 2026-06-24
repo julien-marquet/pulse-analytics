@@ -1,4 +1,6 @@
+import { EventCandidate } from './event-candidate.entity';
 import { Latency } from './value-objects/latency';
+import { Timing } from './value-objects/timing';
 
 export class Event {
   readonly id: string;
@@ -35,9 +37,19 @@ export class Event {
     processedAt: Date;
     properties: Record<string, unknown>;
   }): Event {
+    const timing = Timing.create(data.emittedAt, data.receivedAt, data.processedAt);
+    return new Event({ ...data, latencies: new Latency(timing) });
+  }
+
+  static fromCandidate(candidate: EventCandidate, timing: Timing): Event {
     return new Event({
-      ...data,
-      latencies: new Latency(data.emittedAt, data.receivedAt, data.processedAt),
+      id: candidate.id,
+      type: candidate.type,
+      properties: candidate.properties,
+      emittedAt: timing.emittedAt,
+      receivedAt: timing.receivedAt,
+      processedAt: timing.processedAt,
+      latencies: new Latency(timing),
     });
   }
 }

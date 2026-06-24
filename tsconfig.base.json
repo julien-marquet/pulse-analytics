@@ -30,6 +30,9 @@
             ],
             "@app/contracts": [
                 "packages/contracts/src/index.ts"
+            ],
+            "@app/events-domain": [
+                "packages/events-domain/src/index.ts"
             ]
         }
     }

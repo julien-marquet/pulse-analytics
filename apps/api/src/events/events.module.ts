@@ -5,7 +5,7 @@ import { environment } from '../environment';
 import { EventsIngestionService } from './application/event-ingestion.service';
 import { PrismaService } from '../prisma.service';
 import { EventsQueryService } from './application/event-query.service';
-import { EVENT_REPOSITORY } from './domain/event.repository';
+import { EVENT_REPOSITORY } from '@app/events-domain';
 import { EVENT_STATS_REPOSITORY } from './domain/event-stats.repository';
 import { EventPrismaRepository } from './infrastructure/event.prisma.repository';
 import { EventStatsPrismaRepository } from './infrastructure/event-stats.prisma.repository';

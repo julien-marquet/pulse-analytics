@@ -1,6 +1,6 @@
 import { TypedConfigService } from '@app/common';
 import { EventsStatsService } from './event-stats.service';
-import { EventRepository } from '../domain/event.repository';
+import { EventRepository } from '@app/events-domain';
 import { EventStatsRepository } from '../domain/event-stats.repository';
 import { ConfigVariables } from '../../config';
 
