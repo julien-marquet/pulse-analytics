@@ -7,7 +7,7 @@ import { PrismaService } from '../prisma.service';
 import { EventsQueryService } from './application/event-query.service';
 import { EVENT_REPOSITORY } from '@app/events-domain';
 import { EVENT_STATS_REPOSITORY } from './domain/event-stats.repository';
-import { EventPrismaRepository } from './infrastructure/event.prisma.repository';
+import { EventPrismaRepository } from './infrastructure/event.prisma.reader';
 import { EventStatsPrismaRepository } from './infrastructure/event-stats.prisma.repository';
 import { EventsStatsService } from './application/event-stats.service';
 

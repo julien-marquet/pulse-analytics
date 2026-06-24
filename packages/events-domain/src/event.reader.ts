@@ -1,6 +1,6 @@
 import { Event } from './event.aggregate';
 
-export const EVENT_REPOSITORY = Symbol('IEventRepository');
+export const EVENT_READER = Symbol('IEventReader');
 
 export interface EventQuery {
   page: number;
@@ -12,8 +12,7 @@ export interface EventQuery {
   sortAsc?: boolean;
 }
 
-export interface EventRepository {
-  save(event: Event): Promise<void>;
+export interface EventReader {
   getTypes(): Promise<string[]>;
   findMany(query: EventQuery): Promise<{ data: Event[]; total: number }>;
   findLatestEmittedAt(from?: string, to?: string): Promise<Date | null>;

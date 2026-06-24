@@ -1,18 +1,18 @@
 import { TypedConfigService } from '@app/common';
 import { EventsStatsService } from './event-stats.service';
-import { EventRepository } from '@app/events-domain';
 import { EventStatsRepository } from '../domain/event-stats.repository';
 import { ConfigVariables } from '../../config';
+import { EventReader } from '@app/events-domain';
 
 describe('EventStatsService', () => {
   let service: EventsStatsService;
-  let eventRepo: jest.Mocked<EventRepository>;
+  let eventReader: jest.Mocked<EventReader>;
   let statsRepo: jest.Mocked<EventStatsRepository>;
 
   const query = { timeZone: 'UTC', from: '2026-03-01', to: '2026-04-01' };
 
   beforeEach(() => {
-    eventRepo = {
+    eventReader = {
       getTypes: jest.fn(),
       findMany: jest.fn(),
       findLatestEmittedAt: jest.fn(),
@@ -24,7 +24,7 @@ describe('EventStatsService', () => {
     const config = new TypedConfigService<ConfigVariables>({
       TIMEZONES: ['UTC'],
     });
-    service = new EventsStatsService(eventRepo, statsRepo, config);
+    service = new EventsStatsService(eventReader, statsRepo, config);
   });
 
   describe('getTimeZones', () => {
@@ -79,7 +79,7 @@ describe('EventStatsService', () => {
 
   describe('getStatsOverview', () => {
     it('should compute all aggregate fields correctly', async () => {
-      eventRepo.findLatestEmittedAt.mockResolvedValue(
+      eventReader.findLatestEmittedAt.mockResolvedValue(
         new Date('2026-04-01T12:00:00.000Z'),
       );
       statsRepo.groupByType.mockResolvedValue([
@@ -104,7 +104,7 @@ describe('EventStatsService', () => {
     });
 
     it('should set averageProcessingLatencyMs to null when there are no events', async () => {
-      eventRepo.findLatestEmittedAt.mockResolvedValue(null);
+      eventReader.findLatestEmittedAt.mockResolvedValue(null);
       statsRepo.groupByType.mockResolvedValue([]);
 
       const result = await service.getStatsOverview(query, 3);
@@ -114,7 +114,7 @@ describe('EventStatsService', () => {
     });
 
     it('should set latestEventAt to undefined when no event exists', async () => {
-      eventRepo.findLatestEmittedAt.mockResolvedValue(null);
+      eventReader.findLatestEmittedAt.mockResolvedValue(null);
       statsRepo.groupByType.mockResolvedValue([]);
 
       const result = await service.getStatsOverview(query, 3);
@@ -123,7 +123,7 @@ describe('EventStatsService', () => {
     });
 
     it('should slice topEventTypes to nSelectedTopEvents', async () => {
-      eventRepo.findLatestEmittedAt.mockResolvedValue(null);
+      eventReader.findLatestEmittedAt.mockResolvedValue(null);
       statsRepo.groupByType.mockResolvedValue([
         { eventType: 'a', count: 30, processingLatencyTotalMs: 0 },
         { eventType: 'b', count: 20, processingLatencyTotalMs: 0 },
@@ -137,12 +137,12 @@ describe('EventStatsService', () => {
     });
 
     it('should call both repositories with the correct arguments', async () => {
-      eventRepo.findLatestEmittedAt.mockResolvedValue(null);
+      eventReader.findLatestEmittedAt.mockResolvedValue(null);
       statsRepo.groupByType.mockResolvedValue([]);
 
       await service.getStatsOverview(query, 3);
 
-      expect(eventRepo.findLatestEmittedAt).toHaveBeenCalledWith(
+      expect(eventReader.findLatestEmittedAt).toHaveBeenCalledWith(
         query.from,
         query.to,
       );

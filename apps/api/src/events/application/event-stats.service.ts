@@ -1,10 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TypedConfigService } from '@app/common';
 import { ConfigVariables } from '../../config';
-import {
-  EVENT_REPOSITORY,
-  type EventRepository,
-} from '@app/events-domain';
+import { EVENT_READER, type EventReader } from '@app/events-domain';
 import {
   EVENT_STATS_REPOSITORY,
   StatsQuery,
@@ -15,7 +12,7 @@ import { weightedStats } from '../../utils/aggregate.utils';
 @Injectable()
 export class EventsStatsService {
   constructor(
-    @Inject(EVENT_REPOSITORY) private readonly eventRepo: EventRepository,
+    @Inject(EVENT_READER) private readonly eventReader: EventReader,
     @Inject(EVENT_STATS_REPOSITORY)
     private readonly statsRepo: EventStatsRepository,
     private readonly config: TypedConfigService<ConfigVariables>,
@@ -31,7 +28,7 @@ export class EventsStatsService {
 
   public async getStatsOverview(query: StatsQuery, nSelectedTopEvents: number) {
     const [latestEmittedAt, byType] = await Promise.all([
-      this.eventRepo.findLatestEmittedAt(query.from, query.to),
+      this.eventReader.findLatestEmittedAt(query.from, query.to),
       this.statsRepo.groupByType(query),
     ]);
 

@@ -1,21 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  EVENT_REPOSITORY,
-  EventQuery,
-  type EventRepository,
-} from '@app/events-domain';
+import { EVENT_READER, EventQuery, type EventReader } from '@app/events-domain';
 
 @Injectable()
 export class EventsQueryService {
-  constructor(
-    @Inject(EVENT_REPOSITORY) private readonly repository: EventRepository,
-  ) {}
+  constructor(@Inject(EVENT_READER) private readonly reader: EventReader) {}
 
   public async getTypes() {
-    return this.repository.getTypes();
+    return this.reader.getTypes();
   }
 
   async getEvents(query: EventQuery) {
-    return this.repository.findMany(query);
+    return this.reader.findMany(query);
   }
 }
