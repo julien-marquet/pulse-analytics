@@ -37,7 +37,11 @@ export class Event {
     processedAt: Date;
     properties: Record<string, unknown>;
   }): Event {
-    const timing = Timing.create(data.emittedAt, data.receivedAt, data.processedAt);
+    const timing = Timing.create(
+      data.emittedAt,
+      data.receivedAt,
+      data.processedAt,
+    );
     return new Event({ ...data, latencies: new Latency(timing) });
   }
 

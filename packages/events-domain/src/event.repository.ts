@@ -13,6 +13,7 @@ export interface EventQuery {
 }
 
 export interface EventRepository {
+  save(event: Event): Promise<void>;
   getTypes(): Promise<string[]>;
   findMany(query: EventQuery): Promise<{ data: Event[]; total: number }>;
   findLatestEmittedAt(from?: string, to?: string): Promise<Date | null>;

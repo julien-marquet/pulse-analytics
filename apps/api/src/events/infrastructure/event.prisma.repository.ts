@@ -1,13 +1,24 @@
 import { DatePrismaConverter } from '@app/common';
-import { type Event as DbEvent } from '@app/database';
+import { Prisma, type Event as DbEvent } from '@app/database';
 import { Event, EventQuery, EventRepository } from '@app/events-domain';
-import { Prisma } from '@app/database';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 
 @Injectable()
 export class EventPrismaRepository implements EventRepository {
   constructor(private readonly prisma: PrismaService) {}
+  async save(event: Event): Promise<void> {
+    await this.prisma.event.create({
+      data: {
+        id: event.id,
+        type: event.type,
+        properties: event.properties as Prisma.InputJsonValue,
+        processedAt: event.processedAt,
+        emittedAt: event.emittedAt,
+        receivedAt: event.receivedAt,
+      },
+    });
+  }
 
   async getTypes(): Promise<string[]> {
     const response = await this.prisma.event.findMany({
