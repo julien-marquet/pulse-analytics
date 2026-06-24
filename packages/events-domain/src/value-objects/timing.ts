@@ -9,11 +9,7 @@ export class Timing {
     this.processedAt = processedAt;
   }
 
-  static create(
-    emittedAt: Date,
-    receivedAt: Date,
-    processedAt: Date,
-  ): Timing {
+  static create(emittedAt: Date, receivedAt: Date, processedAt: Date): Timing {
     if (emittedAt > receivedAt) {
       throw new Error(
         `emittedAt (${emittedAt.toISOString()}) must be <= receivedAt (${receivedAt.toISOString()})`,
