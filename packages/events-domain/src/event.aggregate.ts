@@ -45,9 +45,13 @@ export class Event {
     return new Event({ ...data, latencies: new Latency(timing) });
   }
 
-  static fromCandidate(candidate: EventCandidate, timing: Timing): Event {
+  static fromCandidate(
+    id: string,
+    candidate: EventCandidate,
+    timing: Timing,
+  ): Event {
     return new Event({
-      id: candidate.id,
+      id: id,
       type: candidate.type,
       properties: candidate.properties,
       emittedAt: timing.emittedAt,
