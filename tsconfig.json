@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/common" },
+    { "path": "packages/contracts" },
+    { "path": "packages/database" },
+    { "path": "packages/events-domain" },
+    { "path": "apps/api" },
+    { "path": "apps/ingestion-worker" },
+    { "path": "apps/front" }
+  ]
+}
