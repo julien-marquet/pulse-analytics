@@ -1,13 +1,13 @@
 import { TypedConfigService } from '@app/common';
 import { EventsStatsService } from './event-stats.service';
-import { EventStatsRepository } from '../domain/event-stats.repository';
+import { EventStatsReader } from './event-stats.reader';
 import { ConfigVariables } from '../../config';
 import { EventReader } from '@app/events-domain';
 
 describe('EventStatsService', () => {
   let service: EventsStatsService;
   let eventReader: jest.Mocked<EventReader>;
-  let statsRepo: jest.Mocked<EventStatsRepository>;
+  let statsRepo: jest.Mocked<EventStatsReader>;
 
   const query = { timeZone: 'UTC', from: '2026-03-01', to: '2026-04-01' };
 

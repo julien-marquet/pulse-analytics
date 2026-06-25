@@ -1,12 +1,12 @@
 import { Job } from 'bullmq';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { EventProcessor } from './event.processor';
-import { EventPersistenceService } from '../application/event-persistence.service';
+import { EventService } from '../application/event.service';
 import { makeEventData } from '@app/contracts/src/event.fixtures';
 import { PinoLogger } from 'nestjs-pino';
 import { EventCandidate } from '@app/events-domain';
 
-type EventPersistenceServiceMock = DeepMockProxy<EventPersistenceService>;
+type EventPersistenceServiceMock = DeepMockProxy<EventService>;
 type PinoLoggerMock = DeepMockProxy<PinoLogger>;
 
 const makeJob = (overrides: Partial<Job> = {}): Job =>
@@ -22,7 +22,7 @@ describe('EventProcessor', () => {
   let logger: PinoLoggerMock;
 
   beforeEach(() => {
-    eventPersistenceService = mockDeep<EventPersistenceService>();
+    eventPersistenceService = mockDeep<EventService>();
     logger = mockDeep<PinoLogger>();
     processor = new EventProcessor(logger, eventPersistenceService);
   });
@@ -33,7 +33,7 @@ describe('EventProcessor', () => {
 
       await processor.process(job);
 
-      expect(eventPersistenceService.persistEvent).toHaveBeenCalledWith(
+      expect(eventPersistenceService.createEvent).toHaveBeenCalledWith(
         new EventCandidate({
           id: job.data.id,
           type: job.data.type,
@@ -47,7 +47,7 @@ describe('EventProcessor', () => {
 
     it('should rethrow errors from persistEvent', async () => {
       const error = new Error('DB failure');
-      eventPersistenceService.persistEvent.mockRejectedValue(error);
+      eventPersistenceService.createEvent.mockRejectedValue(error);
 
       const job = makeJob();
 
@@ -56,7 +56,7 @@ describe('EventProcessor', () => {
 
     it('should log an error when persistEvent throws', async () => {
       const error = new Error('DB failure');
-      eventPersistenceService.persistEvent.mockRejectedValue(error);
+      eventPersistenceService.createEvent.mockRejectedValue(error);
 
       const job = makeJob();
 

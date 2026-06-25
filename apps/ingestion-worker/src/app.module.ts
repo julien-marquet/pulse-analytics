@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
-import { EventProcessor } from './presentation/event.processor';
-import { PrismaService } from './prisma.service';
 import { BullModule } from '@nestjs/bullmq';
 import { environment } from './environment';
-import { EventPersistenceService } from './application/event-persistence.service';
 import { TypedConfigModule } from '@app/common';
 import { ConfigVariables } from './config';
 import { LoggerModule } from 'nestjs-pino';
 import pretty from 'pino-pretty';
-import { EVENT_WRITER } from '@app/events-domain';
-import { EventPrismaWriter } from './infrastructure/event.prisma.writer';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventModule } from './event/event.module';
+import { EventStatsModule } from './event-stats/event-stats.module';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     LoggerModule.forRoot({
       pinoHttp: [
         {
@@ -36,15 +35,8 @@ import { EventPrismaWriter } from './infrastructure/event.prisma.writer';
         url: environment.get('REDIS_URL'),
       },
     }),
-    BullModule.registerQueue({
-      name: environment.get('EVENT_QUEUE_NAME'),
-    }),
-  ],
-  providers: [
-    PrismaService,
-    { provide: EVENT_WRITER, useClass: EventPrismaWriter },
-    EventPersistenceService,
-    EventProcessor,
+    EventModule,
+    EventStatsModule,
   ],
 })
 export class AppModule {}

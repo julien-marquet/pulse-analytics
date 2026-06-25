@@ -2,7 +2,7 @@ import { Event, Timing } from '@app/events-domain';
 import {
   createPrismaServiceMock,
   PrismaServiceMock,
-} from '../prisma.service.mock';
+} from '../../prisma.service.mock';
 import { EventPrismaWriter } from './event.prisma.writer';
 
 describe('EventPrismaRepository', () => {

@@ -6,8 +6,8 @@ import { EventsIngestionService } from './application/event-ingestion.service';
 import { PrismaService } from '../prisma.service';
 import { EventsQueryService } from './application/event-query.service';
 import { EVENT_READER } from '@app/events-domain';
-import { EVENT_STATS_REPOSITORY } from './domain/event-stats.repository';
-import { EventStatsPrismaRepository } from './infrastructure/event-stats.prisma.repository';
+import { EVENT_STATS_READER } from './application/event-stats.reader';
+import { EventStatsPrismaReader } from './infrastructure/event-stats.prisma.reader';
 import { EventsStatsService } from './application/event-stats.service';
 import { EventPrismaReader } from './infrastructure/event.prisma.reader';
 
@@ -18,7 +18,7 @@ import { EventPrismaReader } from './infrastructure/event.prisma.reader';
   providers: [
     PrismaService,
     { provide: EVENT_READER, useClass: EventPrismaReader },
-    { provide: EVENT_STATS_REPOSITORY, useClass: EventStatsPrismaRepository },
+    { provide: EVENT_STATS_READER, useClass: EventStatsPrismaReader },
     EventsIngestionService,
     EventsQueryService,
     EventsStatsService,

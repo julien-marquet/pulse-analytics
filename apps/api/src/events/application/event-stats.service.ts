@@ -3,18 +3,18 @@ import { TypedConfigService } from '@app/common';
 import { ConfigVariables } from '../../config';
 import { EVENT_READER, type EventReader } from '@app/events-domain';
 import {
-  EVENT_STATS_REPOSITORY,
+  EVENT_STATS_READER,
   StatsQuery,
-  type EventStatsRepository,
-} from '../domain/event-stats.repository';
+  type EventStatsReader,
+} from './event-stats.reader';
 import { weightedStats } from '../../utils/aggregate.utils';
 
 @Injectable()
 export class EventsStatsService {
   constructor(
     @Inject(EVENT_READER) private readonly eventReader: EventReader,
-    @Inject(EVENT_STATS_REPOSITORY)
-    private readonly statsRepo: EventStatsRepository,
+    @Inject(EVENT_STATS_READER)
+    private readonly statsRepo: EventStatsReader,
     private readonly config: TypedConfigService<ConfigVariables>,
   ) {}
 

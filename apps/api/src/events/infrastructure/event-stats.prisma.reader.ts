@@ -2,14 +2,14 @@ import { DatePrismaConverter } from '@app/common';
 import { PrismaService } from '../../prisma.service';
 import {
   DailyStatRow,
-  EventStatsRepository,
+  EventStatsReader,
   StatsQuery,
   TypeStatRow,
-} from '../domain/event-stats.repository';
+} from '../application/event-stats.reader';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class EventStatsPrismaRepository implements EventStatsRepository {
+export class EventStatsPrismaReader implements EventStatsReader {
   constructor(private readonly prisma: PrismaService) {}
 
   async groupByDay(query: StatsQuery): Promise<DailyStatRow[]> {

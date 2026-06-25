@@ -13,9 +13,9 @@ import {
   type EventRepository,
 } from '../domain/event.repository';
 import {
-  EVENT_STATS_REPOSITORY,
-  type EventStatsRepository,
-} from '../domain/event-stats.repository';
+  EVENT_STATS_READER,
+  type EventStatsReader,
+} from '../application/event-stats.reader';
 import { Event } from '../domain/event.aggregate';
 import { IsAllowedTimezoneConstraint } from '../../utils/is-allowed-timezone.validator';
 import { createBullmqQueueMock } from '../../bullmq.queue.mock';
@@ -25,7 +25,7 @@ import { environment } from '../../environment';
 describe('EventsController (integration)', () => {
   let app: INestApplication;
   let eventRepo: jest.Mocked<EventRepository>;
-  let statsRepo: jest.Mocked<EventStatsRepository>;
+  let statsRepo: jest.Mocked<EventStatsReader>;
 
   const mockEvent = Event.create({
     id: 'evt-1',
@@ -55,7 +55,7 @@ describe('EventsController (integration)', () => {
         EventsStatsService,
         IsAllowedTimezoneConstraint,
         { provide: EVENT_REPOSITORY, useValue: eventRepo },
-        { provide: EVENT_STATS_REPOSITORY, useValue: statsRepo },
+        { provide: EVENT_STATS_READER, useValue: statsRepo },
         {
           provide: getQueueToken(environment.get('EVENT_QUEUE_NAME')),
           useValue: createBullmqQueueMock(),

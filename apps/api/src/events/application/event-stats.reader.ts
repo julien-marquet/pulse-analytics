@@ -1,4 +1,4 @@
-export const EVENT_STATS_REPOSITORY = Symbol('IEventStatsRepository');
+export const EVENT_STATS_READER = Symbol('IEventStatsReader');
 
 export interface StatsQuery {
   timeZone: string;
@@ -18,7 +18,7 @@ export interface TypeStatRow {
   processingLatencyTotalMs: number;
 }
 
-export interface EventStatsRepository {
+export interface EventStatsReader {
   groupByDay(query: StatsQuery): Promise<DailyStatRow[]>;
   groupByType(query: StatsQuery): Promise<TypeStatRow[]>;
 }
