@@ -1,8 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Event, EventCandidate } from '@app/events-domain';
+import {
+  Event,
+  EVENT_WRITER,
+  EventCandidate,
+  type EventWriter,
+} from '@app/events-domain';
 import { randomUUID } from 'node:crypto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EVENT_WRITER, type EventWriter } from './event.writer';
 
 @Injectable()
 export class EventService {

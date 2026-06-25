@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma.service';
 import { EventPrismaWriter } from './infrastructure/event.prisma.writer';
 import { EventService } from './application/event.service';
 import { EventProcessor } from './presentation/event.processor';
-import { EVENT_WRITER } from './application/event.writer';
+import { EVENT_WRITER } from '@app/events-domain';
 
 @Module({
   imports: [
