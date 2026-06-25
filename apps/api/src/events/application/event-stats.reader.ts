@@ -1,4 +1,4 @@
-export const EVENT_STATS_READER = Symbol('IEventStatsReader');
+export const EVENT_STATS_READER = Symbol('EventStatsReader');
 
 export interface StatsQuery {
   timeZone: string;

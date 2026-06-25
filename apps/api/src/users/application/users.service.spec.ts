@@ -1,11 +1,11 @@
 import * as bcrypt from 'bcryptjs';
 import { UsersService } from './users.service';
 import { User } from '../domain/user';
-import { type UsersRepository } from '../domain/users.repository';
+import { type UserRepository } from '../domain/user.repository';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let usersRepo: jest.Mocked<UsersRepository>;
+  let usersRepo: jest.Mocked<UserRepository>;
 
   beforeEach(() => {
     usersRepo = { create: jest.fn() };

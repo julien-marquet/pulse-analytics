@@ -3,13 +3,13 @@ import { Module } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { UsersController } from './presentation/users.controller';
 import { UsersService } from './application/users.service';
-import { USERS_REPOSITORY } from './domain/users.repository';
-import { UsersPrismaRepository } from './infrastructure/users.prisma.repository';
+import { USER_REPOSITORY } from './domain/user.repository';
+import { UserPrismaRepository } from './infrastructure/user.prisma.repository';
 
 @Module({
   providers: [
     PrismaService,
-    { provide: USERS_REPOSITORY, useClass: UsersPrismaRepository },
+    { provide: USER_REPOSITORY, useClass: UserPrismaRepository },
     UsersService,
   ],
   controllers: [UsersController],

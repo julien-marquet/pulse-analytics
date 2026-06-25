@@ -3,7 +3,7 @@ import {
   PrismaServiceMock,
 } from '../../prisma.service.mock';
 import { User } from '../domain/user';
-import { UsersPrismaRepository } from './users.prisma.repository';
+import { UserPrismaRepository } from './user.prisma.repository';
 
 const makeUserDbEntry = () => ({
   id: 'user-1',
@@ -12,13 +12,13 @@ const makeUserDbEntry = () => ({
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
 });
 
-describe('UsersPrismaRepository', () => {
-  let repo: UsersPrismaRepository;
+describe('UserPrismaRepository', () => {
+  let repo: UserPrismaRepository;
   let prisma: PrismaServiceMock;
 
   beforeEach(() => {
     prisma = createPrismaServiceMock();
-    repo = new UsersPrismaRepository(prisma);
+    repo = new UserPrismaRepository(prisma);
   });
 
   describe('create', () => {

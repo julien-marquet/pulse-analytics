@@ -1,6 +1,6 @@
-import { Event } from '../../../../../packages/events-domain/src/event.aggregate';
+import { Event } from '@app/events-domain';
 
-export const EVENT_READER = Symbol('IEventReader');
+export const EVENT_READER = Symbol('EventReader');
 
 export interface EventQuery {
   page: number;

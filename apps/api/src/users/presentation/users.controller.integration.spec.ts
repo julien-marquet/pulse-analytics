@@ -5,13 +5,13 @@ import { useContainer } from 'class-validator';
 import { UsersController } from './users.controller';
 import { UsersService } from '../application/users.service';
 import {
-  USERS_REPOSITORY,
-  type UsersRepository,
-} from '../domain/users.repository';
+  USER_REPOSITORY,
+  type UserRepository,
+} from '../domain/user.repository';
 
 describe('UsersController (integration)', () => {
   let app: INestApplication;
-  let usersRepo: jest.Mocked<UsersRepository>;
+  let usersRepo: jest.Mocked<UserRepository>;
 
   beforeAll(async () => {
     usersRepo = {
@@ -22,7 +22,7 @@ describe('UsersController (integration)', () => {
       controllers: [UsersController],
       providers: [
         UsersService,
-        { provide: USERS_REPOSITORY, useValue: usersRepo },
+        { provide: USER_REPOSITORY, useValue: usersRepo },
       ],
     }).compile();
 

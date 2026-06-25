@@ -1,6 +1,6 @@
-import { Event } from '../../../../../packages/events-domain/src/event.aggregate';
+import { Event } from '@app/events-domain';
 
-export const EVENT_WRITER = Symbol('IEventWriter'); // a virer
+export const EVENT_WRITER = Symbol('EventWriter');
 
 export interface EventWriter {
   save(event: Event): Promise<void>;

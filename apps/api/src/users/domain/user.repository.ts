@@ -1,6 +1,6 @@
 import { User } from './user';
 
-export const USERS_REPOSITORY = Symbol('UsersRepository');
+export const USER_REPOSITORY = Symbol('UserRepository');
 
 export interface UserQuery {
   id: string;
@@ -8,6 +8,6 @@ export interface UserQuery {
   passwordHash: string;
 }
 
-export interface UsersRepository {
+export interface UserRepository {
   create(query: UserQuery): Promise<User>;
 }

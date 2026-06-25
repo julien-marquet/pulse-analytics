@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  USERS_REPOSITORY,
-  type UsersRepository,
-} from '../domain/users.repository';
+  USER_REPOSITORY,
+  type UserRepository,
+} from '../domain/user.repository';
 import { randomUUID } from 'node:crypto';
 import * as bcrypt from 'bcryptjs';
 import { User } from '@app/database';
@@ -10,7 +10,7 @@ import { User } from '@app/database';
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject(USERS_REPOSITORY) private readonly userRepo: UsersRepository,
+    @Inject(USER_REPOSITORY) private readonly userRepo: UserRepository,
   ) {}
 
   async createUser(email: string, password: string): Promise<User> {
