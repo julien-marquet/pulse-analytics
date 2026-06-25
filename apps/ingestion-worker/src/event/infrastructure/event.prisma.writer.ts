@@ -1,7 +1,8 @@
-import { Event, EventWriter } from '@app/events-domain';
+import { Event } from '@app/events-domain';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { Prisma } from '@app/database';
+import { EventWriter } from '../application/event.writer';
 
 @Injectable()
 export class EventPrismaWriter implements EventWriter {

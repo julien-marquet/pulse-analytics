@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TypedConfigService } from '@app/common';
 import { ConfigVariables } from '../../config';
-import { EVENT_READER, type EventReader } from '@app/events-domain';
 import {
   EVENT_STATS_READER,
   StatsQuery,
   type EventStatsReader,
 } from './event-stats.reader';
 import { weightedStats } from '../../utils/aggregate.utils';
+import { EVENT_READER, type EventReader } from './event.reader';
 
 @Injectable()
 export class EventsStatsService {
