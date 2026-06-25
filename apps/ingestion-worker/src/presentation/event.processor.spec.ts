@@ -1,9 +1,10 @@
 import { Job } from 'bullmq';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { EventProcessor } from './event.processor';
-import { EventPersistenceService } from './event-persistence.service';
+import { EventPersistenceService } from '../application/event-persistence.service';
 import { makeEventData } from '@app/contracts/src/event.fixtures';
 import { PinoLogger } from 'nestjs-pino';
+import { EventCandidate } from '@app/events-domain';
 
 type EventPersistenceServiceMock = DeepMockProxy<EventPersistenceService>;
 type PinoLoggerMock = DeepMockProxy<PinoLogger>;
@@ -33,8 +34,12 @@ describe('EventProcessor', () => {
       await processor.process(job);
 
       expect(eventPersistenceService.persistEvent).toHaveBeenCalledWith(
-        job.data.id,
-        job.data,
+        new EventCandidate({
+          id: job.data.id,
+          type: job.data.type,
+          properties: job.data.properties,
+          emittedAt: new Date(job.data.emittedAt),
+        }),
         new Date(job.timestamp),
         expect.any(Date),
       );

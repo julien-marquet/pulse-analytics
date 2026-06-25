@@ -5,11 +5,11 @@ import { environment } from '../environment';
 import { EventsIngestionService } from './application/event-ingestion.service';
 import { PrismaService } from '../prisma.service';
 import { EventsQueryService } from './application/event-query.service';
-import { EVENT_REPOSITORY } from '@app/events-domain';
+import { EVENT_READER } from '@app/events-domain';
 import { EVENT_STATS_REPOSITORY } from './domain/event-stats.repository';
-import { EventPrismaRepository } from './infrastructure/event.prisma.reader';
 import { EventStatsPrismaRepository } from './infrastructure/event-stats.prisma.repository';
 import { EventsStatsService } from './application/event-stats.service';
+import { EventPrismaReader } from './infrastructure/event.prisma.reader';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { EventsStatsService } from './application/event-stats.service';
   ],
   providers: [
     PrismaService,
-    { provide: EVENT_REPOSITORY, useClass: EventPrismaRepository },
+    { provide: EVENT_READER, useClass: EventPrismaReader },
     { provide: EVENT_STATS_REPOSITORY, useClass: EventStatsPrismaRepository },
     EventsIngestionService,
     EventsQueryService,

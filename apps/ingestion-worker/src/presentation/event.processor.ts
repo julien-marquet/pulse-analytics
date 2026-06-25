@@ -1,9 +1,10 @@
 import { Job } from 'bullmq';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { environment } from './environment';
-import { CreateEventJobData } from '@app/contracts';
-import { EventPersistenceService } from './event-persistence.service';
+import { environment } from '../environment';
+import { EventPersistenceService } from '../application/event-persistence.service';
 import { PinoLogger } from 'nestjs-pino';
+import { CreateEventDto } from './createEvent.dto';
+import { EventCandidate } from '@app/events-domain';
 
 @Processor(environment.get('EVENT_QUEUE_NAME'))
 export class EventProcessor extends WorkerHost {
@@ -15,7 +16,7 @@ export class EventProcessor extends WorkerHost {
     logger.setContext(EventProcessor.name);
   }
 
-  async process(job: Job<CreateEventJobData>): Promise<void> {
+  async process(job: Job<CreateEventDto>): Promise<void> {
     const metrics = {
       jobId: job.id,
       eventId: job.data.id,
@@ -28,8 +29,10 @@ export class EventProcessor extends WorkerHost {
 
     try {
       await this.eventPersistenceService.persistEvent(
-        job.data.id,
-        job.data,
+        new EventCandidate({
+          ...job.data,
+          emittedAt: new Date(job.data.emittedAt),
+        }),
         new Date(job.timestamp),
         new Date(),
       );

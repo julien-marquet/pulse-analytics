@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
-import { EventProcessor } from './event.processor';
+import { EventProcessor } from './presentation/event.processor';
 import { PrismaService } from './prisma.service';
 import { BullModule } from '@nestjs/bullmq';
 import { environment } from './environment';
-import { EventPersistenceService } from './event-persistence.service';
+import { EventPersistenceService } from './application/event-persistence.service';
 import { TypedConfigModule } from '@app/common';
 import { ConfigVariables } from './config';
 import { LoggerModule } from 'nestjs-pino';
 import pretty from 'pino-pretty';
+import { EVENT_WRITER } from '@app/events-domain';
+import { EventPrismaWriter } from './infrastructure/event.prisma.writer';
 
 @Module({
   imports: [
@@ -38,6 +40,11 @@ import pretty from 'pino-pretty';
       name: environment.get('EVENT_QUEUE_NAME'),
     }),
   ],
-  providers: [PrismaService, EventPersistenceService, EventProcessor],
+  providers: [
+    PrismaService,
+    { provide: EVENT_WRITER, useClass: EventPrismaWriter },
+    EventPersistenceService,
+    EventProcessor,
+  ],
 })
 export class AppModule {}

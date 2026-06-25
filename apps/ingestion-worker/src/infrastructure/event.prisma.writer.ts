@@ -1,6 +1,6 @@
 import { Event, EventWriter } from '@app/events-domain';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../prisma.service';
 import { Prisma } from '@app/database';
 
 @Injectable()
@@ -12,9 +12,9 @@ export class EventPrismaWriter implements EventWriter {
         id: event.id,
         type: event.type,
         properties: event.properties as Prisma.InputJsonValue,
-        processedAt: event.processedAt,
-        emittedAt: event.emittedAt,
-        receivedAt: event.receivedAt,
+        processedAt: event.timing.processedAt,
+        emittedAt: event.timing.emittedAt,
+        receivedAt: event.timing.receivedAt,
       },
     });
   }

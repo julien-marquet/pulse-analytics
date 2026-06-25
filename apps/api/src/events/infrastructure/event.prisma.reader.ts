@@ -1,24 +1,12 @@
 import { DatePrismaConverter } from '@app/common';
 import { type Event as DbEvent } from '@app/database';
-import { Event, EventQuery, EventReader } from '@app/events-domain';
+import { Event, EventQuery, EventReader, Timing } from '@app/events-domain';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 
 @Injectable()
-export class EventPrismaRepository implements EventReader {
+export class EventPrismaReader implements EventReader {
   constructor(private readonly prisma: PrismaService) {}
-  // async save(event: Event): Promise<void> {
-  //   await this.prisma.event.create({
-  //     data: {
-  //       id: event.id,
-  //       type: event.type,
-  //       properties: event.properties as Prisma.InputJsonValue,
-  //       processedAt: event.processedAt,
-  //       emittedAt: event.emittedAt,
-  //       receivedAt: event.receivedAt,
-  //     },
-  //   });
-  // }
 
   async getTypes(): Promise<string[]> {
     const response = await this.prisma.event.findMany({
@@ -63,9 +51,7 @@ export class EventPrismaRepository implements EventReader {
     return Event.create({
       id: row.id,
       type: row.type,
-      emittedAt: row.emittedAt,
-      receivedAt: row.receivedAt,
-      processedAt: row.processedAt,
+      timing: Timing.create(row.emittedAt, row.receivedAt, row.processedAt),
       properties: (row.properties ?? {}) as Record<string, unknown>,
     });
   }
