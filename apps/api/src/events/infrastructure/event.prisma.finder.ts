@@ -3,7 +3,8 @@ import { type Event as DbEvent } from '@app/database';
 import { Event, Timing } from '@app/events-domain';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
-import { EventFinder, FindManyEventsQuery } from '../application/event.finder';
+import { EventFinder } from '../application/event.finder';
+import { FindEventsQuery } from '../application/find-events.query';
 
 @Injectable()
 export class EventPrismaFinder implements EventFinder {
@@ -18,7 +19,9 @@ export class EventPrismaFinder implements EventFinder {
     return response.map((i) => i.type);
   }
 
-  async findMany(query: FindManyEventsQuery): Promise<{ data: Event[]; total: number }> {
+  async findMany(
+    query: FindEventsQuery,
+  ): Promise<{ data: Event[]; total: number }> {
     const filters = {
       type: query.type?.length ? { in: query.type } : undefined,
       emittedAt: { gte: query.from, lte: query.to },
