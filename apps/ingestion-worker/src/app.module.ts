@@ -6,8 +6,8 @@ import { ConfigVariables } from './config';
 import { LoggerModule } from 'nestjs-pino';
 import pretty from 'pino-pretty';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { EventModule } from './event/event.module';
-import { EventStatsModule } from './event-stats/event-stats.module';
+import { EventsModule } from './events/events.module';
+import { DailyEventStatsModule } from './daily-event-stats/daily-event-stats.module';
 
 @Module({
   imports: [
@@ -35,8 +35,8 @@ import { EventStatsModule } from './event-stats/event-stats.module';
         url: environment.get('REDIS_URL'),
       },
     }),
-    EventModule,
-    EventStatsModule,
+    EventsModule,
+    DailyEventStatsModule,
   ],
 })
 export class AppModule {}

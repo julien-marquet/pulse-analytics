@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { environment } from '../environment';
 import { PrismaService } from '../prisma.service';
-import { EventPrismaWriter } from './infrastructure/event.prisma.writer';
+import { EventPrismaRepository } from './infrastructure/event.prisma.repository';
 import { EventService } from './application/event.service';
 import { EventProcessor } from './presentation/event.processor';
 import { EVENT_REPOSITORY } from '@app/events-domain';
@@ -15,9 +15,9 @@ import { EVENT_REPOSITORY } from '@app/events-domain';
   ],
   providers: [
     PrismaService,
-    { provide: EVENT_REPOSITORY, useClass: EventPrismaWriter },
+    { provide: EVENT_REPOSITORY, useClass: EventPrismaRepository },
     EventService,
     EventProcessor,
   ],
 })
-export class EventModule {}
+export class EventsModule {}

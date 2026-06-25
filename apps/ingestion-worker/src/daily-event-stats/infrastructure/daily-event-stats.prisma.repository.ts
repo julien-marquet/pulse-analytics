@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { EventStatsWriter } from '../application/event-stats.writer';
+import { DailyEventStatsRepository } from '../application/daily-event-stats.repository';
 import { PrismaService } from '../../prisma.service';
 import { Event } from '@app/events-domain';
 import { getUTCMidnightForTimezone } from '@app/common';
 
 @Injectable()
-export class EventStatsPrismaWriter implements EventStatsWriter {
+export class DailyEventStatsPrismaRepository implements DailyEventStatsRepository {
   constructor(private prisma: PrismaService) {}
 
   async save(event: Event, timezone: string): Promise<void> {

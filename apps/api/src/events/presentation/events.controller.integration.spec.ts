@@ -8,36 +8,33 @@ import { EventsController } from './events.controller';
 import { EventsIngestionService } from '../application/event-ingestion.service';
 import { EventsQueryService } from '../application/event-query.service';
 import { EventsStatsService } from '../application/event-stats.service';
+
 import {
-  EVENT_REPOSITORY,
-  type EventRepository,
-} from '../domain/event.repository';
-import {
-  EVENT_STATS_READER,
-  type EventStatsReader,
-} from '../application/event-stats.reader';
-import { Event } from '../domain/event.aggregate';
+  DAILY_EVENT_STATS_READ_MODEL,
+  type DailyEventStatsReadModel,
+} from '../application/daily-event-stats.read-model';
+
 import { IsAllowedTimezoneConstraint } from '../../utils/is-allowed-timezone.validator';
 import { createBullmqQueueMock } from '../../bullmq.queue.mock';
 import { createConfigServiceMock } from '../../config.service.mock';
 import { environment } from '../../environment';
+import { Event, Timing } from '@app/events-domain';
+import { EVENT_FINDER, EventFinder } from '../application/event.finder';
 
 describe('EventsController (integration)', () => {
   let app: INestApplication;
-  let eventRepo: jest.Mocked<EventRepository>;
-  let statsRepo: jest.Mocked<EventStatsReader>;
+  let eventFinder: jest.Mocked<EventFinder>;
+  let statsRepo: jest.Mocked<DailyEventStatsReadModel>;
 
   const mockEvent = Event.create({
     id: 'evt-1',
     type: 'click',
-    emittedAt: new Date(),
-    receivedAt: new Date(),
-    processedAt: new Date(),
+    timing: Timing.create(new Date(), new Date(), new Date()),
     properties: {},
   });
 
   beforeAll(async () => {
-    eventRepo = {
+    eventFinder = {
       getTypes: jest.fn(),
       findMany: jest.fn(),
       findLatestEmittedAt: jest.fn(),
@@ -54,8 +51,8 @@ describe('EventsController (integration)', () => {
         EventsIngestionService,
         EventsStatsService,
         IsAllowedTimezoneConstraint,
-        { provide: EVENT_REPOSITORY, useValue: eventRepo },
-        { provide: EVENT_STATS_READER, useValue: statsRepo },
+        { provide: EVENT_FINDER, useValue: eventFinder },
+        { provide: DAILY_EVENT_STATS_READ_MODEL, useValue: statsRepo },
         {
           provide: getQueueToken(environment.get('EVENT_QUEUE_NAME')),
           useValue: createBullmqQueueMock(),
@@ -80,7 +77,7 @@ describe('EventsController (integration)', () => {
 
   describe('GET /events', () => {
     it('returns paginated events', async () => {
-      eventRepo.findMany.mockResolvedValue({ data: [mockEvent], total: 1 });
+      eventFinder.findMany.mockResolvedValue({ data: [mockEvent], total: 1 });
 
       return request(app.getHttpServer())
         .get('/events?page=1&pageSize=10')
@@ -102,7 +99,7 @@ describe('EventsController (integration)', () => {
 
   describe('GET /events/types', () => {
     it('returns event types', async () => {
-      eventRepo.getTypes.mockResolvedValue(['click', 'view']);
+      eventFinder.getTypes.mockResolvedValue(['click', 'view']);
 
       return request(app.getHttpServer())
         .get('/events/types')
@@ -198,7 +195,7 @@ describe('EventsController (integration)', () => {
       statsRepo.groupByType.mockResolvedValue([
         { eventType: 'click', count: 10, processingLatencyTotalMs: 1000 },
       ]);
-      eventRepo.findLatestEmittedAt.mockResolvedValue(
+      eventFinder.findLatestEmittedAt.mockResolvedValue(
         new Date('2024-01-15T12:00:00Z'),
       );
 

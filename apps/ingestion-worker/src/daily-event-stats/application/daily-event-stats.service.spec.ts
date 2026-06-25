@@ -1,12 +1,12 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { TypedConfigService } from '@app/common';
 import { ConfigVariables } from '../../config';
-import { EventStatsService } from './event-stats.service';
-import { type EventStatsWriter } from './event-stats.writer';
+import { DailyEventStatsService } from './daily-event-stats.service';
+import { type DailyEventStatsRepository } from './daily-event-stats.repository';
 import { Event, Timing } from '@app/events-domain';
 
 type ConfigMock = DeepMockProxy<TypedConfigService<ConfigVariables>>;
-type EventStatsWriterMock = DeepMockProxy<EventStatsWriter>;
+type EventStatsWriterMock = DeepMockProxy<DailyEventStatsRepository>;
 
 const makeEvent = () =>
   Event.create({
@@ -20,15 +20,15 @@ const makeEvent = () =>
     properties: {},
   });
 
-describe('EventStatsService', () => {
-  let service: EventStatsService;
+describe('DailyEventStatsService', () => {
+  let service: DailyEventStatsService;
   let config: ConfigMock;
   let writer: EventStatsWriterMock;
 
   beforeEach(() => {
     config = mockDeep<TypedConfigService<ConfigVariables>>();
-    writer = mockDeep<EventStatsWriter>();
-    service = new EventStatsService(config, writer);
+    writer = mockDeep<DailyEventStatsRepository>();
+    service = new DailyEventStatsService(config, writer);
   });
 
   describe('saveEventStats', () => {

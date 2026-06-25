@@ -1,9 +1,9 @@
 import { EventsQueryService } from './event-query.service';
-import { EventReader } from '@app/events-domain';
+import { EventFinder } from './event.finder';
 
 describe('EventQueryService', () => {
   let service: EventsQueryService;
-  let reader: jest.Mocked<EventReader>;
+  let reader: jest.Mocked<EventFinder>;
 
   beforeEach(() => {
     reader = {

@@ -5,11 +5,11 @@ import { environment } from '../environment';
 import { EventsIngestionService } from './application/event-ingestion.service';
 import { PrismaService } from '../prisma.service';
 import { EventsQueryService } from './application/event-query.service';
-import { EVENT_READER } from '@app/events-domain';
-import { EVENT_STATS_READER } from './application/event-stats.reader';
-import { EventStatsPrismaReader } from './infrastructure/event-stats.prisma.reader';
+import { DAILY_EVENT_STATS_READ_MODEL } from './application/daily-event-stats.read-model';
+import { DailyEventStatsPrismaReadModel } from './infrastructure/event-stats.prisma.read-model';
 import { EventsStatsService } from './application/event-stats.service';
-import { EventPrismaReader } from './infrastructure/event.prisma.reader';
+import { EventPrismaFinder } from './infrastructure/event.prisma.finder';
+import { EVENT_FINDER } from './application/event.finder';
 
 @Module({
   imports: [
@@ -17,8 +17,11 @@ import { EventPrismaReader } from './infrastructure/event.prisma.reader';
   ],
   providers: [
     PrismaService,
-    { provide: EVENT_READER, useClass: EventPrismaReader },
-    { provide: EVENT_STATS_READER, useClass: EventStatsPrismaReader },
+    { provide: EVENT_FINDER, useClass: EventPrismaFinder },
+    {
+      provide: DAILY_EVENT_STATS_READ_MODEL,
+      useClass: DailyEventStatsPrismaReadModel,
+    },
     EventsIngestionService,
     EventsQueryService,
     EventsStatsService,

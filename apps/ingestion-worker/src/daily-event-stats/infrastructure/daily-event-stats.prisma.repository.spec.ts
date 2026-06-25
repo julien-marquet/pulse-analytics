@@ -4,7 +4,7 @@ import {
   createPrismaServiceMock,
   PrismaServiceMock,
 } from '../../prisma.service.mock';
-import { EventStatsPrismaWriter } from './event-stats.prisma.writer';
+import { DailyEventStatsPrismaRepository } from './daily-event-stats.prisma.repository';
 
 const emittedAt = new Date('2026-04-09T12:00:00.000Z');
 const receivedAt = new Date('2026-04-09T12:00:00.100Z');
@@ -18,13 +18,13 @@ const makeEvent = () =>
     properties: {},
   });
 
-describe('EventStatsPrismaWriter', () => {
-  let writer: EventStatsPrismaWriter;
+describe('DailyEventStatsPrismaRepository', () => {
+  let writer: DailyEventStatsPrismaRepository;
   let prisma: PrismaServiceMock;
 
   beforeEach(() => {
     prisma = createPrismaServiceMock();
-    writer = new EventStatsPrismaWriter(prisma);
+    writer = new DailyEventStatsPrismaRepository(prisma);
   });
 
   describe('save', () => {

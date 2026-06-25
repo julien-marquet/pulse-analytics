@@ -3,15 +3,15 @@ import {
   createPrismaServiceMock,
   PrismaServiceMock,
 } from '../../prisma.service.mock';
-import { EventPrismaWriter } from './event.prisma.writer';
+import { EventPrismaRepository } from './event.prisma.repository';
 
 describe('EventPrismaRepository', () => {
-  let writer: EventPrismaWriter;
+  let writer: EventPrismaRepository;
   let prisma: PrismaServiceMock;
 
   beforeEach(() => {
     prisma = createPrismaServiceMock();
-    writer = new EventPrismaWriter(prisma);
+    writer = new EventPrismaRepository(prisma);
   });
 
   describe('save', () => {

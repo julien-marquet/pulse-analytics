@@ -4,7 +4,7 @@ import { PrismaService } from '../../prisma.service';
 import { Prisma } from '@app/database';
 
 @Injectable()
-export class EventPrismaWriter implements EventRepository {
+export class EventPrismaRepository implements EventRepository {
   constructor(private readonly prisma: PrismaService) {}
   async save(event: Event): Promise<void> {
     await this.prisma.event.create({

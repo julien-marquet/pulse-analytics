@@ -3,16 +3,17 @@ import { TypedConfigService } from '@app/common';
 import { ConfigVariables } from '../../config';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
-  EVENT_STATS_WRITER,
-  type EventStatsWriter,
-} from './event-stats.writer';
+  DAILY_EVENT_STATS_REPOSITORY,
+  type DailyEventStatsRepository,
+} from './daily-event-stats.repository';
 import { Event } from '@app/events-domain';
 
 @Injectable()
-export class EventStatsService {
+export class DailyEventStatsService {
   constructor(
     private readonly config: TypedConfigService<ConfigVariables>,
-    @Inject(EVENT_STATS_WRITER) private readonly writer: EventStatsWriter,
+    @Inject(DAILY_EVENT_STATS_REPOSITORY)
+    private readonly writer: DailyEventStatsRepository,
   ) {}
 
   @OnEvent('event.created')

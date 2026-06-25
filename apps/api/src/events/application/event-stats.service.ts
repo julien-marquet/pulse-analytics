@@ -2,19 +2,19 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TypedConfigService } from '@app/common';
 import { ConfigVariables } from '../../config';
 import {
-  EVENT_STATS_READER,
+  DAILY_EVENT_STATS_READ_MODEL,
   StatsQuery,
-  type EventStatsReader,
-} from './event-stats.reader';
+  type DailyEventStatsReadModel,
+} from './daily-event-stats.read-model';
 import { weightedStats } from '../../utils/aggregate.utils';
-import { EVENT_READER, type EventReader } from './event.reader';
+import { EVENT_FINDER, type EventFinder } from './event.finder';
 
 @Injectable()
 export class EventsStatsService {
   constructor(
-    @Inject(EVENT_READER) private readonly eventReader: EventReader,
-    @Inject(EVENT_STATS_READER)
-    private readonly statsRepo: EventStatsReader,
+    @Inject(EVENT_FINDER) private readonly eventFinder: EventFinder,
+    @Inject(DAILY_EVENT_STATS_READ_MODEL)
+    private readonly dlyStatsReadModel: DailyEventStatsReadModel,
     private readonly config: TypedConfigService<ConfigVariables>,
   ) {}
 
@@ -23,13 +23,13 @@ export class EventsStatsService {
   }
 
   async getStatsByDay(query: StatsQuery) {
-    return this.statsRepo.groupByDay(query);
+    return this.dlyStatsReadModel.groupByDay(query);
   }
 
   public async getStatsOverview(query: StatsQuery, nSelectedTopEvents: number) {
     const [latestEmittedAt, byType] = await Promise.all([
-      this.eventReader.findLatestEmittedAt(query.from, query.to),
-      this.statsRepo.groupByType(query),
+      this.eventFinder.findLatestEmittedAt(query.from, query.to),
+      this.dlyStatsReadModel.groupByType(query),
     ]);
 
     const { average: averageProcessingLatencyMs, totalWeight: totalEvents } =
@@ -51,7 +51,7 @@ export class EventsStatsService {
   }
 
   async getStatsByType(query: StatsQuery) {
-    const rows = await this.statsRepo.groupByType(query);
+    const rows = await this.dlyStatsReadModel.groupByType(query);
     let total = 0;
     const types = rows.map((r) => {
       total += r.count;

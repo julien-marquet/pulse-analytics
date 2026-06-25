@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EVENT_READER, EventQuery, type EventReader } from '@app/events-domain';
+import { EVENT_FINDER, type EventFinder, EventQuery } from './event.finder';
 
 @Injectable()
 export class EventsQueryService {
-  constructor(@Inject(EVENT_READER) private readonly reader: EventReader) {}
+  constructor(@Inject(EVENT_FINDER) private readonly reader: EventFinder) {}
 
   public async getTypes() {
     return this.reader.getTypes();

@@ -1,6 +1,6 @@
 import { Event } from '@app/events-domain';
 
-export const EVENT_READER = Symbol('EventReader');
+export const EVENT_FINDER = Symbol('EventFinder');
 
 export interface EventQuery {
   page: number;
@@ -12,7 +12,7 @@ export interface EventQuery {
   sortAsc?: boolean;
 }
 
-export interface EventReader {
+export interface EventFinder {
   getTypes(): Promise<string[]>;
   findMany(query: EventQuery): Promise<{ data: Event[]; total: number }>;
   findLatestEmittedAt(from?: string, to?: string): Promise<Date | null>;

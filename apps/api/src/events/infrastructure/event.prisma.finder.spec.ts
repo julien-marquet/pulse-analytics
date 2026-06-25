@@ -1,19 +1,18 @@
 import { DatePrismaConverter } from '@app/common';
-import { Event } from '@app/events-domain';
 import {
   createPrismaServiceMock,
   PrismaServiceMock,
 } from '../../prisma.service.mock';
 import { makeEventDbEntry } from '../../db.fixtures';
-import { EventPrismaReader } from './event.prisma.reader';
+import { EventPrismaFinder } from './event.prisma.finder';
 
-describe('EventPrismaRepository', () => {
-  let repo: EventPrismaReader;
+describe('EventPrismaFinder', () => {
+  let repo: EventPrismaFinder;
   let prisma: PrismaServiceMock;
 
   beforeEach(() => {
     prisma = createPrismaServiceMock();
-    repo = new EventPrismaReader(prisma);
+    repo = new EventPrismaFinder(prisma);
   });
 
   describe('getTypes', () => {

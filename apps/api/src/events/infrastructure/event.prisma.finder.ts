@@ -1,11 +1,12 @@
 import { DatePrismaConverter } from '@app/common';
 import { type Event as DbEvent } from '@app/database';
-import { Event, EventQuery, EventReader, Timing } from '@app/events-domain';
+import { Event, Timing } from '@app/events-domain';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
+import { EventFinder, EventQuery } from '../application/event.finder';
 
 @Injectable()
-export class EventPrismaReader implements EventReader {
+export class EventPrismaFinder implements EventFinder {
   constructor(private readonly prisma: PrismaService) {}
 
   async getTypes(): Promise<string[]> {

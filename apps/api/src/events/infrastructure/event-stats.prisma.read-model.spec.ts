@@ -3,17 +3,17 @@ import {
   createPrismaServiceMock,
   PrismaServiceMock,
 } from '../../prisma.service.mock';
-import { EventStatsPrismaReader } from './event-stats.prisma.reader';
+import { DailyEventStatsPrismaReadModel } from './event-stats.prisma.read-model';
 
 describe('EventStatsPrismaReader', () => {
-  let repo: EventStatsPrismaReader;
+  let repo: DailyEventStatsPrismaReadModel;
   let prisma: PrismaServiceMock;
 
   const query = { timeZone: 'UTC', from: '2026-03-01', to: '2026-04-01' };
 
   beforeEach(() => {
     prisma = createPrismaServiceMock();
-    repo = new EventStatsPrismaReader(prisma);
+    repo = new DailyEventStatsPrismaReadModel(prisma);
   });
 
   describe('groupByDay', () => {
