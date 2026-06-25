@@ -1,12 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
     "outDir": "./dist"
   },
   "references": [
     { "path": "../../packages/common" },
-    { "path": "../../packages/contracts" },
     { "path": "../../packages/database" },
     { "path": "../../packages/events-domain" }
   ]

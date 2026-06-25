@@ -63,33 +63,6 @@ describe('CreateEventRequestDto', () => {
     });
   });
 
-  describe('id', () => {
-    it('should pass when id is provided', async () => {
-      const result = await validateAndTransformPayload(
-        { ...makeValidPayload(), id: 'my-id' },
-        CreateEventRequestDto,
-      );
-      expect(result.id).toBe('my-id');
-    });
-
-    it('should pass when id is absent', async () => {
-      const result = await validateAndTransformPayload(
-        makeValidPayload(),
-        CreateEventRequestDto,
-      );
-      expect(result.id).toBeUndefined();
-    });
-
-    it('should throw when id is an empty string', async () => {
-      await expect(
-        validateAndTransformPayload(
-          { ...makeValidPayload(), id: '' },
-          CreateEventRequestDto,
-        ),
-      ).rejects.toThrow(BadRequestException);
-    });
-  });
-
   describe('properties', () => {
     it('should default to an empty object when absent', async () => {
       const result = await validateAndTransformPayload(

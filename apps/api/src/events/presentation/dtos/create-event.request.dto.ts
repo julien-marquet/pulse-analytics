@@ -15,11 +15,6 @@ export class CreateEventRequestDto {
   emittedAt: string;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  id: string | undefined;
-
-  @IsOptional()
   @IsJsonObject()
   properties: Record<string, unknown> = {};
 }

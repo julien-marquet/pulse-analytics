@@ -24,7 +24,11 @@ export class EventsController {
   ) {}
   @Post()
   async CreateEvent(@Body(ValidationPipe) eventDto: CreateEventRequestDto) {
-    await this.eventsIngestionService.addEvent(eventDto.id, eventDto);
+    await this.eventsIngestionService.addEvent({
+      emittedAt: new Date(eventDto.emittedAt),
+      properties: eventDto.properties,
+      type: eventDto.type,
+    });
   }
 
   @Get()
@@ -38,7 +42,19 @@ export class EventsController {
       page: queryParams.page,
       pageSize: queryParams.pageSize,
       total,
-      data: data,
+      data: data.map((event) => ({
+        id: event.id,
+        type: event.type,
+        properties: event.properties,
+        emittedAt: event.timing.emittedAt,
+        receivedAt: event.timing.receivedAt,
+        processedAt: event.timing.processedAt,
+        latencies: {
+          ingestionLatencyMs: event.latencies.ingestionLatencyMs,
+          processingLatencyMs: event.latencies.processingLatencyMs,
+          totalLatencyMs: event.latencies.totalLatencyMs,
+        },
+      })),
     };
   }
 

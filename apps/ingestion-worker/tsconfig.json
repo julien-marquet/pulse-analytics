@@ -11,9 +11,6 @@
       "path": "../../packages/database"
     },
     {
-      "path": "../../packages/contracts"
-    },
-    {
       "path": "../../packages/events-domain"
     }
   ]

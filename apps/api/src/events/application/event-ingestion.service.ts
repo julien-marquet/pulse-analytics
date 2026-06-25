@@ -1,39 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import { Queue } from 'bullmq';
-import { InjectQueue } from '@nestjs/bullmq';
+import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { CreateEventJobData, EventData } from '@app/contracts';
-import { environment } from '../../environment';
+import { EventCandidate } from '@app/events-domain';
+import { EVENT_PUBLISHER, type EventPublisher } from './event.publisher';
+
+export interface CreateEventQuery {
+  type: string;
+  emittedAt: Date;
+  properties: Record<string, unknown>;
+}
 
 @Injectable()
 export class EventsIngestionService {
   constructor(
-    @InjectQueue(environment.get('EVENT_QUEUE_NAME'))
-    private readonly eventQueue: Queue<CreateEventJobData>,
+    @Inject(EVENT_PUBLISHER) private readonly eventPublisher: EventPublisher,
   ) {}
 
-  public async addEvent(id: string | undefined, eventData: EventData) {
-    if (id == undefined) {
-      id = this.generateEventId();
-    }
-    await this.eventQueue.add(
-      environment.get('ADD_EVENT_JOB_NAME'),
-      {
-        id,
-        ...eventData,
-      },
-      {
-        jobId: id,
-        attempts: 2,
-        backoff: {
-          type: 'fixed',
-          delay: 3000,
-        },
-      },
-    );
-  }
+  public async addEvent(query: CreateEventQuery) {
+    const candidate = new EventCandidate({
+      id: randomUUID(),
+      type: query.type,
+      properties: query.properties,
+      emittedAt: query.emittedAt,
+    });
 
-  private generateEventId() {
-    return randomUUID({});
+    await this.eventPublisher.publish(candidate);
   }
 }

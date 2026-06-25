@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@app/common": "*",
-    "@app/contracts": "*",
     "@app/database": "*",
     "@app/events-domain": "*",
     "@nestjs/platform-express": "^11.1.17",

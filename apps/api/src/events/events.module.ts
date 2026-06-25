@@ -10,6 +10,8 @@ import { DailyEventStatsPrismaReadModel } from './infrastructure/event-stats.pri
 import { EventsStatsService } from './application/event-stats.service';
 import { EventPrismaFinder } from './infrastructure/event.prisma.finder';
 import { EVENT_FINDER } from './application/event.finder';
+import { EVENT_PUBLISHER } from './application/event.publisher';
+import { EventBullMqPublisher } from './infrastructure/event.bullmq.publisher';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { EVENT_FINDER } from './application/event.finder';
       provide: DAILY_EVENT_STATS_READ_MODEL,
       useClass: DailyEventStatsPrismaReadModel,
     },
+    { provide: EVENT_PUBLISHER, useClass: EventBullMqPublisher },
     EventsIngestionService,
     EventsQueryService,
     EventsStatsService,
