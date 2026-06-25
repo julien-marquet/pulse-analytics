@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   Event,
-  EVENT_WRITER,
+  EVENT_REPOSITORY,
   EventCandidate,
-  type EventWriter,
+  type EventRepository,
 } from '@app/events-domain';
 import { randomUUID } from 'node:crypto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -11,7 +11,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 @Injectable()
 export class EventService {
   constructor(
-    @Inject(EVENT_WRITER) private readonly writer: EventWriter,
+    @Inject(EVENT_REPOSITORY) private readonly writer: EventRepository,
     private eventEmitter: EventEmitter2,
   ) {}
 

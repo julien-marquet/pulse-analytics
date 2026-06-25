@@ -1,9 +1,9 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
-import { EventCandidate, EventWriter } from '@app/events-domain';
+import { EventCandidate, EventRepository } from '@app/events-domain';
 import { EventService } from './event.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-type EventWriterMock = DeepMockProxy<EventWriter>;
+type EventWriterMock = DeepMockProxy<EventRepository>;
 type EventEmitter2Mock = DeepMockProxy<EventEmitter2>;
 
 const makeCandidate = (
@@ -26,7 +26,7 @@ describe('EventService', () => {
   const processedAt = new Date('2026-04-09T12:00:02.000Z');
 
   beforeEach(() => {
-    eventWriter = mockDeep<EventWriter>();
+    eventWriter = mockDeep<EventRepository>();
     eventEmitter = mockDeep<EventEmitter2>();
     service = new EventService(eventWriter, eventEmitter);
   });

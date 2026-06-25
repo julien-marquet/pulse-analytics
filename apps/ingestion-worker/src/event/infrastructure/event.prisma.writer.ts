@@ -1,10 +1,10 @@
-import { Event, EventWriter } from '@app/events-domain';
+import { Event, EventRepository } from '@app/events-domain';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { Prisma } from '@app/database';
 
 @Injectable()
-export class EventPrismaWriter implements EventWriter {
+export class EventPrismaWriter implements EventRepository {
   constructor(private readonly prisma: PrismaService) {}
   async save(event: Event): Promise<void> {
     await this.prisma.event.create({
