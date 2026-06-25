@@ -15,5 +15,5 @@ export class GetStatsOverviewQueryParamsDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  nSelectedTopEvents: number = 3;
+  nSelectedTopEvents: number;
 }

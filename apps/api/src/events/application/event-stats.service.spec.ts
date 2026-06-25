@@ -1,5 +1,5 @@
 import { TypedConfigService } from '@app/common';
-import { EventsStatsService } from './event-stats.service';
+import { DEFAULT_NUMBER_OF_TOP_EVENTS, EventsStatsService } from './event-stats.service';
 import { DailyEventStatsReadModel } from './daily-event-stats.read-model';
 import { ConfigVariables } from '../../config';
 import { EventFinder } from './event.finder';
@@ -91,7 +91,7 @@ describe('EventStatsService', () => {
         },
       ]);
 
-      const result = await service.getStatsOverview(query, 3);
+      const result = await service.getStatsOverview(query);
 
       expect(result.totalEvents).toBe(35);
       expect(result.averageProcessingLatencyMs).toBe(100); // 3500 / 35
@@ -107,7 +107,7 @@ describe('EventStatsService', () => {
       eventFinder.findLatestEmittedAt.mockResolvedValue(null);
       statsRepo.groupByType.mockResolvedValue([]);
 
-      const result = await service.getStatsOverview(query, 3);
+      const result = await service.getStatsOverview(query);
 
       expect(result.averageProcessingLatencyMs).toBeNull();
       expect(result.totalEvents).toBe(0);
@@ -117,9 +117,24 @@ describe('EventStatsService', () => {
       eventFinder.findLatestEmittedAt.mockResolvedValue(null);
       statsRepo.groupByType.mockResolvedValue([]);
 
-      const result = await service.getStatsOverview(query, 3);
+      const result = await service.getStatsOverview(query);
 
       expect(result.latestEventAt).toBeUndefined();
+    });
+
+    it('should use DEFAULT_NUMBER_OF_TOP_EVENTS when nSelectedTopEvents is not provided', async () => {
+      eventFinder.findLatestEmittedAt.mockResolvedValue(null);
+      statsRepo.groupByType.mockResolvedValue(
+        Array.from({ length: DEFAULT_NUMBER_OF_TOP_EVENTS + 1 }, (_, i) => ({
+          eventType: `type-${i}`,
+          count: 10,
+          processingLatencyTotalMs: 0,
+        })),
+      );
+
+      const result = await service.getStatsOverview(query);
+
+      expect(result.topEventTypes).toHaveLength(DEFAULT_NUMBER_OF_TOP_EVENTS);
     });
 
     it('should slice topEventTypes to nSelectedTopEvents', async () => {
@@ -140,7 +155,7 @@ describe('EventStatsService', () => {
       eventFinder.findLatestEmittedAt.mockResolvedValue(null);
       statsRepo.groupByType.mockResolvedValue([]);
 
-      await service.getStatsOverview(query, 3);
+      await service.getStatsOverview(query);
 
       expect(eventFinder.findLatestEmittedAt).toHaveBeenCalledWith(
         query.from,

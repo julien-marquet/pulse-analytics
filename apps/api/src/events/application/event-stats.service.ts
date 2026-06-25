@@ -9,6 +9,8 @@ import {
 import { weightedStats } from '../../utils/aggregate.utils';
 import { EVENT_FINDER, type EventFinder } from './event.finder';
 
+export const DEFAULT_NUMBER_OF_TOP_EVENTS = 3;
+
 @Injectable()
 export class EventsStatsService {
   constructor(
@@ -26,7 +28,10 @@ export class EventsStatsService {
     return this.dlyStatsReadModel.groupByDay(query);
   }
 
-  public async getStatsOverview(query: StatsQuery, nSelectedTopEvents: number) {
+  public async getStatsOverview(
+    query: StatsQuery,
+    nSelectedTopEvents: number = DEFAULT_NUMBER_OF_TOP_EVENTS,
+  ) {
     const [latestEmittedAt, byType] = await Promise.all([
       this.eventFinder.findLatestEmittedAt(query.from, query.to),
       this.dlyStatsReadModel.groupByType(query),

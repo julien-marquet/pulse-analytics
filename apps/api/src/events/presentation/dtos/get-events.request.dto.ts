@@ -1,7 +1,6 @@
 import {
   IsNumber,
   Min,
-  Max,
   IsDate,
   IsOptional,
   IsString,
@@ -11,6 +10,10 @@ import {
 } from 'class-validator';
 import { IsStringArray } from '../../../utils/dto.decorators';
 import { Transform } from 'class-transformer';
+import {
+  SORTABLE_EVENT_FIELDS,
+  type SortableEventField,
+} from '../../application/event.finder';
 
 export class GetEventsQueryParamsDto {
   @IsNumber()
@@ -18,9 +21,7 @@ export class GetEventsQueryParamsDto {
   page: number;
 
   @IsNumber()
-  @Min(1)
-  @Max(100)
-  pageSize: number = 50;
+  pageSize: number;
 
   @IsDate()
   @IsOptional()
@@ -46,6 +47,6 @@ export class GetEventsQueryParamsDto {
   @IsString()
   @IsOptional()
   @IsNotEmpty()
-  @IsIn(['emittedAt', 'type'])
-  sortBy?: 'emittedAt' | 'type';
+  @IsIn(SORTABLE_EVENT_FIELDS)
+  sortBy?: SortableEventField;
 }

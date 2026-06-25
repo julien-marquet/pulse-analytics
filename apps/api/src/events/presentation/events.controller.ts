@@ -14,6 +14,7 @@ import { CreateEventRequestDto } from './dtos/create-event.request.dto';
 import { GetTypesResponse } from './dtos/get-types.response.dto';
 import type { GetTimezonesResponse } from './dtos/get-timezones.response.dto';
 import { EventsStatsService } from '../application/event-stats.service';
+import { FindEventsQuery } from '../application/find-events.query';
 
 @Controller('events')
 export class EventsController {
@@ -35,8 +36,9 @@ export class EventsController {
   async getEvents(
     @Query(ValidationPipe) queryParams: GetEventsQueryParamsDto,
   ): Promise<GetEventsResponse> {
-    const { data, total } =
-      await this.eventsQueryService.getEvents(queryParams);
+    const { data, total } = await this.eventsQueryService.getEvents(
+      FindEventsQuery.create(queryParams),
+    );
 
     return {
       page: queryParams.page,

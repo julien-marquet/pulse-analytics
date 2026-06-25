@@ -35,42 +35,6 @@ describe('GetEventsQueryParamsDto', () => {
     });
   });
 
-  describe('pageSize', () => {
-    it('should use default value of 50 when pageSize is absent', async () => {
-      const result = await validateAndTransformPayload(
-        { page: 1 },
-        GetEventsQueryParamsDto,
-      );
-      expect(result.pageSize).toBe(50);
-    });
-
-    it('should throw when pageSize is less than 1', async () => {
-      await expect(
-        validateAndTransformPayload(
-          { ...makeValidPayload(), pageSize: 0 },
-          GetEventsQueryParamsDto,
-        ),
-      ).rejects.toThrow(BadRequestException);
-    });
-
-    it('should throw when pageSize is greater than 100', async () => {
-      await expect(
-        validateAndTransformPayload(
-          { ...makeValidPayload(), pageSize: 101 },
-          GetEventsQueryParamsDto,
-        ),
-      ).rejects.toThrow(BadRequestException);
-    });
-
-    it('should pass when pageSize is exactly 100', async () => {
-      const result = await validateAndTransformPayload(
-        { ...makeValidPayload(), pageSize: 100 },
-        GetEventsQueryParamsDto,
-      );
-      expect(result.pageSize).toBe(100);
-    });
-  });
-
   describe('from / to', () => {
     it('should pass when from and to are absent', async () => {
       const result = await validateAndTransformPayload(
